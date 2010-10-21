@@ -46,7 +46,7 @@ res.each_hash do |row|
   next unless File.exists? b_wig_path
   begin
     Dir.chdir(TMP_FOLDER)
-    Dir.mkdir(tmp_folder)
+    FileUtils.mkdir(tmp_folder)
     `touch #{running_file}`
     TSS_COORDS = {}
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
