@@ -10,12 +10,11 @@ def count_scores(tss_coords_file, folder, output_file)
     tss_coords[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
   }
   scores = Array.new(2001, 0.0) #including the "0" position there are 2000 positions.
-  lines = `gunzip -c #{file}`
   n = 0
   Dir.chdir(folder)
   for file in Dir["chr*.wig.gz"]
     chr = file.gsub(".wig.gz","")
-    lines = File.readlines(file)
+    lines = `gunzip -c #{file}`
     for line in lines
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
