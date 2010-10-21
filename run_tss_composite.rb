@@ -56,10 +56,10 @@ res.each_hash do |row|
     TSS_SCORES_B = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
   
     #t1 = Thread.new(TSS_SCORES_F, f_wig_path) do |tss_scores, file|
-      count_scores(tss_scores, file)
+      count_scores(TSS_SCORES_F, f_wig_path)
     #end
     #t2 = Thread.new(TSS_SCORES_B, b_wig_path) do |tss_scores, file|
-      count_scores(tss_scores, file)
+      count_scores(TSS_SCORES_B, b_wig_path)
     #end
     #t1.join()
     #t2.join()
