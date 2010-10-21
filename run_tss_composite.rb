@@ -13,10 +13,10 @@ def count_scores(tss_coords_file, folder, output_file)
   n = 0
   Dir.chdir(folder)
   for file in Dir["chr*.wig.gz"]
-    n+=1
     chr = file.gsub(".wig.gz","")
     lines = `gunzip -c #{file}`
     for line in lines
+      n+=1
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
       next if tss_coords[chr].empty? # skip to the next line if we are passed any genes in the TSS file.
