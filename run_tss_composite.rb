@@ -64,13 +64,11 @@ res.each_hash do |row|
       TSS_COORDS[tokens[0]] ||= []
       TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
     }
-    Process.fork[ {
-      count_scores(TSS_COORDS, f_wig_path, "#{tmp_folder}/scores_f.txt")
-    }]
-    Process.fork[ {
-      count_scores(TSS_COORDS, b_wig_path, "#{tmp_folder}/scores_b.txt")
-    }]
-    Process.wait
+    child1 = fork
+    count_scores(TSS_COORDS, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
+    child2 = fork unless child1.nil? # fork if we are the parent.
+    count_scores(TSS_COORDS, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
+    Process.waitall 
     #`mv #{tmp_folder} #{analysis_folder_path}`
   ensure
     #FileUtils.rm(tmp_folder,      :force=>true)
