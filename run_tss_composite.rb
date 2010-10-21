@@ -53,8 +53,9 @@ res.each_hash do |row|
     File.readlines("#{USEFUL_BED_FILES}/mm9.tss.2kb.bed").each {|line|
       tokens = line.split("\t")
       TSS_COORDS[tokens[0]] ||= []
-      TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end]
+      TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
     }
+    puts "TSS_COORDS init'd"
     TSS_SCORES_F = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
     TSS_SCORES_B = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
   
