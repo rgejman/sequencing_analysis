@@ -78,10 +78,10 @@ res.each_hash do |row|
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
     child1 = fork
     count_scores(tss_coords_file, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
-    child2 = fork unless child1.nil? # fork if we are the parent.
-    count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
+    #child2 = fork unless child1.nil? # fork if we are the parent.
+    #count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
     Process.waitall
-    exit if child1.nil? or child2.nil? #if you are either one of the children, exit here.
+    exit if child1.nil? #or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
     
     #Dir.chdir(tmp_folder)
@@ -90,7 +90,7 @@ res.each_hash do |row|
     #{}`mv #{tmp_folder} #{COMPOSITE_PLOTS_FOLDER}/`
   ensure
     Process.kill child1 unless child1.nil?
-    Process.kill child2 unless child2.nil?
+    #Process.kill child2 unless child2.nil?
     FileUtils.rm(tmp_folder,      :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
