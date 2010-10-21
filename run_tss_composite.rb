@@ -42,6 +42,7 @@ res.each_hash do |row|
   next unless File.exists? b_wig_path
   begin
     Dir.chdir(TMP_FOLDER)
+    Dir.mkdir(tmp_folder)
     `touch #{running_file}`
     TSS_COORDS = {}
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
@@ -61,8 +62,16 @@ res.each_hash do |row|
     end
     t1.join()
     t2.join()
-    pp TSS_SCORES_F
-    pp TSS_SCORES_B
+    File.open("#{tmp_folder}/scores_f.txt", "w") do |f|
+      for score in TSS_SCORES_F
+        f.puts score
+      end
+    end
+    File.open("#{tmp_folder}/scores_b.txt", "w") do |f|
+      for score in TSS_SCORES_B
+        f.puts score
+      end
+    end
     
     #`mv #{tmp_folder} #{analysis_folder_path}`
   ensure
