@@ -2,7 +2,8 @@
 require 'constants'
 require 'mysql'
 
-def count_scores(scores, file)
+def count_scores(tss_coords, file, output_file)
+  scores = Array.new(2000, 0.0)
   Open3.popen3("gunzip -c #{file}") { |stdin, stdout, stderr|
     while (line = stdout.gets) #for some reason gunzip output to stderr via Open3.popen3
       if line[0,1] == "t" #the 1st header line starts with "track"
@@ -12,7 +13,7 @@ def count_scores(scores, file)
       end
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
-      for l,r,s in TSS_COORDS[chr]
+      for l,r,s in tss_coords[chr]
         if l <= pos and r >= pos
           if s == "+" #strand
             scores[2000 - r - pos] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
@@ -26,6 +27,11 @@ def count_scores(scores, file)
       end
     end
   }
+   File.open(output_file, "w") do |f|
+      for score in scores
+        f.puts score
+      end
+    end
 end
 
 
@@ -58,28 +64,13 @@ res.each_hash do |row|
       TSS_COORDS[tokens[0]] ||= []
       TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
     }
-    TSS_SCORES_F = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
-    TSS_SCORES_B = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
-  
-    t1 = Thread.new(TSS_SCORES_F, f_wig_path) do |tss_scores, file|
-      count_scores(tss_scores, file)
-    end
-    t2 = Thread.new(TSS_SCORES_B, b_wig_path) do |tss_scores, file|
-      count_scores(tss_scores, file)
-    end
-    t1.join()
-    t2.join()
-    File.open("#{tmp_folder}/scores_f.txt", "w") do |f|
-      for score in TSS_SCORES_F
-        f.puts score
-      end
-    end
-    File.open("#{tmp_folder}/scores_b.txt", "w") do |f|
-      for score in TSS_SCORES_B
-        f.puts score
-      end
-    end
-    
+    Process.fork[ {
+      count_scores(TSS_COORDS, f_wig_path, "#{tmp_folder}/scores_f.txt")
+    }]
+    Process.fork[ {
+      count_scores(TSS_COORDS, b_wig_path, "#{tmp_folder}/scores_b.txt")
+    }]
+    Process.wait
     #`mv #{tmp_folder} #{analysis_folder_path}`
   ensure
     #FileUtils.rm(tmp_folder,      :force=>true)
