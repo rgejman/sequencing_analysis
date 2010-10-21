@@ -17,8 +17,7 @@ def count_scores(scores, file)
       end          
       tokens = line.split(" ") #0 = pos, 1 = score
       pos = tokens[0].to_i
-      for coord_pair in TSS_COORDS
-        throw "#{coord_pair[0].class} #{pos.class}"
+      for coord_pair in TSS_COORDS[chr]
         if coord_pair[0] <= pos and coord_pair[1] >= pos
           scores[coord_pair[1] - pos - 2000] += tokens[1]  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
         end
