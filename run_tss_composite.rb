@@ -13,6 +13,7 @@ def count_scores(scores, file)
       if line[0,5] == "track" #the 1st header line starts with "track"
         h2_line = stdin.gets #variableStep header line
         chr = h2_line.split(" ")[1].split("=")[1] #the chromosome #.
+        throw chr
         next
       end          
       tokens = line.split(" ") #0 = pos, 1 = score
@@ -56,7 +57,6 @@ res.each_hash do |row|
       TSS_COORDS[tokens[0]] ||= []
       TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i] # i.e. TSS_COORDS[chr] << [start, end]
     }
-    pp TSS_COORDS
     TSS_SCORES_F = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
     TSS_SCORES_B = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
   
