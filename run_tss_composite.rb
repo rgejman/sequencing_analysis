@@ -12,12 +12,12 @@ def count_scores(scores, file)
       end
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
-      for coord_pair in TSS_COORDS[chr]
-        if coord_pair[0] <= pos and coord_pair[1] >= pos
-          if coord_pair[3] == "+" #strand
-            scores[2000 - coord_pair[1] - pos] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
+      for l,r,s in TSS_COORDS[chr]
+        if l <= pos and r >= pos
+          if s == "+" #strand
+            scores[2000 - r - pos] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
           else
-            scores[coord_pair[1] - pos] += t[1].to_f
+            scores[r - pos] += t[1].to_f
           end
         end
       end
