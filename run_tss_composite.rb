@@ -90,10 +90,8 @@ res.each_hash do |row|
     `r --vanilla < #{SCRIPTS_FOLDER}/make_composite_tss_plot.r`
 
 
-    #{}`mv #{tmp_folder} #{COMPOSITE_PLOTS_FOLDER}/`
+    `mv #{tmp_folder} #{COMPOSITE_PLOTS_FOLDER}/`
   ensure
-    Process.kill "SIGKILL", child1 unless child1.nil?
-    Process.kill "SIGKILL", child2 unless child2.nil?
     FileUtils.rm(tmp_folder,      :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
