@@ -22,7 +22,7 @@ def count_scores(tss_coords_file, file, output_file)
       pos = t[0].to_i
       next if tss_coords[chr].empty? # skip to the next line if we are passed any genes in the TSS file.
       for l,r,s in tss_coords[chr]
-        break if l > pos # no need to keep looking through the TSS if we have passed the pos.
+        break if r < pos # no need to keep looking through the TSS if we have passed the pos.
         if l <= pos and r >= pos
           if s == "+" #strand
             scores[2000 - (r - pos)] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
