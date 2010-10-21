@@ -49,7 +49,7 @@ def count_scores(tss_coords_file, folder, output_file)
           i = i + 1
         end
       end
-      if n % 1 == 0
+      if n % 100 == 0
         File.open(output_file, "w") do |f|
           for score in scores
             f.puts score
