@@ -56,6 +56,7 @@ res.each_hash do |row|
       TSS_COORDS[tokens[0]] ||= []
       TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i] # i.e. TSS_COORDS[chr] << [start, end]
     }
+    pp TSS_COORDS
     TSS_SCORES_F = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
     TSS_SCORES_B = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
   
