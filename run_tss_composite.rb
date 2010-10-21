@@ -13,14 +13,19 @@ def count_scores(tss_coords_file, folder, output_file)
   n = 0
   Dir.chdir(folder)
   for file in Dir["chr*.wig.gz"]
+    n+=1
     chr = file.gsub(".wig.gz","")
     lines = `gunzip -c #{file}`
     for line in lines
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
       next if tss_coords[chr].empty? # skip to the next line if we are passed any genes in the TSS file.
+      need_to_delete = false
       for l,r,s in tss_coords[chr]
-        break if r < pos # no need to keep looking through the TSS if we have passed the pos.
+        if r < pos # no need to keep looking through the TSS if we have passed the pos.
+          need_to_delete = true
+          break
+        end
         if l <= pos and r >= pos
           if s == "+" #strand
             scores[2000 - (r - pos)] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
@@ -30,8 +35,14 @@ def count_scores(tss_coords_file, folder, output_file)
           break
         end
       end
-      tss_coords[chr].delete_if {|coords| coords[1] < pos} #since the wiggle file is sorted, we can delete the earlier coords to save time.
-      n+=1
+       # this is much faster than using delete_if because we don't have to iterate through every entry in tss_coords
+       # and we only delete if we know there is stuff to delete.
+      if need_to_delete
+        for i in 0..tss_coords[chr].length
+          tss_coords.delete_at(i) if tss_coords[chr][i] < pos
+          break if tss_coords[chr][i] < pos
+        end
+      end
       if n % 100 == 0
         File.open(output_file, "w") do |f|
           for score in scores
