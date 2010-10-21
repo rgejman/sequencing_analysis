@@ -2,7 +2,13 @@
 require 'constants'
 require 'mysql'
 
-def count_scores(tss_coords, file, output_file)
+def count_scores(tss_coords_file, file, output_file)
+  tss_coords = {}
+  File.readlines(tss_coords_file).each {|line|
+    tokens = line.split("\t")
+    tss_coords[tokens[0]] ||= []
+    tss_coords[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
+  }
   scores = Array.new(2001, 0.0) #including the "0" position there are 2000 positions.
   Open3.popen3("gunzip -c #{file}") { |stdin, stdout, stderr|
     n = 0
@@ -14,6 +20,7 @@ def count_scores(tss_coords, file, output_file)
       end
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
+      last_pos = 0
       for l,r,s in tss_coords[chr]
         if l <= pos and r >= pos
           if s == "+" #strand
@@ -21,8 +28,11 @@ def count_scores(tss_coords, file, output_file)
           else
             scores[r - pos] += t[1].to_f
           end
+          last_pos = pos
+          break
         end
       end
+      tss_coords[chr].delete_if {|coords| coords[0] < pos} #since the wiggle file is sorted, we can delete the earlier coords to save time.
       n+=1
       if n % 100 == 0
         File.open(output_file, "w") do |f|
@@ -54,7 +64,7 @@ res.each_hash do |row|
   final_folder_path           = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}"
   f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/ChIP_normalized.profile.wig.gz"
   b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/background_normalized.profile.wig.gz"
-  
+  tss_coords_file             = "#{USEFUL_BED_FILES}/mm9.tss.2kb.bed"
   next if File.exists? composite_plot_path # the composite plot has already been generated, so this is done.
   next if File.exists? running_file #This is being processed
   next unless File.exists? f_wig_path
@@ -63,19 +73,13 @@ res.each_hash do |row|
   Dir.chdir(TMP_FOLDER)
   `mkdir -p #{tmp_folder}`
   `touch #{running_file}`
-  TSS_COORDS = {}
   
   begin
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
-    File.readlines("#{USEFUL_BED_FILES}/mm9.tss.2kb.bed").each {|line|
-      tokens = line.split("\t")
-      TSS_COORDS[tokens[0]] ||= []
-      TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
-    }
     child1 = fork
-    count_scores(TSS_COORDS, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
+    count_scores(tss_coords_file, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
-    count_scores(TSS_COORDS, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
+    count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
     Process.waitall
     exit if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
