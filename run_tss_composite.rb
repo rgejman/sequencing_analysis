@@ -32,7 +32,7 @@ def count_scores(tss_coords_file, file, output_file)
           break
         end
       end
-      tss_coords[chr].delete_if {|coords| coords[0] < pos} #since the wiggle file is sorted, we can delete the earlier coords to save time.
+      tss_coords[chr].delete_if {|coords| coords[0] < last_pos} #since the wiggle file is sorted, we can delete the earlier coords to save time.
       n+=1
       if n % 100 == 0
         File.open(output_file, "w") do |f|
