@@ -5,11 +5,9 @@ require 'mysql'
 def count_scores(scores, file)
   Open3.popen3(`gunzip -c #{file}`) { |stdin, stdout, stderr|
     while (line = stdout.gets)
-      puts line
       if line[0,5] == "track" #the 1st header line starts with "track"
         h2_line = stdin.gets #variableStep header line
         chr = h2_line.split(" ")[1].split("=")[1] #the chromosome #.
-        puts chr
         next
       end          
       tokens = line.split(" ") #0 = pos, 1 = score
