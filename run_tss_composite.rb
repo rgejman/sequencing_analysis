@@ -37,7 +37,18 @@ def count_scores(tss_coords_file, folder, output_file)
       end
        # this is much faster than using delete_if because we don't have to iterate through every entry in tss_coords
        # and we only delete if we know there is stuff to delete.
-      tss_coords[chr].delete_if{|a| a[1] < pos } if need_to_delete
+      if need_to_delete
+        i = 0
+        len = tss_coords[chr].length
+        while i < len
+          break if pos < tss_coords[chr][i][1]
+          if tss_coords[chr][i][1] < pos
+            tss_coords[chr].delete_at(i)
+            i = i - 1
+          end
+          i = i + 1
+        end
+      end
       if n % 100 == 0
         File.open(output_file, "w") do |f|
           for score in scores
