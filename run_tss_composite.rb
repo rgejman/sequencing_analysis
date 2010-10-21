@@ -68,9 +68,12 @@ res.each_hash do |row|
     count_scores(TSS_COORDS, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
     count_scores(TSS_COORDS, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
-    Process.waitall 
+    Process.waitall
+    exit if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #`mv #{tmp_folder} #{analysis_folder_path}`
   ensure
+    Process.kill child1 unless child1.nil?
+    Process.kill child2 unless child2.nil?
     #FileUtils.rm(tmp_folder,      :force=>true)
     FileUtils.rm(running_file,    :force=>true)
     t1.kill()
