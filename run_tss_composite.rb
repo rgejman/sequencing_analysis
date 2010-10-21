@@ -40,7 +40,7 @@ def count_scores(tss_coords_file, folder, output_file)
       if need_to_delete
         i = 0
         while i < tss_coords[chr].length
-          break if tss_coords[chr][i][0] < pos
+          break if pos < tss_coords[chr][i][1]
           if tss_coords[chr][i][1] < pos
             tss_coords[chr].delete_at(i) 
             i -= 1
