@@ -18,7 +18,6 @@ def count_scores(scores, file)
         end
       end
     end
-    t.join()
   }
 end
 
