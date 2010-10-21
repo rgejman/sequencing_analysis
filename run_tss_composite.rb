@@ -17,10 +17,10 @@ def count_scores(scores, file)
           if s == "+" #strand
             scores[2000 - r - pos] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
           else
-            if scores[r-pos] == nil
+            if scores[r - pos - 1] == nil
               throw "#{l} #{r} #{pos} #{r-pos}"
             end
-            scores[r - pos] += t[1].to_f
+            scores[r - pos-1] += t[1].to_f
           end
         end
       end
