@@ -5,6 +5,7 @@ require 'mysql'
 def count_scores(tss_coords, file, output_file)
   scores = Array.new(2001, 0.0) #including the "0" position there are 2000 positions.
   Open3.popen3("gunzip -c #{file}") { |stdin, stdout, stderr|
+    n = 0
     while (line = stdout.gets) #for some reason gunzip output to stderr via Open3.popen3
       if line[0,1] == "t" #the 1st header line starts with "track"
         h2_line = stdout.gets #variableStep header line
@@ -22,6 +23,14 @@ def count_scores(tss_coords, file, output_file)
           end
         end
       end
+    end
+    n+=1
+    if n % 10000 == 0
+      File.open(output_file, "w") do |f|
+         for score in scores
+           f.puts score
+         end
+       end
     end
   }
    File.open(output_file, "w") do |f|
