@@ -20,19 +20,19 @@ def count_scores(tss_coords_file, file, output_file)
       end
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
-      last_pos = 0
+      next if tss_coords[chr].empty? # skip to the next line if we are passed any genes in the TSS file.
       for l,r,s in tss_coords[chr]
+        break if l > pos # no need to keep looking through the TSS if we have passed the pos.
         if l <= pos and r >= pos
           if s == "+" #strand
             scores[2000 - (r - pos)] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
           else
             scores[r - pos] += t[1].to_f
           end
-          last_pos = pos
           break
         end
       end
-      tss_coords[chr].delete_if {|coords| coords[1] < last_pos} #since the wiggle file is sorted, we can delete the earlier coords to save time.
+      tss_coords[chr].delete_if {|coords| coords[1] < pos} #since the wiggle file is sorted, we can delete the earlier coords to save time.
       n+=1
       if n % 100 == 0
         File.open(output_file, "w") do |f|
