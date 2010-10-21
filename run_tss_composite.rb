@@ -38,6 +38,7 @@ def count_scores(tss_coords_file, folder, output_file)
        # this is much faster than using delete_if because we don't have to iterate through every entry in tss_coords
        # and we only delete if we know there is stuff to delete.
       if need_to_delete
+        i = 0
         while i < tss_coords[chr].length
           if tss_coords[chr][i][1] < pos #while loop so we can get sequential i's.
             tss_coords[chr].delete_at(i) 
