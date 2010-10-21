@@ -75,9 +75,9 @@ res.each_hash do |row|
   begin
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
     child1 = fork
-    count_scores(tss_coords_folder, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
+    count_scores(tss_coords_file, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
-    count_scores(tss_coords_folder, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
+    count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
     Process.waitall
     exit if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
