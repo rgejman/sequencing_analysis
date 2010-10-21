@@ -19,6 +19,7 @@ def count_scores(scores, file)
           else
             if scores[r-pos] == nil
               throw "#{l} #{r} #{pos} #{r-pos}"
+            end
             scores[r - pos] += t[1].to_f
           end
         end
