@@ -2,7 +2,7 @@
 require 'constants'
 require 'mysql'
 
-def count_scores(tss_coords_file, file, output_file)
+def count_scores(tss_coords_file, folder, output_file)
   tss_coords = {}
   File.readlines(tss_coords_file).each {|line|
     tokens = line.split("\t")
@@ -12,6 +12,7 @@ def count_scores(tss_coords_file, file, output_file)
   scores = Array.new(2001, 0.0) #including the "0" position there are 2000 positions.
   lines = `gunzip -c #{file}`
   n = 0
+  Dir.chdir(folder)
   for file in Dir["chr*.wig.gz"]
     chr = file.gsub(".wig.gz","")
     lines = File.readlines(file)
