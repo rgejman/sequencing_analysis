@@ -11,9 +11,9 @@ def count_scores(scores, file)
     end
     while (line = stderr.gets) #for some reason gunzip output to stderr via Open3.popen3
       if line[0,5] == "track" #the 1st header line starts with "track"
-        h2_line = stdin.gets #variableStep header line
+        h2_line = stderr.gets #variableStep header line
         chr = h2_line.split(" ")[1].split("=")[1] #the chromosome #.
-        throw chr
+        throw "#{chr}"
         next
       end          
       tokens = line.split(" ") #0 = pos, 1 = score
