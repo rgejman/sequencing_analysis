@@ -20,10 +20,9 @@ def count_scores(tss_coords_file, folder, output_file)
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
       next if tss_coords[chr].empty? # skip to the next line if we are passed any genes in the TSS file.
-      need_to_delete = false
       for l,r,s in tss_coords[chr]
         if r < pos # no need to keep looking through the TSS if we have passed the pos.
-          need_to_delete = true
+          tss_coords[chr].delete_if{|a| a[1] < pos }
           break
         end
         if l <= pos and r >= pos
@@ -37,7 +36,6 @@ def count_scores(tss_coords_file, folder, output_file)
       end
        # this is much faster than using delete_if because we don't have to iterate through every entry in tss_coords
        # and we only delete if we know there is stuff to delete.
-      tss_coords[chr].delete_if{|a| a[1]< pos} if need_to_delete
       if n % 100 == 0
         File.open(output_file, "w") do |f|
           for score in scores
@@ -84,17 +82,18 @@ res.each_hash do |row|
     count_scores(tss_coords_file, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
     count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
-    Process.waitall
     exit if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
+    Process.waitall()
 
-    #Dir.chdir(tmp_folder)
+    Dir.chdir(tmp_folder)
+    `r --vanilla < #{SCRIPTS_FOLDER}/make_composite_tss_plot.r`
 
 
     #{}`mv #{tmp_folder} #{COMPOSITE_PLOTS_FOLDER}/`
   ensure
-    Process.kill child1 unless child1.nil?
-    Process.kill child2 unless child2.nil?
+    Process.kill "SIGKILL", child1 unless child1.nil?
+    Process.kill "SIGKILL", child2 unless child2.nil?
     FileUtils.rm(tmp_folder,      :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
