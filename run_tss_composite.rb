@@ -4,7 +4,7 @@ require 'mysql'
 
 def count_scores(scores, file)
   throw file
-  Open3.popen3(`gunzip -c #{file}`) { |stdin, stdout, stderr|
+  Open3.popen3("gunzip -c #{file}") { |stdin, stdout, stderr|
     t = Thread.new(stdout) do |terr|
       while (line = terr.gets)
         throw "stdin: #{line}"
