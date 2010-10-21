@@ -14,7 +14,7 @@ def count_scores(scores, file)
       pos = tokens[0].to_i
       for coord_pair in TSS_COORDS[chr]
         if coord_pair[0] <= pos and coord_pair[1] >= pos
-          scores[coord_pair[1] - pos - 2000] += tokens[1]  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
+          scores[coord_pair[1] - pos - 2000] += tokens[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
         end
       end
     end
@@ -51,8 +51,8 @@ res.each_hash do |row|
       TSS_COORDS[tokens[0]] ||= []
       TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i] # i.e. TSS_COORDS[chr] << [start, end]
     }
-    TSS_SCORES_F = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
-    TSS_SCORES_B = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
+    TSS_SCORES_F = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
+    TSS_SCORES_B = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
   
     t1 = Thread.new(TSS_SCORES_F, f_wig_path) do |tss_scores, file|
       count_scores(tss_scores, file)
