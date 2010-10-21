@@ -11,14 +11,11 @@ def count_scores(tss_coords_file, file, output_file)
   }
   scores = Array.new(2001, 0.0) #including the "0" position there are 2000 positions.
   lines = `gunzip -c #{file}`
-  #Open3.popen3("gunzip -c #{file}") { |stdin, stdout, stderr|
-    n = 0
-    for line in lines #while (line = stdout.gets) #for some reason gunzip output to stderr via Open3.popen3
-      if line[0,1] == "t" #the 1st header line starts with "track"
-        h2_line = stdout.gets #variableStep header line
-        chr = h2_line.split(" ")[1].split("=")[1] #the chromosome #.
-        next
-      end
+  n = 0
+  for file in Dir["chr*.wig.gz"]
+    chr = file.gsub(".wig.gz","")
+    lines = File.readlines(file)
+    for line in lines
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
       next if tss_coords[chr].empty? # skip to the next line if we are passed any genes in the TSS file.
@@ -37,18 +34,18 @@ def count_scores(tss_coords_file, file, output_file)
       n+=1
       if n % 100 == 0
         File.open(output_file, "w") do |f|
-           for score in scores
-             f.puts score
-           end
-         end
+          for score in scores
+            f.puts score
+          end
+        end
       end
     end
-  #}
-   File.open(output_file, "w") do |f|
-      for score in scores
-        f.puts score
-      end
+  end
+  File.open(output_file, "w") do |f|
+    for score in scores
+      f.puts score
     end
+  end
 end
 
 
@@ -63,31 +60,31 @@ res.each_hash do |row|
   running_file                = running_file(analysis_folder_name, "make_tss_composite")
   tmp_folder                  = "#{TMP_FOLDER}/#{analysis_folder_name}"
   final_folder_path           = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}"
-  f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/ChIP_normalized.profile.wig.gz"
-  b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/background_normalized.profile.wig.gz"
+  f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/ChIP_normalized"
+  b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/background_normalized"
   tss_coords_file             = "#{USEFUL_BED_FILES}/mm9.tss.2kb.bed"
   next if File.exists? composite_plot_path # the composite plot has already been generated, so this is done.
   next if File.exists? running_file #This is being processed
   next unless File.exists? f_wig_path
   next unless File.exists? b_wig_path
-  
+
   Dir.chdir(TMP_FOLDER)
   `mkdir -p #{tmp_folder}`
   `touch #{running_file}`
-  
+
   begin
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
     child1 = fork
-    count_scores(tss_coords_file, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
+    count_scores(tss_coords_folder, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
-    count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
+    count_scores(tss_coords_folder, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
     Process.waitall
     exit if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
-    
+
     #Dir.chdir(tmp_folder)
-    
-    
+
+
     #{}`mv #{tmp_folder} #{COMPOSITE_PLOTS_FOLDER}/`
   ensure
     Process.kill child1 unless child1.nil?
