@@ -17,6 +17,8 @@ def count_scores(scores, file)
           if s == "+" #strand
             scores[2000 - r - pos] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
           else
+            if scores[r-pos] == nil
+              throw "#{l} #{r} #{pos} #{r-pos}"
             scores[r - pos] += t[1].to_f
           end
         end
@@ -46,7 +48,7 @@ res.each_hash do |row|
   next unless File.exists? b_wig_path
   begin
     Dir.chdir(TMP_FOLDER)
-    `mkdir #{tmp_folder}`
+    `mkdir -p #{tmp_folder}`
     `touch #{running_file}`
     TSS_COORDS = {}
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
@@ -55,7 +57,6 @@ res.each_hash do |row|
       TSS_COORDS[tokens[0]] ||= []
       TSS_COORDS[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
     }
-    puts "TSS_COORDS init'd"
     TSS_SCORES_F = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
     TSS_SCORES_B = Array.new(2000, 0.0) #Initialized w/ 2000 "0" objects
   
