@@ -4,14 +4,9 @@ require 'mysql'
 
 def count_scores(scores, file)
   Open3.popen3("gunzip -c #{file}") { |stdin, stdout, stderr|
-    t = Thread.new(stdout) do |terr|
-      while (line = terr.gets)
-        puts "stderr: #{line}"
-      end
-    end
-    while (line = stderr.gets) #for some reason gunzip output to stderr via Open3.popen3
+    while (line = stdin.gets) #for some reason gunzip output to stderr via Open3.popen3
       if line[0,1] == "t" #the 1st header line starts with "track"
-        h2_line = stderr.gets #variableStep header line
+        h2_line = stdin.gets #variableStep header line
         chr = h2_line.split(" ")[1].split("=")[1] #the chromosome #.
         next
       end
