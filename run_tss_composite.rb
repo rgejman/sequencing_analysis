@@ -5,9 +5,11 @@ require 'mysql'
 def count_scores(scores, file)
   Open3.popen3(`gunzip -c #{file}`) { |stdin, stdout, stderr|
     while (line = stdout.gets)
+      puts line
       if line[0,5] == "track" #the 1st header line starts with "track"
         h2_line = stdin.gets #variableStep header line
         chr = h2_line.split(" ")[1].split("=")[1] #the chromosome #.
+        puts chr
         next
       end          
       tokens = line.split(" ") #0 = pos, 1 = score
@@ -53,14 +55,14 @@ res.each_hash do |row|
     TSS_SCORES_F = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
     TSS_SCORES_B = Array.new(2000, 0) #Initialized w/ 2000 "0" objects
   
-    t1 = Thread.new(TSS_SCORES_F, f_wig_path) do |tss_scores, file|
+    #t1 = Thread.new(TSS_SCORES_F, f_wig_path) do |tss_scores, file|
       count_scores(tss_scores, file)
-    end
-    t2 = Thread.new(TSS_SCORES_B, b_wig_path) do |tss_scores, file|
+    #end
+    #t2 = Thread.new(TSS_SCORES_B, b_wig_path) do |tss_scores, file|
       count_scores(tss_scores, file)
-    end
-    t1.join()
-    t2.join()
+    #end
+    #t1.join()
+    #t2.join()
     pp TSS_SCORES_F
     pp TSS_SCORES_B
     
