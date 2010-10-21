@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'daemons'
 require 'fileutils'
+require 'pp'
 
 CONFIG = YAML.load_file("config.yml")
 
@@ -18,13 +19,14 @@ LOG_FOLDER              = "#{BASE_FOLDER}/log"
 TMP_FOLDER              = "#{BASE_FOLDER}/tmp"
 MACS_FOLDER             = "#{BASE_FOLDER}/macs"
 QUEST_FOLDER            = "#{BASE_FOLDER}/quest"
-
+COMPOSITE_PLOTS_FOLDER  = "#{BASE_FOLDER}/composite_plots"
 
 MAX_FORKS               = CONFIG["max_forks"]
 
 GENOMES_FOLDER          = "#{GENOMICS_FOLDER}/igv_tools_genomes"
 CEAS_ANNOTATION_TABLES  = "#{GENOMICS_FOLDER}/ceas_annotation_tables"
 QUEST_GENOME_TABLES     = "#{GENOMICS_FOLDER}/QuEST_genome_table_files/"
+USEFUL_BED_FILES        = "#{GENOMICS_FOLDER}/useful_bed_files/"
 
 GENOME                  = "mm9"
 
