@@ -10,34 +10,59 @@ def count_scores(tss_coords_file, folder, output_file)
     tss_coords[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
   }
   scores = Array.new(2001, 0.0) #including the "0" position there are 2000 positions.
-  n = 0
+  #n = 0
   Dir.chdir(folder)
-  for file in Dir["chr*.wig.gz"]
-    chr = file.gsub(".wig.gz","")
-    next if tss_coords[chr].nil? or tss_coords[chr].empty?
-    lines = `gunzip -c #{file}`
-    for line in lines
-      n+=1
-      t = line.split(" ") #0 = pos, 1 = score
-      pos = t[0].to_i
-      break if tss_coords[chr].empty? # ignore the rest of the file if we are passed any genes in the TSS file.
-      for l,r,s in tss_coords[chr]
-        if r < pos # no need to keep looking through the TSS if we have passed the pos AND we have TSSes to delete.
-          tss_coords[chr].delete_if{|a| a[1] < pos }
-          break
-        end
-        if l <= pos and r >= pos
-          score = t[1].to_f
-          if s == "+" #strand
-            scores[2000 - (r - pos)] += score  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
-          else
-            scores[r - pos] += score
+  child_id = nil
+  files = Dir["chr*.wig.gz"]
+  pipes = []
+  for file in files
+    rd, wr = IO.pipe # only the parent should do this.
+    child_id = fork #fork the process
+    if !child_id.nil? #if we are the parent
+      pipes << [rd,wr]
+    else
+      chr = file.gsub(".wig.gz","")
+      next if tss_coords[chr].nil? or tss_coords[chr].empty?
+      lines = `gunzip -c #{file}`
+      for line in lines
+        #n+=1
+        t = line.split(" ") #0 = pos, 1 = score
+        pos = t[0].to_i
+        break if tss_coords[chr].empty? # ignore the rest of the file if we are passed any genes in the TSS file.
+        for l,r,s in tss_coords[chr]
+          if r < pos # no need to keep looking through the TSS if we have passed the pos AND we have TSSes to delete.
+            tss_coords[chr].delete_if{|a| a[1] < pos }
+            break
           end
-          #don't break here because there may be multiple TSS for which this pos matches.
+          if l <= pos and r >= pos
+            score = t[1].to_f
+            if s == "+" #strand
+              scores[2000 - (r - pos)] += score  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
+            else
+              scores[r - pos] += score
+            end
+            #don't break here because there may be multiple TSS for which this pos matches.
+          end
         end
+      end
+      if child_id.nil? # if we are the child
+        rd.close
+        wr.write Masrshal.dump(scores)
+        wr.close
+        exit(0)
       end
     end
   end
+  #only parent should reach here
+  for rd,wr in pipes
+    wr.close
+    loc_scores = Marshal.load(rd.read)
+    rd.close
+    for i in 0...scores
+      scores[i] += loc_scores[i]
+    end
+  end
+
   File.open(output_file, "w") do |f|
     for score in scores
       f.puts score
