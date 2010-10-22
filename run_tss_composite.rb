@@ -99,6 +99,7 @@ res.each_hash do |row|
   next unless File.exists? b_wig_path
   puts "Running #{f_name}_#{b_name}"
   begin
+    puts running_file
     `mkdir -p #{final_folder_path}`
     Dir.chdir(final_folder_path)
     `touch #{running_file}`
