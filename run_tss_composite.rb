@@ -98,8 +98,8 @@ res.each_hash do |row|
   next unless File.exists? f_wig_path
   next unless File.exists? b_wig_path
 
-  Dir.chdir(final_folder_path)
   `mkdir -p #{COMPOSITE_PLOTS_FOLDER}`
+  Dir.chdir(final_folder_path)
   `touch #{running_file}`
 
   begin
