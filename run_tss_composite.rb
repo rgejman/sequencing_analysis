@@ -21,6 +21,7 @@ def count_scores(tss_coords_file, folder, output_file)
     if !child_id.nil? #if we are the parent
       pipes << [rd,wr]
     else
+      rd.close
       chr = file.gsub(".wig.gz","")
       next if tss_coords[chr].nil? or tss_coords[chr].empty?
       lines = `gunzip -c #{file}`
@@ -44,25 +45,20 @@ def count_scores(tss_coords_file, folder, output_file)
             #don't break here because there may be multiple TSS for which this pos matches.
           end
         end
+
       end
-      if child_id.nil? # if we are the child
-        rd.close
-        data = Marshal.dump(scores)
-        wr.print [data.length].pack('l')
-        wr.print data
-        wr.close
-        exit(0)
-      end
+      wr.print scores.join(",")
+      wr.close
+      exit(0)
     end
   end
   #only parent should reach here
   Process.waitall()
   for rd,wr in pipes
     wr.close
-    data = rd.read.unpack('l').shift
-    data = rd.read( data )
-    loc_scores = Marshal.load(data)
+    data = rd.read
     rd.close
+    loc_scores = data.split(",").collect{|s| s.to_f}
     for i in 0...scores
       scores[i] += loc_scores[i]
     end
