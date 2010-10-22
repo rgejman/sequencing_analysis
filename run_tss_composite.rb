@@ -98,11 +98,13 @@ res.each_hash do |row|
   next unless File.exists? f_wig_path
   next unless File.exists? b_wig_path
   puts "Running #{f_name}_#{b_name}"
-  puts running_file
-  `mkdir -p #{final_folder_path}`
-  Dir.chdir(final_folder_path)
-  `touch #{running_file}`
+
   begin
+    `mkdir -p #{final_folder_path}`
+    Dir.chdir(final_folder_path)
+    `touch #{running_file}`
+    child1=nil
+    child2=nil
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
     child1 = fork
     count_scores(tss_coords_file, f_wig_path, "#{final_folder_path}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
@@ -117,7 +119,7 @@ res.each_hash do |row|
     `r --vanilla < #{SCRIPTS_FOLDER}/make_composite_tss_plot.r`
 
   ensure
-    FileUtils.rm(running_file,    :force=>true)
+    FileUtils.rm(running_file,    :force=>true) unless child1.nil? or child2.nil?
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
 end
