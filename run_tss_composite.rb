@@ -77,7 +77,7 @@ res.each_hash do |row|
     exit(0) if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
     a = Process.waitall()
-    raise "Forked process failed." if a.any?{|s| !s.success? }
+    raise "Forked process failed." if a.any?{|uid, ps| !ps.success? }
 
     Dir.chdir(tmp_folder)
     `r --vanilla < #{SCRIPTS_FOLDER}/make_composite_tss_plot.r`
