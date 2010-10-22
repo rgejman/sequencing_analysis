@@ -19,7 +19,7 @@ def count_scores(tss_coords_file, folder, output_file)
       n+=1
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
-      next if tss_coords[chr].empty? # skip to the next line if we are passed any genes in the TSS file.
+      break if tss_coords[chr].empty? # ignore the rest of the file if we are passed any genes in the TSS file.
       for l,r,s in tss_coords[chr]
         if r < pos # no need to keep looking through the TSS if we have passed the pos.
           tss_coords[chr].delete_if{|a| a[1] < pos }
@@ -82,13 +82,13 @@ res.each_hash do |row|
     count_scores(tss_coords_file, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
     count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
-    exit if child1.nil? or child2.nil? #if you are either one of the children, exit here.
+    exit(0) if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
     Process.waitall()
 
     Dir.chdir(tmp_folder)
     `r --vanilla < #{SCRIPTS_FOLDER}/make_composite_tss_plot.r`
-
+    Dir.chdir("/")
 
     `mv #{tmp_folder} #{COMPOSITE_PLOTS_FOLDER}/`
   ensure
