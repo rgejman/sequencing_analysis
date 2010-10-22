@@ -46,9 +46,9 @@ def count_scores(tss_coords_file, folder, output_file)
             #don't break here because there may be multiple TSS for which this pos matches.
           end
         end
-
       end
     end
+    break
   end
   if child_id.nil?
     wr.print scores.join(",")
