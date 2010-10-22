@@ -20,6 +20,7 @@ def count_scores(tss_coords_file, folder, output_file)
     child_id = fork #fork the process
     if !child_id.nil? #if we are the parent
       pipes << [rd,wr]
+      `echo fork for #{file} >> /media/bigdisk/sequencing/tmp/out.log`
     else
       rd.close
       chr = file.gsub(".wig.gz","")
@@ -53,6 +54,8 @@ def count_scores(tss_coords_file, folder, output_file)
     end
   end
   #only parent should reach here
+  `echo waiting for procs to finish >> /media/bigdisk/sequencing/tmp/out.log`
+  
   Process.waitall()
   for rd,wr in pipes
     wr.close
