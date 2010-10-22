@@ -2,14 +2,9 @@
 require 'constants'
 require 'mysql'
 
+LENGTH = 2001
+
 def count_scores(tss_coords_file, folder, output_file)
-  tss_coords = {}
-  File.readlines(tss_coords_file).each {|line|
-    tokens = line.split("\t")
-    tss_coords[tokens[0]] ||= []
-    tss_coords[tokens[0]] << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS[chr] << [start, end, strand]
-  }
-  scores = Array.new(2001, 0.0) #including the "0" position there are 2000 positions.
   #n = 0
   Dir.chdir(folder)
   child_id = nil
@@ -24,16 +19,22 @@ def count_scores(tss_coords_file, folder, output_file)
     else
       rd.close
       chr = file.gsub(".wig.gz","")
-      break if tss_coords[chr].nil? or tss_coords[chr].empty?
+      scores = Array.new(LENGTH, 0.0) #including the "0" position there are 2000 positions.
+      tss_coords = []
+      File.readlines(tss_coords_file).each {|line|
+        tokens = line.split("\t")
+        next unless tokens[0] == chr
+        tss_coords << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS << [start, end, strand]
+      }
       lines = `gunzip -c #{file}`
       for line in lines
         #n+=1
         t = line.split(" ") #0 = pos, 1 = score
         pos = t[0].to_i
-        break if tss_coords[chr].empty? # ignore the rest of the file if we are passed any genes in the TSS file.
-        for l,r,s in tss_coords[chr]
+        break if tss_coords.empty? # ignore the rest of the file if we are passed any genes in the TSS file.
+        for l,r,s in tss_coords
           if r < pos # no need to keep looking through the TSS if we have passed the pos AND we have TSSes to delete.
-            tss_coords[chr].delete_if{|a| a[1] < pos }
+            tss_coords.delete_if{|a| a[1] < pos }
             break
           end
           if l <= pos and r >= pos
@@ -51,13 +52,14 @@ def count_scores(tss_coords_file, folder, output_file)
     end
   end
   if child_id.nil?
+    `echo child: #{loc_scores.join(',')} >> /media/bigdisk/sequencing/tmp/out.log`
     wr.print scores.join(",")
     wr.close
     exit(0)
   end
   #only parent should reach here
   `echo waiting for procs to finish >> /media/bigdisk/sequencing/tmp/out.log`
-  
+  scores = Array.new(LENGTH, 0.0)
   Process.waitall()
   for rd,wr in pipes
     wr.close
