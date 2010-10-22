@@ -47,7 +47,7 @@ def count_scores(tss_coords_file, folder, output_file)
       end
       if child_id.nil? # if we are the child
         rd.close
-        wr.write Masrshal.dump(scores)
+        wr.write Marshal.dump(scores)
         wr.close
         exit(0)
       end
