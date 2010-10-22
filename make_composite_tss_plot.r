@@ -2,8 +2,9 @@ f = as.list(read.table("scores_f.txt"))$V1
 b = as.list(read.table("scores_b.txt"))$V1
 
 x = as.list(seq(-1000,1000))
-pdf("tss.pdf")
-plot(x=x,y=f, col="red", pch=20, cex=0.5)
+filename = paste(tail(strsplit(getwd(),"/")[[1]],1),"tss.pdf", sep=" ")
+pdf(filename)
+plot(x=x,y=f, col="red", pch=20, cex=0.5, xlab="Distance from TSS", ylab="Cumulative Score")
 points(x=x,y=b, pch=20, cex=0.5)
 
 legend_v = c("ChIP", "Control")
