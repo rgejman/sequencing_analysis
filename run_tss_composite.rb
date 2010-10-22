@@ -89,7 +89,6 @@ res.each_hash do |row|
   quest_analysis_folder_path  = "#{QUEST_FOLDER}/#{analysis_folder_name}"
   composite_plot_path         = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}/tss.png"
   running_file                = running_file(analysis_folder_name, "make_tss_composite")
-  tmp_folder                  = "#{TMP_FOLDER}/#{analysis_folder_name}"
   final_folder_path           = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}"
   f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/ChIP_normalized"
   b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/background_normalized"
@@ -99,16 +98,16 @@ res.each_hash do |row|
   next unless File.exists? f_wig_path
   next unless File.exists? b_wig_path
 
-  Dir.chdir(TMP_FOLDER)
-  `mkdir -p #{tmp_folder}`
+  Dir.chdir(final_folder_path)
+  `mkdir -p #{COMPOSITE_PLOTS_FOLDER}`
   `touch #{running_file}`
 
   begin
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
     child1 = fork
-    count_scores(tss_coords_file, f_wig_path, "#{tmp_folder}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
+    count_scores(tss_coords_file, f_wig_path, "#{final_folder_path}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
-    count_scores(tss_coords_file, b_wig_path, "#{tmp_folder}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
+    count_scores(tss_coords_file, b_wig_path, "#{final_folder_path}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
     exit(0) if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
     a = Process.waitall()
@@ -117,7 +116,6 @@ res.each_hash do |row|
     Dir.chdir(tmp_folder)
     `r --vanilla < #{SCRIPTS_FOLDER}/make_composite_tss_plot.r`
 
-    `mv -f #{tmp_folder} #{COMPOSITE_PLOTS_FOLDER}/`
   ensure
     FileUtils.rm(tmp_folder,      :force=>true)
     FileUtils.rm(running_file,    :force=>true)
