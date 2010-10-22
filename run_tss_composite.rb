@@ -52,7 +52,7 @@ def count_scores(tss_coords_file, folder, output_file)
     end
   end
   if child_id.nil?
-    `echo child #{chr}: #{scores.inject(0){|a,b|a+b}} >> /media/bigdisk/sequencing/tmp/out.log`
+    `echo #{output_file.split("/").last} #{chr}: #{scores.inject(0){|a,b|a+b}} >> /media/bigdisk/sequencing/tmp/out.log`
     wr.print scores.join(",")
     wr.close
     exit(0)
