@@ -59,6 +59,7 @@ def count_scores(tss_coords_file, folder, output_file)
     data = rd.read
     rd.close
     loc_scores = data.split(",").collect{|s| s.to_f}
+    `#{echo loc_scores.join(',')} >> /media/bigdisk/sequencing/tmp/out.log`
     for i in 0...scores
       scores[i] += loc_scores[i]
     end
