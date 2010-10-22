@@ -56,7 +56,7 @@ def count_scores(tss_coords_file, folder, output_file)
   #only parent should reach here
   for rd,wr in pipes
     wr.close
-    loc_scores = Marshal.load(result.unpack("m")
+    loc_scores = Marshal.load(result.unpack("m"))
     rd.close
     for i in 0...scores
       scores[i] += loc_scores[i]
