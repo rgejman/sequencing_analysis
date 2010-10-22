@@ -97,6 +97,7 @@ res.each_hash do |row|
   next if File.exists? running_file #This is being processed
   next unless File.exists? f_wig_path
   next unless File.exists? b_wig_path
+  puts "Running #{f_name}_#{b_name}"
   begin
     `mkdir -p #{final_folder_path}`
     Dir.chdir(final_folder_path)
