@@ -66,7 +66,6 @@ def count_scores(tss_coords_file, folder, output_file)
     data = rd.read
     rd.close
     loc_scores = data.split(",").collect{|s| s.to_f}
-    `echo #{loc_scores.join(',')} >> /media/bigdisk/sequencing/tmp/out.log`
     for i in 0...scores.length
       scores[i] += loc_scores[i]
     end
@@ -90,8 +89,8 @@ res.each_hash do |row|
   composite_plot_path         = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}/#{analysis_folder_name} tss.png"
   running_file                = running_file(analysis_folder_name, "make_tss_composite")
   final_folder_path           = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}"
-  f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/ChIP_normalized"
-  b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/background_normalized"
+  f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/ChIP_unnormalized"
+  b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/background_unnormalized"
   tss_coords_file             = "#{USEFUL_BED_FILES}/mm9.tss.2kb.bed"
   next if File.exists? composite_plot_path # the composite plot has already been generated, so this is done.
   next if File.exists? running_file #This is being processed
