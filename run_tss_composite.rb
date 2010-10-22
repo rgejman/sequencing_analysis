@@ -106,7 +106,7 @@ res.each_hash do |row|
     child1 = fork
     count_scores(tss_coords_file, f_wig_path, "#{final_folder_path}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
     child2 = fork unless child1.nil? # fork if we are the parent.
-    count_scores(tss_coords_file, b_wig_path, "#{final_folder_path}/scores_b.txt") if child2.nil? # child2 is nil if the thread is the 2nd fork.
+    count_scores(tss_coords_file, b_wig_path, "#{final_folder_path}/scores_b.txt") if child2.nil? and child1.nil? # child2 is nil if the thread is the 2nd fork.
     exit(0) if child1.nil? or child2.nil? #if you are either one of the children, exit here.
     #control script continues here.
     a = Process.waitall()
