@@ -87,7 +87,7 @@ res.each_hash do |row|
   b_name                      = row["background"]
   analysis_folder_name        = f_name + "_" + b_name
   quest_analysis_folder_path  = "#{QUEST_FOLDER}/#{analysis_folder_name}"
-  composite_plot_path         = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}/tss.png"
+  composite_plot_path         = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}/#{analysis_folder_name} tss.png"
   running_file                = running_file(analysis_folder_name, "make_tss_composite")
   final_folder_path           = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}"
   f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/ChIP_normalized"
@@ -97,12 +97,11 @@ res.each_hash do |row|
   next if File.exists? running_file #This is being processed
   next unless File.exists? f_wig_path
   next unless File.exists? b_wig_path
-
-  `mkdir -p #{final_folder_path}`
-  Dir.chdir(final_folder_path)
-  `touch #{running_file}`
-
   begin
+    `mkdir -p #{final_folder_path}`
+    Dir.chdir(final_folder_path)
+    `touch #{running_file}`
+
     # Put the TSS coordinates into a data structure (array of start/end pairs in hashmap keyed on chromosome)
     child1 = fork
     count_scores(tss_coords_file, f_wig_path, "#{final_folder_path}/scores_f.txt") if child1.nil? # child1 is nil if the thread is the child.
