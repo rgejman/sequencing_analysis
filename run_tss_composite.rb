@@ -24,7 +24,7 @@ def count_scores(tss_coords_file, folder, output_file)
     else
       rd.close
       chr = file.gsub(".wig.gz","")
-      next if tss_coords[chr].nil? or tss_coords[chr].empty?
+      break if tss_coords[chr].nil? or tss_coords[chr].empty?
       lines = `gunzip -c #{file}`
       for line in lines
         #n+=1
