@@ -27,12 +27,13 @@ def count_scores(tss_coords_file, folder, output_file)
           break
         end
         if l <= pos and r >= pos
+          score = t[1].to_f
           if s == "+" #strand
-            scores[2000 - (r - pos)] += t[1].to_f  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
+            scores[2000 - (r - pos)] += score  # get the pos relative to the coord_pairs (0-based) and add the score to this pos.
           else
-            scores[r - pos] += t[1].to_f
+            scores[r - pos] += score
           end
-          break
+          #don't break here because there may be multiple TSS for which this pos matches.
         end
       end
     end
