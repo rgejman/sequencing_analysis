@@ -47,7 +47,7 @@ def count_scores(tss_coords_file, folder, output_file)
       end
       if child_id.nil? # if we are the child
         rd.close
-        wr.write Marshal.dump(scores)
+        wr.puts Marshal.dump(scores).pack("m")
         wr.close
         exit(0)
       end
@@ -56,7 +56,7 @@ def count_scores(tss_coords_file, folder, output_file)
   #only parent should reach here
   for rd,wr in pipes
     wr.close
-    loc_scores = Marshal.load(rd.read)
+    loc_scores = Marshal.load(result.unpack("m")
     rd.close
     for i in 0...scores
       scores[i] += loc_scores[i]
