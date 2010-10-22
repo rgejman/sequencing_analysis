@@ -47,8 +47,8 @@ def count_scores(tss_coords_file, folder, output_file)
           end
         end
       end
+      break
     end
-    break
   end
   if child_id.nil?
     wr.print scores.join(",")
