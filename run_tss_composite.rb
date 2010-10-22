@@ -14,16 +14,16 @@ def count_scores(tss_coords_file, folder, output_file)
   Dir.chdir(folder)
   for file in Dir["chr*.wig.gz"]
     chr = file.gsub(".wig.gz","")
+    next if tss_coords[chr].nil? or tss_coords[chr].empty?
     lines = `gunzip -c #{file}`
     for line in lines
       n+=1
       t = line.split(" ") #0 = pos, 1 = score
       pos = t[0].to_i
       break if tss_coords[chr].empty? # ignore the rest of the file if we are passed any genes in the TSS file.
-      delete = false
       for l,r,s in tss_coords[chr]
         if r < pos # no need to keep looking through the TSS if we have passed the pos AND we have TSSes to delete.
-          delete = true
+          tss_coords[chr].delete_if{|a| a[1] < pos }
           break
         end
         if l <= pos and r >= pos
@@ -35,7 +35,6 @@ def count_scores(tss_coords_file, folder, output_file)
           break
         end
       end
-      tss_coords[chr].delete_if{|a| a[1] < pos } if delete
     end
   end
   File.open(output_file, "w") do |f|
