@@ -113,11 +113,10 @@ res.each_hash do |row|
     a = Process.waitall()
     raise "Forked process failed." if a.any?{|uid, ps| !ps.success? }
 
-    Dir.chdir(tmp_folder)
+    Dir.chdir(final_folder_path)
     `r --vanilla < #{SCRIPTS_FOLDER}/make_composite_tss_plot.r`
 
   ensure
-    FileUtils.rm(tmp_folder,      :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
