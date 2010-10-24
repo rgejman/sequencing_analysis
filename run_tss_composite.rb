@@ -22,7 +22,7 @@ def count_scores(tss_coords_file, folder, output_file)
       scores = Array.new(LENGTH, 0.0) #including the "0" position there are 2000 positions.
       tss_coords = []
       File.readlines(tss_coords_file).each {|line|
-        tokens = line.split("\t")
+        tokens = line.chomp.split("\t")
         next unless tokens[0] == chr
         tss_coords << [tokens[1].to_i, tokens[2].to_i, tokens[5]] # i.e. TSS_COORDS << [start, end, strand]
       }
@@ -86,11 +86,11 @@ res.each_hash do |row|
   b_name                      = row["background"]
   analysis_folder_name        = f_name + "_" + b_name
   quest_analysis_folder_path  = "#{QUEST_FOLDER}/#{analysis_folder_name}"
-  composite_plot_path         = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}/#{analysis_folder_name} tss.png"
+  composite_plot_path         = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}/#{analysis_folder_name} tss.pdf"
   running_file                = running_file(analysis_folder_name, "make_tss_composite")
   final_folder_path           = "#{COMPOSITE_PLOTS_FOLDER}/#{analysis_folder_name}"
-  f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/ChIP_unnormalized"
-  b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/background_unnormalized"
+  f_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/ChIP_normalized"
+  b_wig_path                  = "#{quest_analysis_folder_path}/tracks/wig_profiles/by_chr/background_normalized"
   tss_coords_file             = "#{USEFUL_BED_FILES}/mm9.tss.2kb.bed"
   next if File.exists? composite_plot_path # the composite plot has already been generated, so this is done.
   next if File.exists? running_file #This is being processed
