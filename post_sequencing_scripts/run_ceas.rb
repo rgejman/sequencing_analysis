@@ -1,5 +1,5 @@
+#!/usr/bin/env ruby -wKU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
-
 require 'constants'
 
 ## ASK SCOTT: Does CEAS not extend the input alignments, like igvtools can do?
