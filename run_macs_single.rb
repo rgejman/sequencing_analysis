@@ -4,7 +4,7 @@ require 'mysql'
 Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   next unless file =~ /\.sorted.bam$/
   file_path             = "#{ALIGNMENTS_FOLDER}/#{file}"
-  analysis_folder_name  = f_name
+  analysis_folder_name  = file.gsub(".sorted.bam","")
   analysis_folder_path  = "#{MACS_FOLDER}/#{analysis_folder_name}"
   next if File.exists? analysis_folder_path #this has already been analyzed.
   next unless File.exists? "#{file_path}"
@@ -22,7 +22,7 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   `mkdir #{analysis_folder_path}`
   Dir.chdir(TMP_FOLDER)
   begin
-    puts `macs14 -t #{f_path} --g mm -n #{analysis_folder_name}`
+    puts `macs14 -t #{file_path} --g mm -n #{analysis_folder_name}`
     `r --vanilla < #{model_file}`
     for ext in extensions
       `mv #{analysis_folder_name}_#{ext} #{output_folder}/`
