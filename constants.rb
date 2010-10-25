@@ -2,8 +2,8 @@ require 'rubygems'
 require 'daemons'
 require 'fileutils'
 require 'pp'
-
-CONFIG = YAML.load_file("config.yml")
+path = File.expand_path(File.dirname(__FILE__))
+CONFIG = YAML.load_file("#{path}/config.yml")
 
 
 SCRIPTS_FOLDER          = CONFIG["scripts_folder"]
