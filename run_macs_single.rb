@@ -34,7 +34,6 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
        FileUtils.rm("#{analysis_folder_name}_#{ext}", :force=>true)
      end
     FileUtils.rm(running_file,    :force=>true)
-    conn.close
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
 end
