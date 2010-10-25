@@ -4,7 +4,7 @@ require 'constants'
 ARGS_REQUIRED = 2
 unless ARGV.length == ARGS_REQUIRED
   puts "Usage:\t\tget_enriched_regions.rb region_file enrichment_file"
-  files = Dir.glob("/Users/rgejman/genomics/useful_bed_files/*.bed").collect {|f| f.split("/").last}
+  files = Dir.glob("#{USEFUL_BED_FILES}/*.bed").collect {|f| f.split("/").last}
   puts ""
   puts "Region files:\t#{files.join("\n\t\t")}"
   exit
