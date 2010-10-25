@@ -13,7 +13,7 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   complete_file       = "#{output_folder}/#{analysis_folder_name}_model.pdf"
   next if File.exists? complete_file # We use the model pdf as evidence that the run has completed.
   next if File.exists? running_file #This is being processed
-  model_file          = "#{TMP_FOLDER}/#{analysis_folder_name}_model.r"
+  model_file          = "#{MACS_FOLDER}/#{analysis_folder_name}_model.r"
     
   puts analysis_folder_name
   `touch #{running_file}`
