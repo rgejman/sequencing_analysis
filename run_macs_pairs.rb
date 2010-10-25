@@ -19,25 +19,17 @@ res.each_hash do |row|
   next if File.exists? complete_file # We use the model pdf as evidence that the run has completed.
   next if File.exists? running_file #This is being processed
   model_file          = "#{TMP_FOLDER}/#{analysis_folder_name}_model.r"
-  
-  extensions = ["summits.bed", "negative_peaks.xls", "peaks.xls", "peaks.bed", "model.r", "model.pdf"]
-  
+    
   puts analysis_folder_name
-  Dir.chdir(TMP_FOLDER)
   `touch #{running_file}`
   `mkdir #{analysis_folder_path}`
+  Dir.chdir(output_folder)
   begin
     puts `macs14 -t #{f_path} -c #{b_path} --g mm -n #{analysis_folder_name}`
     `r --vanilla < #{model_file}`
-    for ext in extensions
-      `mv #{analysis_folder_name}_#{ext} #{output_folder}/`
-    end
   rescue => e
     throw e
   ensure
-    for ext in extensions
-       FileUtils.rm("#{analysis_folder_name}_#{ext}", :force=>true)
-     end
     FileUtils.rm(running_file,    :force=>true)
     conn.close
   end

@@ -14,25 +14,17 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   next if File.exists? complete_file # We use the model pdf as evidence that the run has completed.
   next if File.exists? running_file #This is being processed
   model_file          = "#{TMP_FOLDER}/#{analysis_folder_name}_model.r"
-  
-  extensions = ["peaks.xls", "peaks.bed", "model.r", "model.pdf"]
-  
+    
   puts analysis_folder_name
   `touch #{running_file}`
   `mkdir #{analysis_folder_path}`
-  Dir.chdir(TMP_FOLDER)
+  Dir.chdir(analysis_folder_path)
   begin
     puts `macs14 -t #{file_path} --g mm -n #{analysis_folder_name}`
     `r --vanilla < #{model_file}`
-    for ext in extensions
-      `mv #{analysis_folder_name}_#{ext} #{output_folder}/`
-    end
   rescue => e
     throw e
   ensure
-    for ext in extensions
-       FileUtils.rm("#{analysis_folder_name}_#{ext}", :force=>true)
-     end
     FileUtils.rm(running_file,    :force=>true)
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
