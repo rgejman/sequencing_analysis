@@ -15,7 +15,7 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   next if File.exists? running_file #This is being processed
   model_file          = "#{TMP_FOLDER}/#{analysis_folder_name}_model.r"
   
-  extensions = ["summits.bed", "negative_peaks.xls", "peaks.xls", "peaks.bed", "model.r", "model.pdf"]
+  extensions = ["peaks.xls", "peaks.bed", "model.r", "model.pdf"]
   
   puts analysis_folder_name
   `touch #{running_file}`
