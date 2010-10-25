@@ -1,3 +1,4 @@
+$: << File.expand_path(File.dirname(__FILE__) + "../")
 require 'constants'
 EXTEND_LENGTH = 100
 

@@ -1,3 +1,5 @@
+$: << File.expand_path(File.dirname(__FILE__) + "../")
+
 require 'constants'
 Dir.foreach("#{FASTQ_FOLDER}/") do |file|
   next unless file =~ /\.txt$/

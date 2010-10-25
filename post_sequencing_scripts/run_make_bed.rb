@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby -KU
+$: << File.expand_path(File.dirname(__FILE__) + "../")
 require 'constants'
 Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   running_file  = running_file(file, "make_bed")
