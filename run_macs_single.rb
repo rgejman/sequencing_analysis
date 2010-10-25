@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby -KU
 require 'constants'
-require 'mysql'
+
 Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   next unless file =~ /\.sorted.bam$/
   file_path             = "#{ALIGNMENTS_FOLDER}/#{file}"
@@ -38,4 +38,3 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
 end
-conn.close
