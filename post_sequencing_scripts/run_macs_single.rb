@@ -23,6 +23,7 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   begin
     puts `macs14 -t #{file_path} --g mm -n #{analysis_folder_name}`
     `r --vanilla < #{model_file}`
+    `intersectBed -u -wa -a #{USEFUL_BED_FILES}/mm9.tss.2kb.bed -b #{analysis_folder_name}_peaks.bed > #{analysis_folder_name}_peaks.overlap_tss.bed`
   rescue => e
     throw e
   ensure

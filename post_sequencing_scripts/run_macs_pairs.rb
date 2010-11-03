@@ -28,6 +28,7 @@ res.each_hash do |row|
   begin
     puts `macs14 -t #{f_path} -c #{b_path} --g mm -n #{analysis_folder_name}`
     `r --vanilla < #{model_file}`
+    `intersectBed -u -wa -a #{USEFUL_BED_FILES}/mm9.tss.2kb.bed -b #{analysis_folder_name}_peaks.bed > #{analysis_folder_name}_peaks.intersect_tss.bed`
   rescue => e
     throw e
   ensure

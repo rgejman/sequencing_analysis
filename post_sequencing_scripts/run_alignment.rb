@@ -5,8 +5,13 @@ require 'constants'
 # Bowtie options
 BT_NUM_THREADS		      = 1
 BT_OVERRIDE_OFFRATE	    = 9
+if ARGV.length > 0
+  files = ARGV
+else
+  files = Dir.foreach("#{FASTQ_FOLDER}/")
+end
 
-Dir.foreach("#{FASTQ_FOLDER}/") do |file|
+for file in files
   next unless file =~ /\.txt$/
   base                    = file.gsub('.txt','.sam')
   running_file            = running_file(base, "alignment")
