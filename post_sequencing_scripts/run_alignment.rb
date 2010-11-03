@@ -4,12 +4,6 @@ require 'constants'
 
 # Bowtie options
 BT_NUM_THREADS		      = 10
-BT_OVERRIDE_OFFRATE	    = 9
-if ARGV.length > 0
-  files = ARGV
-else
-  files = 
-end
 
 Dir.foreach("#{FASTQ_FOLDER}/") do |file|
   next unless file =~ /\.txt$/
