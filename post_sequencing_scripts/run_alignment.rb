@@ -8,10 +8,10 @@ BT_OVERRIDE_OFFRATE	    = 9
 if ARGV.length > 0
   files = ARGV
 else
-  files = Dir.foreach("#{FASTQ_FOLDER}/")
+  files = 
 end
 
-for file in files
+Dir.foreach("#{FASTQ_FOLDER}/") do |file|
   next unless file =~ /\.txt$/
   base                    = file.gsub('.txt','.sam')
   running_file            = running_file(base, "alignment")
