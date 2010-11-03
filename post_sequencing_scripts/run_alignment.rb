@@ -3,7 +3,7 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 
 # Bowtie options
-BT_NUM_THREADS		      = 1
+BT_NUM_THREADS		      = 10
 BT_OVERRIDE_OFFRATE	    = 9
 if ARGV.length > 0
   files = ARGV
