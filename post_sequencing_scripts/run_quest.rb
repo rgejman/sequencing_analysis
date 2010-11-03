@@ -36,7 +36,13 @@ res.each_hash do |row|
          end
        end
       #stdin.puts "" #ONLY CALL THIS IF WE DO NOT HAVE A CONTROL.
-      stdin.puts 3 # options: 1:TF, 2:polII-like, 3:histone ChIP, 4:individual config. # in the future this must be parsed from the filename
+      chip_config = 3
+      if f_name =~ /PolII/
+        chip_config = 2
+      elsif f_name =~ /(H3)|(H4)/
+        chip_config = 3
+      end
+      stdin.puts chip_config # options: 1:TF, 2:polII-like, 3:histone ChIP, 4:individual config. # in the future this must be parsed from the filename
       stdin.puts 2 #recommended peak calling params.
       stdin.puts "y" #to run QuEST analysis now.
       t.join()
