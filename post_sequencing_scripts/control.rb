@@ -33,6 +33,7 @@ loop do
     puts "#{forks} running. #{MAX_FORKS} max."
     call(p, options)
     puts "Called #{p}"
+    sleep(5)
   end
   sleep(30)
 end
