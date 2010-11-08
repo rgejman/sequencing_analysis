@@ -6,8 +6,9 @@ for path in files
   next unless path =~ /\.txt$/
   name = File.basename(path)
   running_file = running_file(name, "fastqc")
-  fastqc_output_folder_name = "#{name}_fastqc"
-  fastqc_output_folder_path = "#{FASTQC_FOLDER}/#{fastqc_output_folder_name}"
+  fastqc_output_folder_name     = "#{name}_fastqc"
+  fastqc_tmp_folder_path = "#{TMP_FOLDER}/#{fastqc_output_folder_name}"
+  fastqc_output_folder_path     = "#{FASTQC_FOLDER}/#{fastqc_output_folder_name}"
 
   next if File.exists? fastqc_output_folder_path # The file has been processed in the past
   next if File.exists? running_file #This is being processed
@@ -17,7 +18,8 @@ for path in files
   `touch #{running_file}`
   begin
     `fastqc #{path}`
-    `mv #{TMP_FOLDER}/#{fastqc_output_folder_name} #{FASTQC_FOLDER}/`
+    cmd = "mv #{fastqc_tmp_folder_path} #{FASTQC_FOLDER}/"
+    `#{cmd}`
   rescue => e
     FileUtils.rm(fastqc_output_folder_path,     :force=>true)
     throw e
