@@ -26,17 +26,16 @@ res.each_hash do |rna_seq_alignment|
   if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
     files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
     mean_dist           = mean_fragment_length - (read_length*2)
-    mean_dist_arg       = "-r #{mean_dist_arg}"
+    mean_dist_arg       = "-r #{mean_dist_arg}" #-r = mean distance between ends of paired reads.
   else
     files_arg = reads.collect {|p| p[0] }.join(",")
   end
+  GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
+  LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
+  OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
+  cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{files_arg}"
+  puts cmd
+  `cmd`
+  break
 end
-#-r = mean distance between ends of paired reads. e.g. read_length=36 & fragment_mean=300 => dist = 228
-#-p = num_threads
 
-GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
-LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
-OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
-cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{files_arg}"
-puts cmd
-`cmd`
