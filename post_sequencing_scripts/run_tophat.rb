@@ -2,7 +2,7 @@
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 require 'mysql'
-NUM_THREADS = 16
+NUM_THREADS = 12
 
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 res = conn.query("SELECT * FROM rna_seq_alignment ORDER BY created_at desc")
@@ -47,4 +47,3 @@ res.each_hash do |rna_seq_alignment|
   end
   break
 end
-

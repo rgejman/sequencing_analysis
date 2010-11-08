@@ -22,11 +22,11 @@ for path in files
     puts cmd
     `#{cmd}`
   rescue => e
-    FileUtils.rm(fastqc_output_folder_path,     :force=>true)
+    #FileUtils.rm(fastqc_output_folder_path,     :force=>true)
     throw e
   ensure
-    FileUtils.rm("#{TMP_FOLDER}/#{fastqc_output_folder_name}.zip",  :force=>true)
-    FileUtils.rm("#{TMP_FOLDER}/#{fastqc_output_folder_name}",      :force=>true)
+    #FileUtils.rm("#{TMP_FOLDER}/#{fastqc_output_folder_name}.zip",  :force=>true)
+    #FileUtils.rm("#{TMP_FOLDER}/#{fastqc_output_folder_name}",      :force=>true)
     FileUtils.rm(running_file,                                      :force=>true)
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
