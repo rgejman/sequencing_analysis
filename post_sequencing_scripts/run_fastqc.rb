@@ -19,6 +19,7 @@ for path in files
   begin
     `fastqc #{path}`
     cmd = "mv #{fastqc_tmp_folder_path} #{FASTQC_FOLDER}/"
+    puts cmd
     `#{cmd}`
   rescue => e
     FileUtils.rm(fastqc_output_folder_path,     :force=>true)
