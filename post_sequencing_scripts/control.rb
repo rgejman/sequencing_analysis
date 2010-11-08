@@ -26,4 +26,5 @@ loop do
     call(p, options)
     puts "Called #{p}"
   end
+  sleep(30)
 end
