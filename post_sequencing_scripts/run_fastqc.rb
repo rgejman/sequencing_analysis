@@ -18,7 +18,7 @@ for file in files
     `fastqc #{FASTQ_FOLDER}/#{file}`
     `mv #{TMP_FOLDER}/#{fastqc_output_folder_name} #{FASTQC_FOLDER}/`
   rescue => e
-    FileUtils.rm(output_file,     :force=>true)
+    FileUtils.rm(fastqc_output_folder_path,     :force=>true)
     throw e
   ensure
     FileUtils.rm("#{TMP_FOLDER}/#{fastqc_output_folder_name}.zip",  :force=>true)
