@@ -6,28 +6,26 @@ for path in files
   next unless path =~ /\.txt$/
   name = File.basename(path).gsub(".txt","")
   running_file = running_file(name, "fastqc")
-  fastqc_output_folder_name     = "#{name}_fastqc"
-  fastqc_tmp_folder_path = "#{TMP_FOLDER}/#{fastqc_output_folder_name}"
-  fastqc_output_folder_path     = "#{FASTQC_FOLDER}/#{fastqc_output_folder_name}"
+  fastqc_tmp_folder_path        = "#{path.gsub(".txt","")}_fastqc"
+  fastqc_output_folder_path     = "#{FASTQC_FOLDER}/#{name}"
 
   next if File.exists? fastqc_output_folder_path # The file has been processed in the past
   next if File.exists? running_file #This is being processed
 
   puts name
-  Dir.chdir(TMP_FOLDER)
   `touch #{running_file}`
   begin
     `fastqc #{path}`
-    cmd = "mv #{fastqc_tmp_folder_path} #{FASTQC_FOLDER}/"
+    cmd = "mv #{fastqc_tmp_folder_path} #{fastqc_output_folder_path}"
     puts cmd
     `#{cmd}`
   rescue => e
-    #FileUtils.rm(fastqc_output_folder_path,     :force=>true)
+    FileUtils.rm(fastqc_output_folder_path,     :force=>true)
     throw e
   ensure
-    #FileUtils.rm("#{TMP_FOLDER}/#{fastqc_output_folder_name}.zip",  :force=>true)
-    #FileUtils.rm("#{TMP_FOLDER}/#{fastqc_output_folder_name}",      :force=>true)
-    FileUtils.rm(running_file,                                      :force=>true)
+    FileUtils.rm("#{fastqc_tmp_folder_path}.zip", :force=>true)
+    FileUtils.rm("#{fastqc_tmp_folder_path}",     :force=>true)
+    FileUtils.rm(running_file,                    :force=>true)
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
 end
