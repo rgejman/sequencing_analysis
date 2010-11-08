@@ -20,8 +20,8 @@ res.each_hash do |rna_seq_alignment|
       reads << file["name"] + ".txt"
     end
   end
-  read_length           = rna_seq_alignment["read_length"]
-  mean_fragment_length  = rna_seq_alignment["mean_fragment_length"]
+  read_length           = rna_seq_alignment["read_length"].to_i
+  mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
   mean_dist_arg         = ""
   if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
     files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
