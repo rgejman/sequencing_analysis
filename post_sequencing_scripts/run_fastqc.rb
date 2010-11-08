@@ -16,7 +16,7 @@ for path in files
   Dir.chdir(TMP_FOLDER)
   `touch #{running_file}`
   begin
-    `fastqc #{FASTQ_FOLDER}/#{name}`
+    `fastqc #{path}`
     `mv #{TMP_FOLDER}/#{fastqc_output_folder_name} #{FASTQC_FOLDER}/`
   rescue => e
     FileUtils.rm(fastqc_output_folder_path,     :force=>true)
