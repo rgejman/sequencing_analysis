@@ -4,7 +4,7 @@ require 'constants'
 files = Dir.entries("#{FASTQ_CHIP_FOLDER}/").collect{|e| "#{FASTQ_CHIP_FOLDER}/#{e}"} + Dir.entries("#{FASTQ_RNA_SEQ_FOLDER}/").collect{|e| "#{FASTQ_RNA_SEQ_FOLDER}/#{e}"}
 for path in files
   next unless path =~ /\.txt$/
-  name = File.basename(path)
+  name = File.basename(path).gsub(".txt","")
   running_file = running_file(name, "fastqc")
   fastqc_output_folder_name     = "#{name}_fastqc"
   fastqc_tmp_folder_path = "#{TMP_FOLDER}/#{fastqc_output_folder_name}"
