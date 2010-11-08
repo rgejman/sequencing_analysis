@@ -14,7 +14,6 @@ options = {
     :log_output => true
   }
 
-forks = []
 programs = ["run_fastqc.rb", "run_alignment.rb", "run_sort_sam.rb",
               "run_bam_index.rb", "run_igvtools.rb", "run_make_bam.rb",
                 "run_macs_single.rb","run_macs_pair.rb", "run_quest.rb",
@@ -23,11 +22,8 @@ programs = ["run_fastqc.rb", "run_alignment.rb", "run_sort_sam.rb",
 
 loop do
   for p in programs
-    while forks.length >= MAX_FORKS
-      sleep(5)
-      forks.delete_if {|f| !f.running? }
-    end
-    forks << call(p, options)
+    sleep(30) while Dir.entries("#{LOG_FOLDER}/").select{|e| e =~ /\.pid/ }.length > MAX_FORKS
+    call(p, options)
     puts "Called #{p}"
   end
 end
