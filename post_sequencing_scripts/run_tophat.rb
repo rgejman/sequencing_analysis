@@ -33,7 +33,7 @@ res.each_hash do |rna_seq_alignment|
   GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
-  cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{files_arg}"
+  cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{GENOME} #{files_arg}"
   puts cmd
   `#{cmd}`
   break
