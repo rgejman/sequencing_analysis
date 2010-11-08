@@ -28,5 +28,6 @@ loop do
       forks.delete_if {|f| !f.running? }
     end
     forks << call(p, options)
+    puts "Called #{p}"
   end
 end
