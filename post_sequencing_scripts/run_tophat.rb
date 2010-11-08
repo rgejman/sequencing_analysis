@@ -35,7 +35,7 @@ res.each_hash do |rna_seq_alignment|
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
   cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{files_arg}"
   puts cmd
-  `cmd`
+  `#{cmd}`
   break
 end
 
