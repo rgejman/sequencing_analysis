@@ -15,9 +15,11 @@ res.each_hash do |rna_seq_alignment|
   # for each file that comprises this RNA-Seq run (there may be multiple)
   files_res.each_hash do |file|
     if file["paired"].to_i == 1
-      reads << [file["name"] + ".1.txt", file["name"] + ".2.txt"]
+      f1 = "#{FASTQ_RNA_SEQ_FOLDER}/#{file['name']}.1.txt"
+      f2 = "#{FASTQ_RNA_SEQ_FOLDER}/#{file['name']}.2.txt"
+      reads << [f1,f2]
     else
-      reads << file["name"] + ".txt"
+      reads << "#{FASTQ_RNA_SEQ_FOLDER}/#{file['name']}.txt"
     end
   end
   read_length           = rna_seq_alignment["read_length"].to_i

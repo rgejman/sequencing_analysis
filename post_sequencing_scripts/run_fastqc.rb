@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby -wKU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
-Dir.foreach("#{FASTQ_FOLDER}/") do |file|
+files = Dir.entries("#{FASTQ_CHIP_FOLDER}/") + Dir.entries("#{FASTQ_RNA_SEQ_FOLDER}/")
+for file in files
   next unless file =~ /\.txt$/
   running_file = running_file(file, "fastqc")
   fastqc_output_folder_name = "#{file.gsub('.txt','')}_fastqc"

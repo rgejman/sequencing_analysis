@@ -5,7 +5,7 @@ require 'constants'
 # Bowtie options
 BT_NUM_THREADS		      = 10
 
-Dir.foreach("#{FASTQ_FOLDER}/") do |file|
+Dir.foreach("#{FASTQ_CHIP_FOLDER}/") do |file|
   next unless file =~ /\.txt$/
   base                    = file.gsub('.txt','.sam')
   running_file            = running_file(base, "alignment")
@@ -19,7 +19,7 @@ Dir.foreach("#{FASTQ_FOLDER}/") do |file|
   puts file
   `touch #{running_file}`
   begin
-    `bowtie -p #{BT_NUM_THREADS} --best -m 1 #{GENOME} --sam "#{FASTQ_FOLDER}/#{file}" "#{tmp_file}"`
+    `bowtie -p #{BT_NUM_THREADS} --best -m 1 #{GENOME} --sam "#{FASTQ_CHIP_FOLDER}/#{file}" "#{tmp_file}"`
     FileUtils.mv(tmp_file, output_file)
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
