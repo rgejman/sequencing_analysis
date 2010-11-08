@@ -21,7 +21,7 @@ programs = ["run_fastqc.rb", "run_alignment.rb", "run_sort_sam.rb",
               #,"run_make_bed.rb","run_make_wig.rb" # unclear if these are necessary
               
 def forks
-  Dir.entries("#{LOG_FOLDER}/").select{|e| e =~ /\.pid/ }.length
+  Dir.entries("#{LOG_FOLDER}/").select{|e| e =~ /pid$/ }.length
 end
 
 loop do
