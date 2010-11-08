@@ -22,7 +22,11 @@ programs = ["run_fastqc.rb", "run_alignment.rb", "run_sort_sam.rb",
 
 loop do
   for p in programs
-    sleep(30) while Dir.entries("#{LOG_FOLDER}/").select{|e| e =~ /\.pid/ }.length > MAX_FORKS
+    forks = 0
+    while (forks = Dir.entries("#{LOG_FOLDER}/").select{|e| e =~ /\.pid/ }.length) > MAX_FORKS
+      puts "#{forks} running"
+      sleep(30)
+    end
     call(p, options)
     puts "Called #{p}"
   end
