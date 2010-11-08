@@ -4,19 +4,19 @@ require 'constants'
 files = Dir.entries("#{FASTQ_CHIP_FOLDER}/").collect{|e| "#{FASTQ_CHIP_FOLDER}/#{e}"} + Dir.entries("#{FASTQ_RNA_SEQ_FOLDER}/").collect{|e| "#{FASTQ_RNA_SEQ_FOLDER}/#{e}"}
 for path in files
   next unless path =~ /\.txt$/
-  file = File.new(path)
-  running_file = running_file(file.basename, "fastqc")
-  fastqc_output_folder_name = "#{file.basename}_fastqc"
+  name = File.basename(path)
+  running_file = running_file(name, "fastqc")
+  fastqc_output_folder_name = "#{name}_fastqc"
   fastqc_output_folder_path = "#{FASTQC_FOLDER}/#{fastqc_output_folder_name}"
 
   next if File.exists? fastqc_output_folder_path # The file has been processed in the past
   next if File.exists? running_file #This is being processed
 
-  puts file
+  puts name
   Dir.chdir(TMP_FOLDER)
   `touch #{running_file}`
   begin
-    `fastqc #{FASTQ_FOLDER}/#{file.basename}`
+    `fastqc #{FASTQ_FOLDER}/#{name}`
     `mv #{TMP_FOLDER}/#{fastqc_output_folder_name} #{FASTQC_FOLDER}/`
   rescue => e
     FileUtils.rm(fastqc_output_folder_path,     :force=>true)
