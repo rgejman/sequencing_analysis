@@ -26,7 +26,7 @@ res.each_hash do |rna_seq_alignment|
   if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
     files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
     mean_dist           = mean_fragment_length - (read_length*2)
-    mean_dist_arg       = "-r #{mean_dist_arg}" #-r = mean distance between ends of paired reads.
+    mean_dist_arg       = "-r #{mean_dist}" #-r = mean distance between ends of paired reads.
   else
     files_arg = reads.collect {|p| p[0] }.join(",")
   end
