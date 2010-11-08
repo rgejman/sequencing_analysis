@@ -9,7 +9,7 @@ options = {
     :multiple   => true,
     :ontop      => false,
     :mode       => :load,
-    :backtrace  => true,
+    :backtrace  => false,
     :monitor    => false,
     :log_output => true
   }
