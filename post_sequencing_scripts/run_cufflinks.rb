@@ -14,13 +14,12 @@ res.each_hash do |rna_seq_alignment|
   accepted_hits                 = "#{tophat_output_folder_path}/accepted_hits.sam"
   junctions                     = "#{tophat_output_folder_path}/junctions.bed"
   
-  next unless File.exists? output_folder_path #Tophat has not yet run.
+  next unless File.exists? tophat_output_folder_path #Tophat has not yet run.
   next unless File.exists? accepted_hits
   next unless File.exists? junctions
   
-  GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
-  LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
-  OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
+  #GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
+  #LIBRARY_TYPE_ARG = "--library-type fr-unstranded" # this is the default
   `touch #{running_file}`
   begin
     cmd = "tophat -p #{NUM_THREADS} -o #{cufflinks_output_folder_path} #{accepted_hits} -r #{BOWTIE_INDEXES}/#{GENOME}.fa"
