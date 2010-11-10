@@ -1,6 +1,7 @@
-scripts_folder: /Users/rgejman/Documents/Tarakhovsky/post_sequencing_scripts
-base_folder: /Users/rgejman/Documents/Tarakhovsky/Sequencing
-genomics_folder: /Users/rgejman/genomics
+scripts_folder: /home/user/post_sequencing_scripts
+base_folder: /home/user/Sequencing
+genomics_folder: /home/user/genomics
+bowtie_indexes_folder: /usr/genomics_bin/bowtie/indexes
 max_forks: 1
 mysql_host: localhost
 mysql_pass: 
