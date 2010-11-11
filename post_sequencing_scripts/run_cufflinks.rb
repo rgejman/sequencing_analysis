@@ -20,11 +20,20 @@ res.each_hash do |rna_seq_alignment|
   next unless File.exists? accepted_hits
   next unless File.exists? junctions
   
+  read_length           = rna_seq_alignment["read_length"].to_i
+  mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
+  mean_dist_arg         = ""
+  if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
+    files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
+    mean_dist           = mean_fragment_length - (read_length*2) - 70 #70 accounts for the illumina primers
+    mean_dist_arg       = "-r #{mean_dist}" #-r = mean distance between ends of paired reads.
+  end
+  
   #GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
   #LIBRARY_TYPE_ARG = "--library-type fr-unstranded" # this is the default
   `touch #{running_file}`
   begin
-    cmd = "tophat -p #{NUM_THREADS} -o #{cufflinks_output_folder_path} #{accepted_hits} --reference-seq #{BOWTIE_INDEXES}/#{GENOME}.fa"
+    cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} -o #{cufflinks_output_folder_path} #{accepted_hits} --reference-seq #{BOWTIE_INDEXES}/#{GENOME}.fa"
     puts cmd
     `#{cmd}`
   rescue => e
