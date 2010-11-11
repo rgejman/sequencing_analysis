@@ -36,7 +36,7 @@ res.each_hash do |rna_seq_alignment|
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
   begin
-    cmd = "tophat -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{GENOME} #{files_arg}"
+    cmd = "tophat --no-novel-juncs -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{GENOME} #{files_arg}"
     puts cmd
     `#{cmd}`
   rescue => e
