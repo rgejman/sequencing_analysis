@@ -24,14 +24,14 @@ res.each_hash do |rna_seq_alignment|
   #LIBRARY_TYPE_ARG = "--library-type fr-unstranded" # this is the default
   `touch #{running_file}`
   begin
-    cmd = "tophat -p #{NUM_THREADS} -o #{cufflinks_output_folder_path} #{accepted_hits} -r #{BOWTIE_INDEXES}/#{GENOME}.fa"
+    cmd = "tophat -p #{NUM_THREADS} -o #{cufflinks_output_folder_path} #{accepted_hits} --reference-seq #{BOWTIE_INDEXES}/#{GENOME}.fa"
     puts cmd
     `#{cmd}`
   rescue => e
     throw e
   ensure
-    FileUtils.rm(output_folder_path,    :force=>true)
-    FileUtils.rm(running_file,    :force=>true)
+    FileUtils.rm(cufflinks_output_folder_path,    :force=>true)
+    FileUtils.rm(running_file,                    :force=>true)
     conn.close
   end
   break
