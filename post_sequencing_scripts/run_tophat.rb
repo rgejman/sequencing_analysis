@@ -27,16 +27,16 @@ res.each_hash do |rna_seq_alignment|
   mean_dist_arg         = ""
   if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
     files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
-    mean_dist           = mean_fragment_length - (read_length*2) - 70 #70 accounts for the illumina primers
+    mean_dist           = mean_fragment_length - (read_length*2)# - 70 #70 accounts for the illumina primers
     mean_dist_arg       = "-r #{mean_dist}" #-r = mean distance between ends of paired reads.
   else
     files_arg = reads.collect {|p| p[0] }.join(",")
   end
-  GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
+  GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.refseq.genes.gtf"
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
   begin
-    cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{GENOME} #{files_arg}"
+    cmd = "tophat -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{GENOME} #{files_arg}"
     puts cmd
     `#{cmd}`
   rescue => e

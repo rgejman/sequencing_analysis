@@ -37,6 +37,8 @@ res.each_hash do |rna_seq_alignment|
     cmd = "cufflinks -p #{NUM_THREADS} -r #{BOWTIE_INDEXES}/#{GENOME}.fa -o #{cufflinks_output_folder_path} #{accepted_hits}"
     puts cmd
     `#{cmd}`
+    `cd #{cufflinks_output_folder_path}`
+    `cuffcompare -r #{USEFUL_BED_FILES}/mm9.refseq.genes.gtf -o cuffcompare #{cufflinks_output_folder_path}/transcripts.gtf`
   rescue => e
     throw e
   ensure
