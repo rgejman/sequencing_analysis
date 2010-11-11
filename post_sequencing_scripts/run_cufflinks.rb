@@ -16,6 +16,7 @@ res.each_hash do |rna_seq_alignment|
   puts "Checking for existence of #{tophat_output_folder_path}"
   puts "Checking for existence of #{accepted_hits}"
   puts "Checking for existence of #{junctions}"
+  next if File.exists? cufflinks_output_folder_path
   next unless File.exists? tophat_output_folder_path #Tophat has not yet run.
   next unless File.exists? accepted_hits
   next unless File.exists? junctions
