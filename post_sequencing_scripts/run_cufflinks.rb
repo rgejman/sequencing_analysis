@@ -26,7 +26,7 @@ res.each_hash do |rna_seq_alignment|
   mean_dist_arg         = ""
   if paired #the first "reads entry" has 2 files, so it's paired.
     mean_dist           = mean_fragment_length - (read_length*2) - 70 #70 accounts for the illumina primers
-    mean_dist_arg       = "-r #{mean_dist}" #-r = mean distance between ends of paired reads.
+    mean_dist_arg       = "-m #{mean_dist}" #-r = mean distance between ends of paired reads.
   end
   
   #GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
