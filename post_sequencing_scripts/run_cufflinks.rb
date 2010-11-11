@@ -11,7 +11,7 @@ res.each_hash do |rna_seq_alignment|
   running_file                  = running_file(output_folder_name, "cufflinks")
   tophat_output_folder_path     = "#{TOPHAT_FOLDER}/#{output_folder_name}"
   cufflinks_output_folder_path  = "#{CUFFLINKS_FOLDER}/#{output_folder_name}"
-  accepted_hits                 = "#{tophat_output_folder_path}/accepted_hits.sam"
+  accepted_hits                 = "#{tophat_output_folder_path}/accepted_hits.bam"
   junctions                     = "#{tophat_output_folder_path}/junctions.bed"
   puts "Checking for existence of #{tophat_output_folder_path}"
   puts "Checking for existence of #{accepted_hits}"
