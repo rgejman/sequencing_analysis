@@ -33,7 +33,7 @@ res.each_hash do |rna_seq_alignment|
   #LIBRARY_TYPE_ARG = "--library-type fr-unstranded" # this is the default
   `touch #{running_file}`
   begin
-    cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} -o #{cufflinks_output_folder_path} --reference-seq #{BOWTIE_INDEXES}/#{GENOME}.fa #{accepted_hits}"
+    cmd = "tophat -p #{NUM_THREADS} #{mean_dist_arg} -o #{cufflinks_output_folder_path} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{accepted_hits}"
     puts cmd
     `#{cmd}`
   rescue => e
