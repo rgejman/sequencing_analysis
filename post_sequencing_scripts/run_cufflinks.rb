@@ -19,21 +19,21 @@ res.each_hash do |rna_seq_alignment|
   next unless File.exists? tophat_output_folder_path #Tophat has not yet run.
   next unless File.exists? accepted_hits
   next unless File.exists? junctions
-  files_res = conn.query("SELECT * FROM rna_seq_pairs WHERE rna_seq_alignment_id = #{rna_seq_alignment['id']}")
-  paired = files_res.fetch_hash["paired"] == "1"
-  read_length           = rna_seq_alignment["read_length"].to_i
-  mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
-  mean_dist_arg         = ""
-  if paired #the first "reads entry" has 2 files, so it's paired.
-    mean_dist           = mean_fragment_length - (read_length*2) - 70 #70 accounts for the illumina primers
+  #files_res = conn.query("SELECT * FROM rna_seq_pairs WHERE rna_seq_alignment_id = #{rna_seq_alignment['id']}")
+  #paired = files_res.fetch_hash["paired"] == "1"
+  #read_length           = rna_seq_alignment["read_length"].to_i
+  #mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
+  #mean_dist_arg         = ""
+  #if paired #the first "reads entry" has 2 files, so it's paired.
+  #  mean_dist           = mean_fragment_length - (read_length*2) - 70 #70 accounts for the illumina primers
     #mean_dist_arg       = "-m #{mean_dist}" #-r = mean distance between ends of paired reads.
-  end
+  #end
   
   #GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
   #LIBRARY_TYPE_ARG = "--library-type fr-unstranded" # this is the default
   `touch #{running_file}`
   begin
-    cmd = "cufflinks -p #{NUM_THREADS} #{mean_dist_arg} -r #{BOWTIE_INDEXES}/#{GENOME}.fa -o #{cufflinks_output_folder_path} #{accepted_hits}"
+    cmd = "cufflinks -p #{NUM_THREADS} -r #{BOWTIE_INDEXES}/#{GENOME}.fa -o #{cufflinks_output_folder_path} #{accepted_hits}"
     puts cmd
     `#{cmd}`
   rescue => e
