@@ -19,12 +19,12 @@ res.each_hash do |rna_seq_alignment|
   next unless File.exists? tophat_output_folder_path #Tophat has not yet run.
   next unless File.exists? accepted_hits
   next unless File.exists? junctions
-  
+  files_res = conn.query("SELECT * FROM rna_seq_pairs WHERE rna_seq_alignment_id = #{rna_seq_alignment['id']}")
+  paired = files_res.fetch_hash["paired"] == "1"
   read_length           = rna_seq_alignment["read_length"].to_i
   mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
   mean_dist_arg         = ""
-  if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
-    files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
+  if paired #the first "reads entry" has 2 files, so it's paired.
     mean_dist           = mean_fragment_length - (read_length*2) - 70 #70 accounts for the illumina primers
     mean_dist_arg       = "-r #{mean_dist}" #-r = mean distance between ends of paired reads.
   end
