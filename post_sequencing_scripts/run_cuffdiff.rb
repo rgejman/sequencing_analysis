@@ -2,7 +2,7 @@
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 require 'mysql'
-NUM_THREADS = 12
+NUM_THREADS = 24
 
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 res = conn.query("SELECT * FROM rna_seq_analysis_pairs ORDER BY created_at desc")
@@ -33,7 +33,7 @@ res.each_hash do |pair|
   print "exists"
   running_file      = running_file(output_folder_name, "cuffdiff")
   
-  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
+  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.refseq.genes.for.cuffdiff.gtf"
   `touch #{running_file}`
   begin
     cmd = "cuffdiff -o #{output_folder_path} -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{foreground_folder}/accepted_hits.bam #{background_folder}/accepted_hits.bam"
