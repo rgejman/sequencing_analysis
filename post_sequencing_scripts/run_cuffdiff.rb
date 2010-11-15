@@ -20,8 +20,12 @@ res.each_hash do |pair|
   
   labels            = foreground["sample"] + "," + background["sample"]
   
+  print "Checking existence of #{foreground_folder}/cuffcompare ... "
   next unless File.exists? "#{foreground_folder}/cuffcompare"
+  puts "exists"
+  print "Checking existence of #{background_folder}/cuffcompare ... "
   next unless File.exists? "#{background_folder}/cuffcompare"
+  print "exists"
   running_file      = running_file(output_folder_name, "cuffdiff")
   
   REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
