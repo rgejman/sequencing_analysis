@@ -18,7 +18,11 @@ res.each_hash do |pair|
   foreground_folder = "#{TOPHAT_FOLDER}/#{foreground_name}"
   background_folder = "#{TOPHAT_FOLDER}/#{background_name}"
   
+  output_folder     = "#{DIFF_EXPR_FOLDER}/#{foreground['person']}_#{foreground['sample']}_#{background['sample']}"
+  
   labels            = foreground["sample"] + "," + background["sample"]
+  
+  next if File.exists? output_folder
   
   print "Checking existence of #{foreground_folder}/transcripts/transcripts.gtf ... "
   next unless File.exists? "#{foreground_folder}/transcripts/transcripts.gtf"
@@ -31,13 +35,12 @@ res.each_hash do |pair|
   REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
   `touch #{running_file}`
   begin
-    cmd = "cuffdiff -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{foreground_folder}/accepted_hits.bam #{background_folder}/accepted_hits.bam"
+    cmd = "cuffdiff -o -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{foreground_folder}/accepted_hits.bam #{background_folder}/accepted_hits.bam"
     puts cmd
     `#{cmd}`
   rescue => e
     throw e
   ensure
-    FileUtils.rm("#{output_folder_path}/transcripts",    :force=>true)
     FileUtils.rm(running_file,                    :force=>true)
     conn.close
   end
