@@ -23,7 +23,7 @@ res.each_hash do |pair|
   
   labels              = foreground["sample"] + "," + background["sample"]
   
-  next if File.exists? output_folder
+  next if File.exists? output_folder_path
   
   print "Checking existence of #{foreground_folder}/transcripts/transcripts.gtf ... "
   next unless File.exists? "#{foreground_folder}/transcripts/transcripts.gtf"
