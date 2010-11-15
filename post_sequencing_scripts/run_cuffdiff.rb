@@ -20,11 +20,11 @@ res.each_hash do |pair|
   
   labels            = foreground["sample"] + "," + background["sample"]
   
-  print "Checking existence of #{foreground_folder}/transcripts.gtf ... "
-  next unless File.exists? "#{foreground_folder}/transcripts.gtf"
+  print "Checking existence of #{foreground_folder}/transcripts/transcripts.gtf ... "
+  next unless File.exists? "#{foreground_folder}/transcripts/transcripts.gtf"
   puts "exists"
-  print "Checking existence of #{background_folder}/transcripts.gtf ... "
-  next unless File.exists? "#{background_folder}/transcripts.gtf"
+  print "Checking existence of #{background_folder}/transcripts/transcripts.gtf ... "
+  next unless File.exists? "#{background_folder}/transcripts/transcripts.gtf"
   print "exists"
   running_file      = running_file(output_folder_name, "cuffdiff")
   
