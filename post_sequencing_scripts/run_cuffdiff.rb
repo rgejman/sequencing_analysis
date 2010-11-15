@@ -19,7 +19,7 @@ res.each_hash do |pair|
   background_folder = "#{TOPHAT_FOLDER}/#{background_name}"
   
   output_folder_name  = "#{foreground['person']}_#{foreground['sample']}_#{background['sample']}"
-  output_folder_path       = "#{DIFF_EXPR_FOLDER}/#{output_folder_name}"
+  output_folder_path  = "#{DIFF_EXPR_FOLDER}/#{output_folder_name}"
   
   labels              = foreground["sample"] + "," + background["sample"]
   
@@ -36,7 +36,7 @@ res.each_hash do |pair|
   REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ucsc.genes.gtf"
   `touch #{running_file}`
   begin
-    cmd = "cuffdiff -o -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{foreground_folder}/accepted_hits.bam #{background_folder}/accepted_hits.bam"
+    cmd = "cuffdiff -o #{output_folder_path} -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{foreground_folder}/accepted_hits.bam #{background_folder}/accepted_hits.bam"
     puts cmd
     `#{cmd}`
   rescue => e
