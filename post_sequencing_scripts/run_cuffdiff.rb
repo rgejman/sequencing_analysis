@@ -18,9 +18,10 @@ res.each_hash do |pair|
   foreground_folder = "#{TOPHAT_FOLDER}/#{foreground_name}"
   background_folder = "#{TOPHAT_FOLDER}/#{background_name}"
   
-  output_folder     = "#{DIFF_EXPR_FOLDER}/#{foreground['person']}_#{foreground['sample']}_#{background['sample']}"
+  output_folder_name  = "#{foreground['person']}_#{foreground['sample']}_#{background['sample']}"
+  output_folder_path       = "#{DIFF_EXPR_FOLDER}/#{output_folder_name}"
   
-  labels            = foreground["sample"] + "," + background["sample"]
+  labels              = foreground["sample"] + "," + background["sample"]
   
   next if File.exists? output_folder
   
@@ -42,6 +43,7 @@ res.each_hash do |pair|
     throw e
   ensure
     FileUtils.rm(running_file,                    :force=>true)
+    FileUtils.rm(output_folder_path,              :force=>true)
     conn.close
   end
   break
