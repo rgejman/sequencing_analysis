@@ -18,12 +18,12 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   `touch #{running_file}`
   begin
     `igvtools count -e #{EXTEND_LENGTH} "#{input_path}" "#{tmp_file1},#{tmp_file2}" "#{GENOMES_FOLDER}/#{GENOME}.genome"`
-    FileUtils.mv(tmp_file1, output_file1)
-    FileUtils.mv(tmp_file2, output_file2)
+    FileUtils.mv(tmp_file1, output_file_1)
+    FileUtils.mv(tmp_file2, output_file_2)
     
   rescue => e
-    FileUtils.rm(output_file1,     :force=>true)
-    FileUtils.rm(output_file2,     :force=>true)
+    FileUtils.rm(output_file_1,     :force=>true)
+    FileUtils.rm(output_file_2,     :force=>true)
     
     throw e
   ensure
