@@ -33,7 +33,7 @@ res.each_hash do |pair|
   print "exists"
   running_file      = running_file(output_folder_name, "cuffdiff")
   
-  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensemble.genes.for.cuffdiff.fixed.gtf"
+  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.fixed.gtf"
   `touch #{running_file}`
   begin
     cmd = "cuffdiff -o #{output_folder_path} -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{background_folder}/accepted_hits.bam #{foreground_folder}/accepted_hits.bam"

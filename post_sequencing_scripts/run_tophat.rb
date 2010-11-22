@@ -32,7 +32,7 @@ res.each_hash do |rna_seq_alignment|
   else
     files_arg = reads.collect {|p| p[0] }.join(",")
   end
-  GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ensemble.genes.for.cuffdiff.fixed.gtf" #mm9.refseq.genes.gtf"
+  GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.fixed.gtf" #mm9.refseq.genes.gtf"
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
   begin
