@@ -21,7 +21,7 @@ res.each_hash do |pair|
   output_folder_name  = "#{foreground['person']}_#{foreground['sample']}_#{background['sample']}"
   output_folder_path  = "#{DIFF_EXPR_FOLDER}/#{output_folder_name}"
   
-  labels              = foreground["sample"] + "," + background["sample"]
+  labels              = background["sample"] + "," + foreground["sample"]
   
   next if File.exists? output_folder_path
   
@@ -33,10 +33,10 @@ res.each_hash do |pair|
   print "exists"
   running_file      = running_file(output_folder_name, "cuffdiff")
   
-  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.refseq.genes.for.cuffdiff.fixed.gtf"
+  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensemble.genes.for.cuffdiff.fixed.gtf"
   `touch #{running_file}`
   begin
-    cmd = "cuffdiff -o #{output_folder_path} -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{foreground_folder}/accepted_hits.bam #{background_folder}/accepted_hits.bam"
+    cmd = "cuffdiff -o #{output_folder_path} -p #{NUM_THREADS} -L #{labels} -r #{BOWTIE_INDEXES}/#{GENOME}.fa #{REF_TRANSCRIPTS_FILE} #{background_folder}/accepted_hits.bam #{foreground_folder}/accepted_hits.bam"
     puts cmd
     `#{cmd}`
   rescue => e
