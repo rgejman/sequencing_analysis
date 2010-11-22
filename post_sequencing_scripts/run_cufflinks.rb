@@ -21,7 +21,7 @@ res.each_hash do |rna_seq_alignment|
   next unless File.exists? accepted_hits
   next unless File.exists? junctions
 
-  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.fixed.gtf"
+  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.gtf"
   `touch #{running_file}`
   begin
     cmd = "cufflinks -G #{REF_TRANSCRIPTS_FILE} -p #{NUM_THREADS} -r #{BOWTIE_INDEXES}/#{GENOME}.fa -o #{output_folder_path}/transcripts #{accepted_hits}"
