@@ -7,7 +7,7 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   running_file        = running_file(file, "make_wig")
   tmp_wig_file        = "#{TMP_FOLDER}/#{file.gsub(".bam",".wig")}"
   tmp_bigwig_file     = "#{TMP_FOLDER}/#{file.gsub(".bam",".bigwig")}"
-  output_wig_file     = "#{ALIGNMENTS_FOLDER}/#{file.gsub(".bam",".wig")}" ### Must be changed to temporary outfile.
+  output_wig_file     = "#{WIG_FOLDER}/#{file.gsub(".bam",".wig")}" ### Must be changed to temporary outfile.
   
   input_file		= "#{ALIGNMENTS_FOLDER}/#{file}"
   next if File.exists? output_wig_file # The file has been processed in the past

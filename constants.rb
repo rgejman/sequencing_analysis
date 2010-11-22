@@ -23,6 +23,7 @@ QUEST_FOLDER            = "#{BASE_FOLDER}/quest"
 COMPOSITE_PLOTS_FOLDER  = "#{BASE_FOLDER}/composite_plots"
 TOPHAT_FOLDER           = "#{BASE_FOLDER}/tophat"
 DIFF_EXPR_FOLDER        = "#{BASE_FOLDER}/diff_expr"
+WIG_FOLDER              = "#{BASE_FOLDER}/wig"
 MAX_FORKS               = CONFIG["max_forks"]
 
 GENOMES_FOLDER          = "#{GENOMICS_FOLDER}/igv_tools_genomes"
