@@ -12,7 +12,7 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   output_file_2         = "#{IGVTOOLS_OUTPUT_FOLDER}/#{file}.wig"
   
   input_path            = "#{ALIGNMENTS_FOLDER}/#{file}"
-  next if File.exists? output_file #Already processed
+  next if File.exists? output_file_2 #Already processed
   next if File.exists? running_file #Being processed
   puts file
   `touch #{running_file}`
