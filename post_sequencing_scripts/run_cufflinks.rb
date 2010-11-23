@@ -24,7 +24,7 @@ res.each_hash do |rna_seq_alignment|
   REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.gtf"
   `touch #{running_file}`
   begin
-    cmd = "cufflinks -G #{REF_TRANSCRIPTS_FILE} -p #{NUM_THREADS} -r #{BOWTIE_INDEXES}/#{GENOME}.fa -o #{output_folder_path}/transcripts #{accepted_hits}"
+    cmd = "cufflinks -G #{REF_TRANSCRIPTS_FILE} -p #{NUM_THREADS} -o #{output_folder_path}/transcripts #{accepted_hits}" # -r #{BOWTIE_INDEXES}/#{GENOME}.fa
     puts cmd
     `#{cmd}`
     `cd #{output_folder_path}`

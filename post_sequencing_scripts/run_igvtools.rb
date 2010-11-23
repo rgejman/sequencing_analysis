@@ -9,10 +9,12 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   tmp_file1             = "#{TMP_FOLDER}/#{file}.cov.tdf"
   tmp_file2             = "#{TMP_FOLDER}/#{file}.wig"
   output_file_1         = "#{IGVTOOLS_OUTPUT_FOLDER}/#{file}.cov.tdf"
-  output_file_2         = "#{IGVTOOLS_OUTPUT_FOLDER}/#{file}.wig"
+  output_file_2         = "#{WIG_FOLDER}/#{file}.wig"
   
   input_path            = "#{ALIGNMENTS_FOLDER}/#{file}"
+  next if File.exists? output_file_1 #Already processed
   next if File.exists? output_file_2 #Already processed
+  
   next if File.exists? running_file #Being processed
   puts file
   `touch #{running_file}`
