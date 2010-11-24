@@ -50,6 +50,7 @@ File.open(OUTPUT_FILE, "w") do |f|
   for i in 0...genes[0][:blocks].length
     f.print "\tb#{i}"
   end
+  f.print "\n"
   for gene in genes
     f.print "#{gene[:gene]}\t#{gene[:chr]}\t#{gene[:start]}\t#{gene[:end]}\t#{gene[:strand]}"
     for block in gene[:blocks]
