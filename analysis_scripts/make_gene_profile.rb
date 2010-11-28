@@ -3,10 +3,12 @@ require 'wigreader'
 require 'pp'
 
 WIG_FILE            = ARGV[0]
-GENE_BED_FILE       = ARGV[1]
-DISTANCE_AROUND_TSS = ARGV[2].to_i
-BLOCKS              = ARGV[3].to_i
-OUTPUT_FILE         = ARGV[4]
+DISTANCE_AROUND_TSS = ARGV[1].to_i
+BLOCKS              = ARGV[2].to_i
+HEADER_POSTPEND     = ARGV[3]
+
+GENE_BED_FILE       = "/home/tarakhovsky/genomics/useful_bed_files/mm9.tss.2kb.bed"
+output_file         = File.basename(WIG_FILE).split(".")[0] + ".profile.#{DISTANCE_AROUND_TSS}.#{BLOCKS}.txt" #e.g. "Eugene_WT_H3K4me3_CD4.sorted.bam.wig" to "Eugene_WT_H3K4me3_CD4.profile.6000.80.txt"
 
 block_len = DISTANCE_AROUND_TSS.to_f/BLOCKS
 raise "'Distance around TSS' must be evenly divisible by 'blocks'" if block_len != block_len.round
@@ -45,10 +47,10 @@ for gene in genes
   end
 end
 
-File.open(OUTPUT_FILE, "w") do |f|
+File.open(output_file, "w") do |f|
   f.print "symbol\tchr\tstart\tend\tstrand"
   for i in 0...genes[0][:blocks].length
-    f.print "\tb#{i}"
+    f.print "\tb#{i}_#{HEADER_POSTPEND}"
   end
   f.print "\n"
   for gene in genes
