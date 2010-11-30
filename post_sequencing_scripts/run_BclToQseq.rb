@@ -42,7 +42,7 @@ res.each_hash do |sequencing_run|
     Dir.chdir(output_folder)
     cmd = "make -j #{NUM_THREADS}"
     puts cmd
-    `cmd`
+    `#{cmd}`
     for lane in sample.keys
       sample        = samples[lane]
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
