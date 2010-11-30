@@ -40,7 +40,7 @@ res.each_hash do |sequencing_run|
     puts cmd
     `#{cmd}`
     Dir.chdir(output_folder)
-    cmd = "make -j #{NUM_THREADS} &"
+    cmd = "make -j #{NUM_THREADS} >> /dev/null"
     puts cmd
     `#{cmd}`
     for lane in samples.keys
