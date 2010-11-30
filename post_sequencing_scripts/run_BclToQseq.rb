@@ -34,7 +34,7 @@ res.each_hash do |sequencing_run|
   end
   next if nsamples_already_converted == 8 #All samples have already been converted to qseq.
 
-  `touch running_file`
+  `touch #{running_file}`
   begin
     cmd = "setupBclToQseq.py -i #{base_calls_folder} -p #{intensities_folder} -o #{output_folder} --in-place --overwrite"
     puts cmd
