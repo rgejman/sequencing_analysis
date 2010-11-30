@@ -29,7 +29,7 @@ res.each_hash do |sequencing_run|
       sample["qseq_file"] = "#{QSEQ_FOLDER}/#{user}_#{name}_#{date}_qseq.txt"
     end
     
-    nsamples_already_converted +=1 if File.exists sample["qseq_file"]
+    nsamples_already_converted +=1 if File.exists? sample["qseq_file"]
     
     samples[lane] = sample
   end
