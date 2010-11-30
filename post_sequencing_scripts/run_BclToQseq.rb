@@ -48,7 +48,7 @@ res.each_hash do |sequencing_run|
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file = sample["qseq_file"]
       cat_cmd = "cat #{qseq_files.join(" ")} > #{qseq_file}"
-      `cat_cmd`
+      `#{cat_cmd}`
     end
   rescue => e
     throw e
