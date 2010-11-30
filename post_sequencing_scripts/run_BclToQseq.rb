@@ -28,9 +28,9 @@ res.each_hash do |sequencing_run|
     else
       sample["qseq_file"] = "#{QSEQ_FOLDER}/#{user}_#{name}_#{date}_qseq.txt"
     end
-    
+
     nsamples_already_converted +=1 if File.exists? sample["qseq_file"]
-    
+
     samples[lane] = sample
   end
   next if nsamples_already_converted == 8 #All samples have already been converted to qseq.
@@ -44,14 +44,21 @@ res.each_hash do |sequencing_run|
     cmd = "make -j #{NUM_THREADS}> /dev/null 2>&1"
     puts cmd
     `#{cmd}`
+    forks = []
     for lane in samples.keys
       puts "Cat'ing lane #{lane}"
       sample        = samples[lane]
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file     = sample["qseq_file"]
-      cat_cmd = "cat #{qseq_files.join(" ")} > #{qseq_file}"
+      ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
+      cat_cmd = "cat #{qseq_files.join(" ")} | grep -e "1$" > #{qseq_file}"
       puts cat_cmd
-      `#{cat_cmd}`
+      forks << fork do
+        `#{cat_cmd}`
+      end
+    end
+    for fork in forks
+      Process.wait(fork)
     end
   rescue => e
     throw e
