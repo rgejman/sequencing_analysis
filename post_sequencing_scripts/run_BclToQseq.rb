@@ -44,9 +44,10 @@ res.each_hash do |sequencing_run|
     puts cmd
     `#{cmd}`
     for lane in samples.keys
+      puts "Cat'ing lane #{lane}"
       sample        = samples[lane]
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
-      qseq_file = sample["qseq_file"]
+      qseq_file     = sample["qseq_file"]
       cat_cmd = "cat #{qseq_files.join(" ")} > #{qseq_file}"
       puts cat_cmd
       `#{cat_cmd}`
