@@ -18,7 +18,7 @@ res.each_hash do |sequencing_run|
   date    = sequencing_run["run_at"][0,10].gsub("-","_")
   nsamples_already_converted = 0
   samples_res.each_hash do |sample|
-    lane = sample["lane"].to_i
+    lane    = sample["lane"].to_i
     user    = sample["user"]
     name    = sample["name"]
     if user.downcase == "control"
@@ -48,6 +48,7 @@ res.each_hash do |sequencing_run|
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file = sample["qseq_file"]
       cat_cmd = "cat #{qseq_files.join(" ")} > #{qseq_file}"
+      `cat_cmd`
     end
   rescue => e
     throw e
