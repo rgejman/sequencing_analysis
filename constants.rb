@@ -10,6 +10,7 @@ SCRIPTS_FOLDER          = CONFIG["scripts_folder"]
 BASE_FOLDER             = CONFIG["base_folder"]
 GENOMICS_FOLDER         = CONFIG["genomics_folder"]
 RAW_FOLDER	            = "#{BASE_FOLDER}/raw"
+QSEQ_FOLDER	            = "#{BASE_FOLDER}/qseq"
 FASTQ_CHIP_FOLDER	      = "#{BASE_FOLDER}/fastq_chip"
 FASTQ_RNA_SEQ_FOLDER	  = "#{BASE_FOLDER}/fastq_rna_seq"
 FASTQC_FOLDER		        = "#{BASE_FOLDER}/fastqc"
