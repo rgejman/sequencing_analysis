@@ -51,7 +51,7 @@ res.each_hash do |sequencing_run|
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file     = sample["qseq_file"]
       ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
-      cat_cmd = "cat #{qseq_files.join(" ")} | grep -e "1$" > #{qseq_file}"
+      cat_cmd = "cat #{qseq_files.join(" ")} | grep -e \"1$\" > #{qseq_file}"
       puts cat_cmd
       forks << fork do
         `#{cat_cmd}`
