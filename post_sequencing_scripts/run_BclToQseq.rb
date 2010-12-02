@@ -48,6 +48,10 @@ res.each_hash do |sequencing_run|
     for lane in samples.keys
       puts "Cat'ing lane #{lane}"
       sample        = samples[lane]
+      
+      ##### WE DO NOT CONVERT CONTROL LANES TO QSEQ. WASTE OF SPACE! 
+      next it sample["user"].downcase == "control"
+      
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file     = sample["qseq_file"]
       ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
