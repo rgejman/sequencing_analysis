@@ -9,7 +9,7 @@ Dir.foreach("#{QSEQ_FOLDER}/") do |file|
   output_file             = "#{TMP_FOLDER}/#{output_filename}" #We manually move this.
 
   next if File.exists? running_file
-  next if File.exists? tmp_file
+  next if File.exists? output_file
   
   base = file.gsub("_qseq.txt","")
   
