@@ -21,7 +21,7 @@ Dir.foreach("#{QSEQ_FOLDER}/") do |file|
     cat  = "cat #{file}"
     awk1 = "gawk '{gsub(/\\./, \"N\", $9);print}'"
     awk2 = "awk '{print \"@\"$1\":#{base}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\"; print $9; print \"+\"$1\":#{base}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\" ; print $10}'"
-    out  = "> #{output_file}.txt"
+    out  = "> #{output_file}"
     `#{cat} | #{awk1} | #{awk2} #{out}`
   rescue => e
     FileUtils.rm(output_file,     :force=>true)

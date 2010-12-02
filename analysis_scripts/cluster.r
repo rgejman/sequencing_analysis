@@ -7,6 +7,16 @@ remove_less_one_and_log = function(d) {
 	return(d)
 }
 
+sizes_to_breaks = function(sizes) {
+	breaks = c(0)
+	last_index = 0
+	for(size in sizes) {
+		last_index = size+last_index
+		breaks = c(breaks,last_index)
+	}
+	return(breaks)
+}
+
 make_wss_plot = function(data,name,n=25) {
 	# This plot helps us find the optimal # of clusters
 	wss <- (nrow(data)-1)*sum(apply(data,2,var))
@@ -55,7 +65,7 @@ make_heatmaps = function(data, symbol, cols_per_heatmap, clusters, postfix) {
 		
 		nheatmaps = ncol(cols_per_heatmap)
 
-		par(mfrow=c(1,nheatmaps))
+		par(mfrow=c(1,nheatmaps+1))
 		
 		for(n in 1:nheatmaps) {
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
@@ -63,6 +73,14 @@ make_heatmaps = function(data, symbol, cols_per_heatmap, clusters, postfix) {
 			nc = ncol(data_plot)
 			image(1:nr,1:nc,data.matrix(data_plot),breaks=breaks,col=colors,axes=FALSE,xlab=colnames(cols_per_heatmap)[n],ylab="")
 		}
+		## Now we add the cluster labels
+				
+		breaks = c(0,seq(from=1,to=length(fit$size),by=1))
+		print(breaks)
+		colors = gray(1:(length(breaks)-1)/(length(breaks)))
+		print(colors)
+		data_plot = t(data.matrix(d$fit.cluster))
+		image(1:nrow(data_plot),1:ncol(data_plot),data_plot,breaks=breaks,col=colors,axes=FALSE,ylab="",xlab="Clusters")
 		dev.off()
 
 		######## OUTPUT SYMBOLS ########

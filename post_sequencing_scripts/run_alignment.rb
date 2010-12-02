@@ -19,7 +19,8 @@ Dir.foreach("#{FASTQ_CHIP_FOLDER}/") do |file|
   puts file
   `touch #{running_file}`
   begin
-    `bowtie --chunkmbs 128 -p #{BT_NUM_THREADS} --best -m 2 #{GENOME} --sam "#{FASTQ_CHIP_FOLDER}/#{file}" "#{tmp_file}"`
+    ## Do not align the last base because it has a higher error rate.
+    `bowtie --chunkmbs 128 -p #{BT_NUM_THREADS} --best -m 2 #{GENOME} --trim3 1 --sam "#{FASTQ_CHIP_FOLDER}/#{file}" "#{tmp_file}"`
     FileUtils.mv(tmp_file, output_file)
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
