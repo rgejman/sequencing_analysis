@@ -50,7 +50,7 @@ res.each_hash do |sequencing_run|
       sample        = samples[lane]
       
       ##### WE DO NOT CONVERT CONTROL LANES TO QSEQ. WASTE OF SPACE! 
-      next it sample["user"].downcase == "control"
+      next if sample["user"].downcase == "control"
       
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file     = sample["qseq_file"]
