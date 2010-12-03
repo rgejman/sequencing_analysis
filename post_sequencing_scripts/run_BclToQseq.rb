@@ -46,11 +46,12 @@ res.each_hash do |sequencing_run|
     `#{cmd}`
     forks = []
     for lane in samples.keys
-      puts "Cat'ing lane #{lane}"
       sample        = samples[lane]
-      
       ##### WE DO NOT CONVERT CONTROL LANES TO QSEQ. WASTE OF SPACE! 
       next if sample["user"].downcase == "control"
+      
+      
+      puts "Cat'ing lane #{lane}"
       
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file     = sample["qseq_file"]
