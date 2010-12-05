@@ -58,6 +58,7 @@ res.each_hash do |sequencing_run|
       puts "C: #{cat_cmd}"
       forks << fork do
         `#{cat_cmd}`
+        `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
         FileUtils.mv(tmp_filepath, qseq_filepath)
       end
     end
