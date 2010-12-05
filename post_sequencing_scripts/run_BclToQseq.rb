@@ -26,8 +26,8 @@ res.each_hash do |sequencing_run|
     sample["qseq_file"]   = base + "_qseq.txt"
     sample["fastq_file"]  = base + "_fastq.txt"
     
-    if File.exists? "#{QSEQ_FOLDER}/#{user.capitalize}/" + sample["qseq_file"]
-      or File.exists? "#{FASTQ_CHIP_FOLDER}/#{user.capitalize}/" + sample["fastq_file"]
+    if File.exists? "#{QSEQ_FOLDER}/#{user.capitalize}/" + sample["qseq_file"] \\
+      or File.exists? "#{FASTQ_CHIP_FOLDER}/#{user.capitalize}/" + sample["fastq_file"] \\
       or File.exists? "#{FASTQ_RNA_SEQ_FOLDER}/#{user.capitalize}/" + sample["fastq_file"]
       next
     else
