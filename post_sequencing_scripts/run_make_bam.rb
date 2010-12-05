@@ -14,6 +14,8 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   begin
     `samtools view -S -b -o #{tmp_file} #{input_file}`
     FileUtils.mv(tmp_file, output_file)
+    Dir.chdir("#{ALIGNMENTS_FOLDER}/")
+    puts `samtools index #{output_file}`
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
     throw e

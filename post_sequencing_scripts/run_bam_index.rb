@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby -wKU
+
+## This should not be necessary and BAM indexes are created by make_bam.
+
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|

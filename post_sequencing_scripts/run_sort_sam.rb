@@ -14,7 +14,14 @@ Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
   begin
     `touch #{running_file}`
     `igvtools sort  "#{input_path}" "#{tmp_file}"`
+    ### Let's check the filesize of the sorted and unsorted to make sure that the sort worked correctly
+    s1 = File.size(input_path)
+    s2 = File.size(tmp_file)
+    if Math.abs(s1 - s2) > 1048576 #1 megabyte in bytes
+      throw "Original file was #{s1} and sorted file is #{s2}. Sort failed. Removing sorted file."
+    end
     FileUtils.mv(tmp_file, output_file)
+    FileUtils.rm(input_path) # Removes the unsorted SAM file.
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
     throw e

@@ -7,8 +7,9 @@ BT_NUM_THREADS		      = 10
 
 Dir.foreach("#{FASTQ_CHIP_FOLDER}/") do |file|
   next unless file =~ /\.txt$/
-  base                    = file.gsub('.txt','.sam')
+  base                    = file.gsub('_fastq.txt','.sam')
   running_file            = running_file(base, "alignment")
+  input_file              = "#{FASTQ_CHIP_FOLDER}/#{file}"
   tmp_file                = "#{TMP_FOLDER}/#{base}"
   output_file             = "#{ALIGNMENTS_FOLDER}/#{base}"
 
@@ -20,8 +21,9 @@ Dir.foreach("#{FASTQ_CHIP_FOLDER}/") do |file|
   `touch #{running_file}`
   begin
     ## Do not align the last base because it has a higher error rate.
-    `bowtie --chunkmbs 128 -p #{BT_NUM_THREADS} --best -m 2 #{GENOME} --trim3 1 --sam "#{FASTQ_CHIP_FOLDER}/#{file}" "#{tmp_file}"`
+    `bowtie --chunkmbs 128 -p #{BT_NUM_THREADS} --best -m 2 #{GENOME} --trim3 1 --sam "#{input_file}" "#{tmp_file}"`
     FileUtils.mv(tmp_file, output_file)
+    FileUtils.rm(input_file) # Removes the unsorted SAM file.
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
     throw e
