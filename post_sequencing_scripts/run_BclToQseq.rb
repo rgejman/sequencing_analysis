@@ -22,7 +22,7 @@ res.each_hash do |sequencing_run|
     lane        = sample["lane"].to_i
     user        = sample["user"]
     name        = sample["name"]
-    sample["qseq_file"] = sample_filename(run_id, lane, user, name)
+    sample["qseq_file"] = sample_filename(run_id, date, lane, user, name)
     next if File.exists? "#{QSEQ_FOLDER}/" + sample["qseq_file"]
     samples[lane] = sample
   end

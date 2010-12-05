@@ -57,7 +57,7 @@ def call(script_name, options)
 end
 
 #Takes in a mysql row (or any hashtable)
-def sample_filename(run_id, lane, user, name)
+def sample_filename(run_id, date, lane, user, name)
   user = user.capitalize
   if user.downcase == "control"
     name += "_#{run_id}_#{lane}"
