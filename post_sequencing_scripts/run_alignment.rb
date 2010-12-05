@@ -5,7 +5,7 @@ require 'constants'
 # Bowtie options
 BT_NUM_THREADS		      = 10
 
-files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.txt").collect{|p| File.join(FASTQ_CHIP_FOLDER,p)}
+files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.txt")
 for file in files
   base                    = file.split("/").last.gsub('_fastq.txt','.sam')
   running_file            = running_file(base, "alignment")
