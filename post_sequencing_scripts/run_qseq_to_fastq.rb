@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby -wKU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
+require 'mysql'
+
+conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+samples_res = conn.query("SELECT * FROM sequencing_samples WHERE sequencing_run_id = '#{seq_run_id}' ORDER BY lane desc")
+
 
 Dir.foreach("#{QSEQ_FOLDER}/") do |file|
   next unless file =~ /\_qseq.txt$/

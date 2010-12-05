@@ -55,3 +55,14 @@ def call(script_name, options)
     `ruby #{SCRIPTS_FOLDER}/#{script_name}`
   end
 end
+
+#Takes in a mysql row (or any hashtable)
+def sample_filename(run_id, lane, user, name, sample_type)
+  user = user.capitalize
+  if user.downcase == "control"
+    name += "_#{run_id}_#{lane}"
+    return "#{user}_#{date}_#{name}_qseq.txt"
+  else
+    return "#{user}_#{name}_#{date}_qseq.txt"
+  end
+end

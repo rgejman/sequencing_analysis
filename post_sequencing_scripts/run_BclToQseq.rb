@@ -19,21 +19,13 @@ res.each_hash do |sequencing_run|
   date    = sequencing_run["run_at"][0,10].gsub("-","_")
   nsamples_already_converted = 0
   samples_res.each_hash do |sample|
-    lane    = sample["lane"].to_i
-    user    = sample["user"]
-    name    = sample["name"]
-    if user.downcase == "control"
-      name += "_#{run_id}_#{lane}"
-      sample["qseq_file"] = "#{QSEQ_FOLDER}/#{user}_#{date}_#{name}_qseq.txt"
-    else
-      sample["qseq_file"] = "#{QSEQ_FOLDER}/#{user}_#{name}_#{date}_qseq.txt"
-    end
-
-    nsamples_already_converted +=1 if File.exists? sample["qseq_file"]
-
+    lane        = sample["lane"].to_i
+    user        = sample["user"]
+    name        = sample["name"]
+    sample["qseq_file"] = sample_filename(run_id, lane, user, name)
+    next if File.exists? "#{QSEQ_FOLDER}/" + sample["qseq_file"]
     samples[lane] = sample
   end
-  next if nsamples_already_converted == 8 #All samples have already been converted to qseq.
 
   `touch #{running_file}`
   begin
@@ -50,19 +42,22 @@ res.each_hash do |sequencing_run|
       ##### WE DO NOT CONVERT CONTROL LANES TO QSEQ. WASTE OF SPACE! 
       next if sample["user"].downcase == "control"
       
-      
-      puts "Cat'ing lane #{lane}"
+      puts "P: Cat'ing lane #{lane}"
       
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file     = sample["qseq_file"]
+      qseq_filepath = "#{QSEQ_FOLDER}/#{user.capitalize}/" + sample["qseq_file"]
+      tmp_filepath  = "#{TMP_FOLDER}/" + sample["qseq_file"]
       ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
-      cat_cmd = "cat #{qseq_files.join(" ")} | grep -e \"1$\" > #{qseq_file}"
-      puts cat_cmd
+      cat_cmd = "cat #{qseq_files.join(" ")} | grep -e \"1$\" > #{tmp_filepath}"
+      puts "C: #{cat_cmd}"
       forks << fork do
         `#{cat_cmd}`
+        FileUtils.mv(tmp_filepath, qseq_filepath)
       end
     end
     for fork in forks
+      puts "P: Waiting for child (#{fork})"
       Process.wait(fork)
     end
   rescue => e
