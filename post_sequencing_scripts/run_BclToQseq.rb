@@ -17,15 +17,20 @@ res.each_hash do |sequencing_run|
   samples = {}
   samples_res = conn.query("SELECT * FROM sequencing_samples WHERE sequencing_run_id = '#{seq_run_id}' ORDER BY lane desc")
   date    = sequencing_run["run_at"][0,10].gsub("-","_")
-  nsamples_already_converted = 0
+  nsamples_not_converted = 0
   samples_res.each_hash do |sample|
     lane        = sample["lane"].to_i
     user        = sample["user"]
     name        = sample["name"]
     sample["qseq_file"] = sample_filename(run_id, date, lane, user, name)
-    next if File.exists? "#{QSEQ_FOLDER}/" + sample["qseq_file"]
+    if File.exists? "#{QSEQ_FOLDER}/#{user.capitalize}/" + sample["qseq_file"]
+      next
+    else
+      nsamples_not_converted += 1 if user.downcase != "control"
+    end
     samples[lane] = sample
   end
+  next if nsamples_not_converted == 0
 
   `touch #{running_file}`
   begin
@@ -46,7 +51,7 @@ res.each_hash do |sequencing_run|
       
       qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
       qseq_file     = sample["qseq_file"]
-      qseq_filepath = "#{QSEQ_FOLDER}/#{user.capitalize}/" + sample["qseq_file"]
+      qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + sample["qseq_file"]
       tmp_filepath  = "#{TMP_FOLDER}/" + sample["qseq_file"]
       ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
       cat_cmd = "cat #{qseq_files.join(" ")} | grep -e \"1$\" > #{tmp_filepath}"
