@@ -19,8 +19,6 @@ samples_res.each_hash do |sample|
   fastq_file    = "#{folder}/#{base_file}_fastq.txt"
   tmp_file      = "#{TMP_FOLDER}/#{base_file}_fastq.txt"
   running_file  = running_file(base_file, "qseq_to_fastq")
-  puts fastq_file
-  puts qseq_file
   next unless File.exists? qseq_file
   next if File.exists? fastq_file
   next if File.exists? running_file
@@ -28,9 +26,9 @@ samples_res.each_hash do |sample|
   
   Dir.chdir(QSEQ_FOLDER)
   begin
-    cat  = "cat #{file}"
+    cat  = "cat #{qseq_file}"
     awk1 = "gawk '{gsub(/\\./, \"N\", $9);print}'"
-    awk2 = "awk '{print \"@\"$1\":#{base}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\"; print $9; print \"+\"$1\":#{base}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\" ; print $10}'"
+    awk2 = "awk '{print \"@\"$1\":#{base_file}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\"; print $9; print \"+\"$1\":#{base_file}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\" ; print $10}'"
     out  = "> #{tmp_file}"
     `#{cat} | #{awk1} | #{awk2} #{out}`
     `mkdir -p #{folder}`
