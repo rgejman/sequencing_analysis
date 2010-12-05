@@ -20,15 +20,15 @@ res.each_hash do |sequencing_run|
   nsamples_not_converted = 0
   samples_res.each_hash do |sample|
     lane        = sample["lane"].to_i
-    user        = sample["user"]
+    user        = sample["user"].capitalize
     name        = sample["name"]
     base        = sample_filebase(run_id, date, lane, user, name)
     sample["qseq_file"]   = base + "_qseq.txt"
-    sample["fastq_file"]  = base + "_fastq.txt"
-    
-    if File.exists? "#{QSEQ_FOLDER}/#{user.capitalize}/" + sample["qseq_file"] \\
-      or File.exists? "#{FASTQ_CHIP_FOLDER}/#{user.capitalize}/" + sample["fastq_file"] \\
-      or File.exists? "#{FASTQ_RNA_SEQ_FOLDER}/#{user.capitalize}/" + sample["fastq_file"]
+    fq  = base + "_fastq.txt"
+    q = "#{QSEQ_FOLDER}/#{user}/" + sample["qseq_file"]
+    c = "#{FASTQ_CHIP_FOLDER}/#{user}/#{fq}"
+    r = "#{FASTQ_RNA_SEQ_FOLDER}/#{user}/#{fq}"
+    if File.exists? q or File.exists? r or File.exists? c
       next
     else
       nsamples_not_converted += 1 if user.downcase != "control"
