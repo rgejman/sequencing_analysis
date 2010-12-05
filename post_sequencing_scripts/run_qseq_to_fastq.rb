@@ -11,7 +11,7 @@ samples_res.each_hash do |sample|
   lane          = sample["lane"].to_i
   user          = sample["user"].capitalize
   name          = sample["name"]
-  type          = sample["type"]
+  type          = sample["type"].downcase
   run_id        = sample["sequencing_run_id"]
   base_file     = sample_filebase(run_id, date, lane, user, name)
   qseq_file     = "#{QSEQ_FOLDER}/#{user}/" + base_file + "_qseq.txt"
@@ -23,7 +23,7 @@ samples_res.each_hash do |sample|
   next if File.exists? fastq_file
   next if File.exists? running_file
   `touch #{running_file}`  
-  
+  puts qseq_file
   Dir.chdir(QSEQ_FOLDER)
   begin
     cat  = "cat #{qseq_file}"

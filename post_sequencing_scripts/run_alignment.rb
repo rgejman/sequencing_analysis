@@ -5,13 +5,14 @@ require 'constants'
 # Bowtie options
 BT_NUM_THREADS		      = 10
 
-Dir.foreach("#{FASTQ_CHIP_FOLDER}/") do |file|
-  next unless file =~ /\.txt$/
-  base                    = file.gsub('_fastq.txt','.sam')
+files = Dir.glob("**/*_fastq.txt").collect{|p| File.join(FASTQ_CHIP_FOLDER,p)}
+for file in files
+  base                    = file.split("/").last.gsub('_fastq.txt','.sam')
   running_file            = running_file(base, "alignment")
-  input_file              = "#{FASTQ_CHIP_FOLDER}/#{file}"
+  input_file              = file
   tmp_file                = "#{TMP_FOLDER}/#{base}"
-  output_file             = "#{ALIGNMENTS_FOLDER}/#{base}"
+  user                    = base.split("_").first
+  output_file             = "#{ALIGNMENTS_FOLDER}/#{user}/#{base}"
 
   next if File.exists? tmp_file
   next if File.exists? output_file
