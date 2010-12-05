@@ -28,6 +28,7 @@ for file in files
     convert_bam   = "samtools view -hbSu -"
     sort_bam      = "samtools sort - #{tmp_file}"
     `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
+    `mkdir -p #{ALIGNMENTS_FOLDER}/#{user}`
     FileUtils.mv(tmp_file, output_file)
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
