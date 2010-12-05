@@ -57,12 +57,12 @@ def call(script_name, options)
 end
 
 #Takes in a mysql row (or any hashtable)
-def sample_filename(run_id, date, lane, user, name)
+def sample_filebase(run_id, date, lane, user, name)
   user = user.capitalize
   if user.downcase == "control"
     name += "_#{run_id}_#{lane}"
-    return "#{user}_#{date}_#{name}_qseq.txt"
+    return "#{user}_#{date}_#{name}"
   else
-    return "#{user}_#{name}_#{date}_qseq.txt"
+    return "#{user}_#{name}_#{date}"
   end
 end

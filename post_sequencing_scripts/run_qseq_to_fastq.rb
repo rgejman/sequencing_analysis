@@ -4,35 +4,41 @@ require 'constants'
 require 'mysql'
 
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
-samples_res = conn.query("SELECT * FROM sequencing_samples WHERE sequencing_run_id = '#{seq_run_id}' ORDER BY lane desc")
+samples_res = conn.query("SELECT * FROM sequencing_samples,sequencing_run where sequencing_run_id = sequencing_run.id and user != 'Control' and user != 'control'")
 
-
-Dir.foreach("#{QSEQ_FOLDER}/") do |file|
-  next unless file =~ /\_qseq.txt$/
-  output_filename         = file.gsub("qseq","fastq")
-  running_file            = running_file(file, "qseq_to_fastq")
-  output_file             = "#{TMP_FOLDER}/#{output_filename}" #We manually move this.
-
+samples_res.each_hash do |sample|
+  date          = sample["run_at"][0,10].gsub("-","_")
+  lane          = sample["lane"].to_i
+  user          = sample["user"].capitalize
+  name          = sample["name"]
+  type          = sample["type"]
+  base_file     = sample_filename(run_id, date, lane, user, name) + "_fastq.txt"
+  qseq_file     = "#{QSEQ_FOLDER}/#{user}/" + base_file
+  folder        = (type == "chip" ? "#{FASTQ_CHIP_FOLDER}" : "#{FASTQ_RNA_SEQ_FOLDER}") + "/#{user}"
+  fastq_file    = "#{folder}/#{base_file}"
+  tmp_file      = "#{TMP_FOLDER}/#{base_file}"
+  running_file  = running_file(base_file, "qseq_to_fastq")
+  next unless File.exists? qseq_file
+  next if File.exists? fastq_file
   next if File.exists? running_file
-  next if File.exists? output_file
+  `touch #{running_file}`  
   
-  base = file.gsub("_qseq.txt","")
-  
-  puts file
-  `touch #{running_file}`
-
   Dir.chdir(QSEQ_FOLDER)
   begin
     cat  = "cat #{file}"
     awk1 = "gawk '{gsub(/\\./, \"N\", $9);print}'"
     awk2 = "awk '{print \"@\"$1\":#{base}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\"; print $9; print \"+\"$1\":#{base}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\" ; print $10}'"
-    out  = "> #{output_file}"
+    out  = "> #{tmp_file}"
     `#{cat} | #{awk1} | #{awk2} #{out}`
+    `mkdir -p #{folder}`
+    FileUtils.mv(tmp_file, fastq_file)
   rescue => e
-    FileUtils.rm(output_file,     :force=>true)
+    FileUtils.rm(fastq_file,     :force=>true)
+    FileUtils.rm(tmp_file,       :force=>true)
     throw e
   ensure
     FileUtils.rm(running_file,    :force=>true)
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
+  
 end
