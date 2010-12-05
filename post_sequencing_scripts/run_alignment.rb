@@ -16,7 +16,7 @@ for file in files
 
   puts tmp_file
   next if File.exists? tmp_file
-  put output_file
+  puts output_file
   next if File.exists? output_file
   next if File.exists? running_file
 
