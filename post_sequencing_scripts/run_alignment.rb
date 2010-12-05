@@ -14,7 +14,9 @@ for file in files
   user                    = base.split("_").first
   output_file             = "#{ALIGNMENTS_FOLDER}/#{user}/#{base}"
 
+  puts tmp_file
   next if File.exists? tmp_file
+  put output_file
   next if File.exists? output_file
   next if File.exists? running_file
 
