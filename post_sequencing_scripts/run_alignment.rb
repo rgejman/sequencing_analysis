@@ -7,7 +7,7 @@ BT_NUM_THREADS		      = 10
 
 files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.txt")
 for file in files
-  base                    = file.split("/").last.gsub('_fastq.txt','.sam')
+  base                    = file.split("/").last.gsub('_fastq.txt','.sorted.bam')
   running_file            = running_file(base, "alignment")
   input_file              = file
   tmp_file                = "#{TMP_FOLDER}/#{base}"
@@ -24,14 +24,16 @@ for file in files
   `touch #{running_file}`
   begin
     ## Do not align the last base because it has a higher error rate.
-    `bowtie --chunkmbs 128 -p #{BT_NUM_THREADS} --best -m 2 #{GENOME} --trim3 1 --sam "#{input_file}" "#{tmp_file}"`
+    bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best -m 2 #{GENOME} --trim3 1 --sam \"#{input_file}\" \"#{tmp_file}\""
+    convert_bam   = "samtools view -h -bS -u"
+    sort_bam      = "samtools sort - #{tmp_file}"
+    `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
     FileUtils.mv(tmp_file, output_file)
-    FileUtils.rm(input_file) # Removes the unsorted SAM file.
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
     throw e
   ensure
-    FileUtils.rm(tmp_file, :force=>true)
+    FileUtils.rm(tmp_file,        :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
   break # We break so that other scripts have a chance to execute before we try this one again.
