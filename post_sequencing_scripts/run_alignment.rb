@@ -12,7 +12,7 @@ for file in files
   input_file              = file
   tmp_file                = "#{TMP_FOLDER}/#{base}"
   user                    = base.split("_").first
-  output_file             = "#{ALIGNMENTS_FOLDER}/#{user}/#{base}"
+  output_file             = "#{ALIGNMENTS_FOLDER}/#{user}/#{base}.bam"
 
   puts tmp_file
   next if File.exists? tmp_file
@@ -29,7 +29,7 @@ for file in files
     sort_bam      = "samtools sort - #{tmp_file}"
     `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
     `mkdir -p #{ALIGNMENTS_FOLDER}/#{user}`
-    FileUtils.mv(tmp_file, output_file)
+    FileUtils.mv(tmp_file + ".bam", output_file)
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
     throw e
