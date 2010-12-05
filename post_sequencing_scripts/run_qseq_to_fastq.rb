@@ -19,6 +19,7 @@ samples_res.each_hash do |sample|
   fastq_file    = "#{folder}/#{base_file}"
   tmp_file      = "#{TMP_FOLDER}/#{base_file}"
   running_file  = running_file(base_file, "qseq_to_fastq")
+  puts fastq_file
   next unless File.exists? qseq_file
   next if File.exists? fastq_file
   next if File.exists? running_file
