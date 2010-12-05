@@ -3,11 +3,11 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 
 # Bowtie options
-BT_NUM_THREADS		      = 10
+BT_NUM_THREADS		      = 24
 
 files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.txt")
 for file in files
-  base                    = file.split("/").last.gsub('_fastq.txt','.sorted.bam')
+  base                    = file.split("/").last.gsub('_fastq.txt','.sorted') #.bam is added automatically
   running_file            = running_file(base, "alignment")
   input_file              = file
   tmp_file                = "#{TMP_FOLDER}/#{base}"
@@ -25,7 +25,7 @@ for file in files
   begin
     ## Do not align the last base because it has a higher error rate.
     bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best -m 2 #{GENOME} --trim3 1 --sam \"#{input_file}\""
-    convert_bam   = "samtools view -h -bS -u"
+    convert_bam   = "samtools view -hbSu -"
     sort_bam      = "samtools sort - #{tmp_file}"
     `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
     FileUtils.mv(tmp_file, output_file)
@@ -36,7 +36,7 @@ for file in files
     FileUtils.rm(tmp_file,        :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
-  break # We break so that other scripts have a chance to execute before we try this one again.
+  #break #since this script is memory and CPU intensive, we just let it loop through all the files needing conversion
 end
 
 # bowtie options:
