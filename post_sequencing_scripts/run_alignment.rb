@@ -14,9 +14,7 @@ for file in files
   user                    = base.split("_").first
   output_file             = "#{ALIGNMENTS_FOLDER}/#{user}/#{base}.bam"
 
-  puts tmp_file
   next if File.exists? tmp_file
-  puts output_file
   next if File.exists? output_file
   next if File.exists? running_file
 
@@ -30,6 +28,7 @@ for file in files
     `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
     `mkdir -p #{ALIGNMENTS_FOLDER}/#{user}`
     FileUtils.mv(tmp_file + ".bam", output_file)
+    puts `samtools index #{output_file}`
   rescue => e
     FileUtils.rm(output_file,     :force=>true)
     throw e
