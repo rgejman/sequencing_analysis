@@ -5,9 +5,9 @@ EXTEND_LENGTH = 100
 files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.bam")
 
 for file in files
-  running_file          = running_file(file, "coverage")
   base                  = file.split("/").last.gsub('.bam','.cov.tdf') #.bam is added automatically
   user                    = base.split("_").first
+  running_file          = running_file(base, "coverage")
   tmp_file1             = "#{TMP_FOLDER}/#{base}.cov.tdf"
   tmp_file2             = "#{TMP_FOLDER}/#{base}.wig"
   output_file_1         = "#{COVERAGE_FOLDER}/#{user}/#{base}.cov.tdf"
