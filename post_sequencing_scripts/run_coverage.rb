@@ -6,7 +6,7 @@ files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.bam")
 
 for file in files
   pid = fork do
-    base                  = file.split("/").last.gsub('.bam','.cov.tdf') #.bam is added automatically
+    base                  = file.split("/").last.gsub('.bam','') #.bam is added automatically
     user                    = base.split("_").first
     running_file          = running_file(base, "coverage")
     tmp_file1             = "#{TMP_FOLDER}/#{base}.cov.tdf"
