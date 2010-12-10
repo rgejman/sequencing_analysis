@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby -wKU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
-files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*.txt") + Dir.glob("#{FASTQ_RNA_SEQ_FOLDER}/**/*.txt")
+files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.txt") + Dir.glob("#{FASTQ_RNA_SEQ_FOLDER}/**/*_fastq.txt")
 for path in files
   puts "Examining #{path}"
   name                          = File.basename(path).gsub("fastq.txt","")
