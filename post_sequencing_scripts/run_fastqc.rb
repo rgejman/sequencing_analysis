@@ -17,6 +17,7 @@ for path in files
   begin
     cmd = "fastqc #{path}"
     `#{cmd}`
+    `mkdir -p #{FASTQC_FOLDER}/#{user}/`
     FileUtils.mv(fastqc_tmp_folder_path,fastqc_output_folder_path)
   rescue => e
     FileUtils.rm(fastqc_tmp_folder_path,        :force=>true)
