@@ -3,8 +3,9 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 files = Dir.entries("#{FASTQ_CHIP_FOLDER}/").collect{|e| "#{FASTQ_CHIP_FOLDER}/#{e}"} + Dir.entries("#{FASTQ_RNA_SEQ_FOLDER}/").collect{|e| "#{FASTQ_RNA_SEQ_FOLDER}/#{e}"}
 for path in files
+  puts "Examining #{path}"
   next unless path =~ /\.txt$/
-  name                          = File.basename(path).gsub(".txt","")
+  name                          = File.basename(path).gsub("fastq.txt","")
   user                          = name.split("_")[0]
   running_file                  = running_file(name, "fastqc")
   fastqc_tmp_folder_path        = path.gsub(".txt","") + "_fastqc"
