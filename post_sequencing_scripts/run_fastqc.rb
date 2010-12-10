@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby -wKU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
-files = Dir.entries("#{FASTQ_CHIP_FOLDER}/").collect{|e| "#{FASTQ_CHIP_FOLDER}/#{e}"} + Dir.entries("#{FASTQ_RNA_SEQ_FOLDER}/").collect{|e| "#{FASTQ_RNA_SEQ_FOLDER}/#{e}"}
+files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*.txt") + Dir.glob("#{FASTQ_RNA_SEQ_FOLDER}/**/*.txt")
 for path in files
   puts "Examining #{path}"
-  next unless path =~ /\.txt$/
   name                          = File.basename(path).gsub("fastq.txt","")
   user                          = name.split("_")[0]
   running_file                  = running_file(name, "fastqc")
