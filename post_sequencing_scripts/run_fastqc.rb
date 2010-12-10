@@ -17,9 +17,7 @@ for path in files
   begin
     cmd = "fastqc #{path}"
     `#{cmd}`
-    cmd = "mv #{fastqc_tmp_folder_path} #{fastqc_output_folder_path}"
-    puts cmd
-    puts `#{cmd}`
+    FileUtils.mv(fastqc_tmp_folder_path,fastqc_output_folder_path)
   rescue => e
     FileUtils.rm(fastqc_tmp_folder_path,        :force=>true)
     FileUtils.rm(fastqc_tmp_zip_path,           :force=>true)
