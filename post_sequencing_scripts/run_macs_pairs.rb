@@ -20,7 +20,7 @@ res.each_hash do |row|
   tmp_folder          = "#{TMP_FOLDER}/#{analysis_folder_name}_macs"
   
   running_file        = running_file(analysis_folder_name, "run_macs_pair")
-  complete_file       = "#{output_folder}/#{analysis_folder_name}_model.pdf"
+  complete_file       = "#{analysis_folder_path}/#{analysis_folder_name}_model.pdf"
   model_file          = "#{TMP_FOLDER}/#{analysis_folder_name}_model.r"
   
   next if File.exists? running_file #This is being processed
