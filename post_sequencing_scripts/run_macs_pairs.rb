@@ -21,7 +21,7 @@ res.each_hash do |row|
   
   running_file        = running_file(analysis_folder_name, "run_macs_pair")
   complete_file       = "#{analysis_folder_path}/#{analysis_folder_name}_model.pdf"
-  model_file          = "#{TMP_FOLDER}/#{analysis_folder_name}_model.r"
+  model_file          = "#{analysis_folder_path}/#{analysis_folder_name}_model.r"
   
   next if File.exists? running_file #This is being processed
   next if File.exists? analysis_folder_path #this has already been analyzed.
