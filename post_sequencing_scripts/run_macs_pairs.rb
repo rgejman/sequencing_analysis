@@ -31,7 +31,7 @@ res.each_hash do |row|
     
   puts analysis_folder_name
   `touch #{running_file}`
-  `mkdir -p #{MACS_FOLDER}/#{f_user}/#{analysis_folder_path}`
+  `mkdir -p #{analysis_folder_path}`
   Dir.chdir(analysis_folder_path)
   begin
     puts `macs14 -t #{f_path} -c #{b_path} --g mm -n #{analysis_folder_name}`
