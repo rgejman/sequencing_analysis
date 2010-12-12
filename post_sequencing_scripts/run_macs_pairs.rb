@@ -12,6 +12,7 @@ res.each_hash do |row|
   
   f_path = "#{ALIGNMENTS_FOLDER}/#{f_user}/#{f_name}.sorted.bam"
   b_path = "#{ALIGNMENTS_FOLDER}/#{b_user}/#{b_name}.sorted.bam"
+  puts "macs: Checking #{analysis_folder_name}"
   analysis_folder_name = f_name + "_" + b_name
   analysis_folder_path = "#{MACS_FOLDER}/#{f_user}/#{analysis_folder_name}"
   running_file        = running_file(analysis_folder_name, "run_macs")
