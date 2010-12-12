@@ -23,10 +23,15 @@ res.each_hash do |row|
   complete_file       = "#{analysis_folder_path}/#{analysis_folder_name}_model.pdf"
   model_file          = "#{analysis_folder_path}/#{analysis_folder_name}_model.r"
   
+  puts "\t Running file exists?"
   next if File.exists? running_file #This is being processed
+  puts "\t Analysis folder exists?"
   next if File.exists? analysis_folder_path #this has already been analyzed.
+  puts "\t foreground exists?"
   next unless File.exists? "#{f_path}"
+  puts "\t background exists?"
   next unless File.exists? "#{b_path}"
+  puts "\t Model exists?"
   next if File.exists? complete_file # We use the model pdf as evidence that the run has completed.
     
   puts analysis_folder_name
