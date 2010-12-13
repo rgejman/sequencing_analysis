@@ -92,8 +92,6 @@ make_heatmaps = function(data, symbol, cols_per_heatmap, clusters, postfix) {
 	}
 }
 
-
-
 num_blocks = 80
 #base_col_names = unlist(lapply(0:(num_blocks-1), function(x) paste("b",x,sep="")))
 non_numeric_col_names = c("symbol","chr","start","end","strand")
@@ -149,5 +147,3 @@ make_heatmaps(WTK9_KRK9, t1$symbol, cols_per_heatmap, clusters, "WTK9_KRK9")
 
 cols_per_heatmap = data.frame(WTK4=colnames(WTK4), KRK4=colnames(KRK4), WTK9=colnames(WTK9), KRK9=colnames(KRK9))
 make_heatmaps(WTK4_KRK4_WTK9_KRK9, t1$symbol, cols_per_heatmap, clusters, "WTK4_KRK4_WTK9_KRK9")
-
-

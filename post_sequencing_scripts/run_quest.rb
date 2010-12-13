@@ -26,6 +26,7 @@ res.each_hash do |row|
   Dir.chdir(TMP_FOLDER)
   `touch #{running_file}`
   begin
+    GENOME = "mm9"
     x = "generate_QuEST_parameters.pl -silent -bam_align_ChIP #{f_path} -bam_align_RX_noIP #{b_path} -gt #{QUEST_GENOME_TABLES}/#{GENOME} -ap #{tmp_folder}"
     puts x
     Open3.popen3(x) {
