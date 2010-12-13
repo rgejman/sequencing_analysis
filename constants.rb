@@ -34,6 +34,7 @@ QUEST_GENOME_TABLES     = "#{GENOMICS_FOLDER}/QuEST_genome_table_files"
 USEFUL_BED_FILES        = "#{GENOMICS_FOLDER}/useful_bed_files"
 BOWTIE_INDEXES          = CONFIG["bowtie_indexes_folder"]
 
+GENOMES                 = {"mm"=>"mm9", "hg"=>"hg19", "phix"=>"phix174"}
 GENOME                  = "mm9"
 
 MYSQL_DB                = CONFIG["mysql_db"]
