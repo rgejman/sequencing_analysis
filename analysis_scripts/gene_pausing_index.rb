@@ -13,9 +13,9 @@ def remove_smaller_genes(arr)
       a_len = (a[:start] - a[:end]).abs
       b_len = (b[:start] - b[:end]).abs
       if a_len < b_len
-        f_arr.remove(a)
+        f_arr.delete(a)
       elsif
-        f_arr.remove(b)
+        f_arr.delete(b)
       end
     end
   end
