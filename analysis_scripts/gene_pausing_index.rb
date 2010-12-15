@@ -13,6 +13,7 @@ US_TSS_OFFSET       = 250 # +/- this number is the area defined to be the paused
 TSS_DS_OFFSET       = 500 # TSS + this number until the end of the gene is the "DS" area
 
 GENE_BED_FILE       = "/home/tarakhovsky/genomics/useful_bed_files/mm9.refseq.genes.uniq_longer.bed"
+OUTPUT_FILE         = File.basename(WIG_FILE).split(".")[0] + ".pausing_index.txt" #e.g. "Eugene_WT_H3K4me3_CD4.sorted.bam.wig" to "Eugene_WT_H3K4me3_CD4.profile.6000.80.txt"
 
 block_len = block_len.to_i
 genes = File.readlines(GENE_BED_FILE).collect{|l| g={}; g[:chr],g[:start],g[:end],g[:symbol],tmp,g[:strand]= l.chomp.split("\t");g}
@@ -47,7 +48,8 @@ for gene in genes
     puts "#{gene[:symbol]} could not be found in the wig file."
   end
 end
-
-for gene in genes
-  puts "#{gene[:symbol]}\t#{gene[:chr]}\t#{gene[:start]}\t#{gene[:end]}\t#{gene[:strand]}\t#{gene[:pausing_index]}\t#{gene[:pausing_area_rpkm]}\t#{gene[:ds_area_rpkm]}"
+File.open(OUTPUT_FILE, "w") do |f|
+  for gene in genes
+    f.puts "#{gene[:symbol]}\t#{gene[:chr]}\t#{gene[:start]}\t#{gene[:end]}\t#{gene[:strand]}\t#{gene[:pausing_index]}\t#{gene[:pausing_area_rpkm]}\t#{gene[:ds_area_rpkm]}"
+  end
 end
