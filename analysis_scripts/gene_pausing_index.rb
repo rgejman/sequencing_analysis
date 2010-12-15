@@ -9,13 +9,13 @@ def remove_smaller_genes(arr)
   f_arr = arr.clone
   for a in (0...arr.length)
     for b in ((a+1)...arr.length)
-      next unless a[:gene] == b[:gene]
-      a_len = (a[:start].to_i - a[:end].to_i).abs
-      b_len = (b[:start].to_i - b[:end].to_i).abs
+      next unless arr[a][:gene] == arr[b][:gene]
+      a_len = (arr[a][:start].to_i - arr[a][:end].to_i).abs
+      b_len = (arr[b][:start].to_i - arr[b][:end].to_i).abs
       if a_len < b_len
-        f_arr.delete(a)
+        f_arr.delete(arr[a])
       elsif
-        f_arr.delete(b)
+        f_arr.delete(arr[b])
       end
     end
   end
