@@ -33,19 +33,21 @@ for gene in genes
     ds_end        = gene[:end]
   end
   begin
+    gene[:pausing_index]      = 0 # this means it could not be calculated.
     gene[:pausing_area_rpkm]  = reader.fpkm(gene[:chr], pausing_start, pausing_end)
     gene[:ds_area_rpkm]       = reader.fpkm(gene[:chr], ds_start, ds_end)
-    gene[:pausing_index]      = Math.log2(gene[:pausing_area_rpkm] - gene[:ds_area_rpkm])
+    diff = gene[:pausing_area_rpkm] - gene[:ds_area_rpkm]
+    if diff <= 0
+      gene[:pausing_index]    = 0
+    else
+      gene[:pausing_index]    = Math.log2(diff)
+    end
   rescue => e
     puts e
     puts "#{gene[:symbol]} could not be found in the wig file."
   end
 end
 
-File.open(output_file, "w") do |f|
-  f.print "symbol\tchr\tstart\tend\tstrand\tpausing_index\tpromotor_rpkm\tds_rpkm"
-  f.print "\n"
-  for gene in genes
-    f.puts "#{gene[:symbol]}\t#{gene[:chr]}\t#{gene[:start]}\t#{gene[:end]}\t#{gene[:strand]}\t#{gene[:pausing_index]}\t#{gene[:pausing_area_rpkm]}\t#{gene[:ds_area_rpkm]}"
-  end
+for gene in genes
+  puts "#{gene[:symbol]}\t#{gene[:chr]}\t#{gene[:start]}\t#{gene[:end]}\t#{gene[:strand]}\t#{gene[:pausing_index]}\t#{gene[:pausing_area_rpkm]}\t#{gene[:ds_area_rpkm]}"
 end
