@@ -10,8 +10,8 @@ def remove_smaller_genes(arr)
   for a in (0...arr.length)
     for b in ((a+1)...arr.length)
       next unless a[:gene] == b[:gene]
-      a_len = (a[:start] - a[:end]).abs
-      b_len = (b[:start] - b[:end]).abs
+      a_len = (a[:start].to_i - a[:end].to_i).abs
+      b_len = (b[:start].to_i - b[:end].to_i).abs
       if a_len < b_len
         f_arr.delete(a)
       elsif
