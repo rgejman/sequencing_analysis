@@ -1,3 +1,7 @@
+max_mean_plus_sd = function(d,stdevs=2) {
+	return(max(mean(d, trim=0.05)+(stdevs * sd(d))));
+}
+
 remove_less_one_and_log = function(d) {
 	# Changes values <1 to 1 and log-transforms the data
 	# To do this we should set all RPKM values <1 to some constant (I chose 1 because log(1) = 0)
@@ -35,26 +39,20 @@ make_wss_plot = function(data,name,n=25) {
 # b0	b0		b0		b0
 # b1	b1		b1		b1
 # etc	etc		etc		etc
-make_heatmaps = function(data, symbol, cols_per_heatmap, clusters, postfix) {
+# data_to_add is useful if you want to cluster on one set of data, but put another cluster aside it.
+make_heatmaps = function(data, breaks, symbol, cols_per_heatmap, clusters, postfix, cols_to_cluster=c()) {
+	if(length(cols_to_cluster) == 0) {
+		cols_to_cluster = colnames(data)
+	}
 	for(cluster in clusters) {
-
-		######## DETERMINE # OF BREAKS ########
-		# e.g.
-		# K9 columns have mean=~2 and sd=~2 (without log)
-		# K4 columns have mean=~2 and sd that ranges from 7-25
-
-		max_mean_plus_sd = max(mean(data)+sd(data))
-		breaks = c(seq(from=0,to=max_mean_plus_sd,by=0.5),10000)
-		colors = rev(gray(0:(length(breaks)-2)/(length(breaks)-2)))
-
 		######## CLUSTERING ########
-
-		fit <- kmeans(data, cluster, iter.max=50,nstart=10)
+		fit <- kmeans(subset(data, select=cols_to_cluster), cluster, iter.max=50,nstart=10)
 
 		# get cluster means 
 		# append cluster assignment
 		d <- data.frame(data, symbol)
 		d <- data.frame(d, fit$cluster)
+		
 
 		d = d[order(d$fit.cluster),]
 
@@ -68,19 +66,19 @@ make_heatmaps = function(data, symbol, cols_per_heatmap, clusters, postfix) {
 		par(mfrow=c(1,nheatmaps+1))
 		
 		for(n in 1:nheatmaps) {
+			brk = unlist(breaks[n])
+			colors = rev(gray(0:(length(brk)-2)/(length(brk)-2)))
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
 			nr = nrow(data_plot)
 			nc = ncol(data_plot)
-			image(1:nr,1:nc,data.matrix(data_plot),breaks=breaks,col=colors,axes=FALSE,xlab=colnames(cols_per_heatmap)[n],ylab="")
+			image(1:nr,1:nc,data.matrix(data_plot),breaks=brk,col=colors,axes=FALSE,xlab=colnames(cols_per_heatmap)[n],ylab="")
 		}
 		## Now we add the cluster labels
 				
-		breaks = c(0,seq(from=1,to=length(fit$size),by=1))
-		print(breaks)
-		colors = gray(1:(length(breaks)-1)/(length(breaks)))
-		print(colors)
+		label_breaks = c(0,seq(from=1,to=length(fit$size),by=1))
+		colors = gray(1:(length(label_breaks)-1)/(length(label_breaks)))
 		data_plot = t(data.matrix(d$fit.cluster))
-		image(1:nrow(data_plot),1:ncol(data_plot),data_plot,breaks=breaks,col=colors,axes=FALSE,ylab="",xlab="Clusters")
+		image(1:nrow(data_plot),1:ncol(data_plot),data_plot,breaks=label_breaks,col=colors,axes=FALSE,ylab="",xlab="Clusters")
 		dev.off()
 
 		######## OUTPUT SYMBOLS ########
@@ -128,6 +126,11 @@ WTK9_KRK9 			= WTK9_KRK9[,-(1:1)] # Remove the "row.names" column which was adde
 WTK4_KRK4_WTK9_KRK9 = merge(WTK4_KRK4,WTK9_KRK9, all.x=FALSE,all.y=TRUE,sort=FALSE, by="row.names")
 WTK4_KRK4_WTK9_KRK9 = WTK4_KRK4_WTK9_KRK9[,-(1:1)] # Remove the "row.names" column which was added automatically on merge
 
+
+### DATA NORMALIZATION ###
+## OPTIONS:
+## 1. Change values <1 to 1 and log-transform the data. This smoothes everything and is nice to look for big trends.
+## 2. Don't normalize. The values get capped automatically in the heatmap making stage.
 # Changes values <1 to 1 and log-transform the data
 WTK4_KRK4 			= remove_less_one_and_log(WTK4_KRK4)
 WTK9_KRK9 			= remove_less_one_and_log(WTK9_KRK9)
@@ -139,11 +142,26 @@ make_wss_plot(WTK4_KRK4, "WTK4_KRK4")
 make_wss_plot(WTK9_KRK9, "WTK9_KRK9")
 make_wss_plot(WTK4_KRK4_WTK9_KRK9, "WTK4_KRK4_WTK9_KRK9")
 
+bk = c(seq(from=0,to=max_mean_plus_sd(WTK4_KRK4),by=0.5),10000)
+breaks = list(bk,bk)
 cols_per_heatmap = data.frame(WTK4=colnames(WTK4), KRK4=colnames(KRK4))
-make_heatmaps(WTK4_KRK4, t1$symbol, cols_per_heatmap, clusters, "WTK4_KRK4")
+make_heatmaps(WTK4_KRK4, breaks, t1$symbol, cols_per_heatmap, clusters, "WTK4_KRK4")
 
+bk = c(seq(from=0,to=max_mean_plus_sd(WTK9_KRK9),by=0.5),10000)
+breaks = list(bk,bk)
 cols_per_heatmap = data.frame(WTK9=colnames(WTK9), KRK9=colnames(KRK9))
-make_heatmaps(WTK9_KRK9, t1$symbol, cols_per_heatmap, clusters, "WTK9_KRK9")
+make_heatmaps(WTK9_KRK9, breaks, t1$symbol, cols_per_heatmap, clusters, "WTK9_KRK9")
 
+k4bk = c(seq(from=0,to=max_mean_plus_sd(WTK4_KRK4),by=0.5),10000)
+k9bk = c(seq(from=0,to=max_mean_plus_sd(WTK9_KRK9),by=0.5),10000)
+breaks = list(k4bk,k4bk,k9bk,k9bk)
 cols_per_heatmap = data.frame(WTK4=colnames(WTK4), KRK4=colnames(KRK4), WTK9=colnames(WTK9), KRK9=colnames(KRK9))
-make_heatmaps(WTK4_KRK4_WTK9_KRK9, t1$symbol, cols_per_heatmap, clusters, "WTK4_KRK4_WTK9_KRK9")
+make_heatmaps(WTK4_KRK4_WTK9_KRK9, breaks, t1$symbol, cols_per_heatmap, clusters, "WTK4_KRK4_WTK9_KRK9")
+
+## Cluster only on K9
+k4bk = c(seq(from=0,to=max_mean_plus_sd(WTK4_KRK4),by=0.5),10000)
+k9bk = c(seq(from=0,to=max_mean_plus_sd(WTK9_KRK9),by=0.5),10000)
+breaks = list(k4bk,k4bk,k9bk,k9bk)
+cols_per_heatmap = data.frame(WTK4=colnames(WTK4), KRK4=colnames(KRK4), WTK9=colnames(WTK9), KRK9=colnames(KRK9))
+cols_to_cluster = c(colnames(WTK9), colnames(KRK9))
+make_heatmaps(WTK4_KRK4_WTK9_KRK9, breaks, t1$symbol, cols_per_heatmap, clusters, "WTK4_KRK4_WTK9_KRK9_clustered_on_K9", cols_to_cluster)
