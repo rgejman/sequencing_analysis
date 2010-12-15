@@ -25,10 +25,9 @@ end
 WIG_FILE            = ARGV[0] ## This should be a RNA Pol II chip-seq wiggle file
 AROUND_TSS_AREA     = 250 # +/- this number is the area defined to be the paused-pol II area.
 TSS_DS_OFFSET       = 500 # TSS + this number until the end of the gene is the "DS" area
-HEADER_POSTPEND     = ARGV[1]
 
 GENE_BED_FILE       = "/home/tarakhovsky/genomics/useful_bed_files/mm9.refseq.genes.gtf"
-output_file         = File.basename(WIG_FILE).split(".")[0] + ".profile.#{DISTANCE_AROUND_TSS}.#{BLOCKS}.txt" #e.g. "Eugene_WT_H3K4me3_CD4.sorted.bam.wig" to "Eugene_WT_H3K4me3_CD4.profile.6000.80.txt"
+output_file         = File.basename(WIG_FILE).split(".")[0] + ".pausing_index.txt" #e.g. "Eugene_WT_H3K4me3_CD4.sorted.bam.wig" to "Eugene_WT_H3K4me3_CD4.profile.6000.80.txt"
 
 block_len = block_len.to_i
 genes = File.readlines(GENE_BED_FILE).collect{|l| g={}; g[:chr],g[:start],g[:end],g[:gene],tmp,g[:strand]= l.chomp.split("\t");g}
