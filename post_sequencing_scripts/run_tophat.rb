@@ -7,19 +7,20 @@ NUM_THREADS = 12
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 res = conn.query("SELECT * FROM rna_seq_alignment ORDER BY created_at desc")
 res.each_hash do |rna_seq_alignment|
-  output_folder_name  = rna_seq_alignment["person"] + "_" + rna_seq_alignment["sample"]
-  output_folder_path  = "#{TOPHAT_FOLDER}/#{output_folder_name}"
+  person =  rna_seq_alignment["person"]
+  output_folder_name  = person + "_" + rna_seq_alignment["sample"]
+  output_folder_path  = "#{TOPHAT_FOLDER}/#{person}/#{output_folder_name}"
   next if File.exists? output_folder_path #this has already been analyzed. 
   files_res = conn.query("SELECT * FROM rna_seq_pairs WHERE rna_seq_alignment_id = #{rna_seq_alignment['id']}")
   reads = []
   # for each file that comprises this RNA-Seq run (there may be multiple)
   files_res.each_hash do |file|
     if file["paired"].to_i == 1
-      f1 = "#{FASTQ_RNA_SEQ_FOLDER}/#{file['name']}.1.txt"
-      f2 = "#{FASTQ_RNA_SEQ_FOLDER}/#{file['name']}.2.txt"
+      f1 = "#{FASTQ_RNA_SEQ_FOLDER}/#{person}/#{file['name']}.1.txt"
+      f2 = "#{FASTQ_RNA_SEQ_FOLDER}/#{person}/#{file['name']}.2.txt"
       reads << [f1,f2]
     else
-      reads << "#{FASTQ_RNA_SEQ_FOLDER}/#{file['name']}.txt"
+      reads << "#{FASTQ_RNA_SEQ_FOLDER}/#{person}/#{file['name']}.txt"
     end
   end
   read_length           = rna_seq_alignment["read_length"].to_i
@@ -38,6 +39,7 @@ res.each_hash do |rna_seq_alignment|
   GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.gtf" #mm9.refseq.genes.gtf"
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
+  `mkdir -p #{output_folder_path}`
   begin
     cmd = "tophat -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{genome} #{files_arg}"
     puts cmd
