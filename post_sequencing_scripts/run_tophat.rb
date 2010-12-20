@@ -24,6 +24,9 @@ res.each_hash do |rna_seq_alignment|
   end
   read_length           = rna_seq_alignment["read_length"].to_i
   mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
+  genome                = rna_seq_alignment["genome"]
+  genome                = GENOMES[genome]
+  
   mean_dist_arg         = ""
   if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
     files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
@@ -36,7 +39,7 @@ res.each_hash do |rna_seq_alignment|
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
   begin
-    cmd = "tophat -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{GENOME} #{files_arg}"
+    cmd = "tophat -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{genome} #{files_arg}"
     puts cmd
     `#{cmd}`
     `bamtools index -in #{output_folder_path}/accepted_hits.bam`
