@@ -39,7 +39,6 @@ res.each_hash do |rna_seq_alignment|
   GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.gtf" #mm9.refseq.genes.gtf"
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
-  `mkdir -p #{output_folder_path}`
   begin
     cmd = "tophat -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{genome} #{files_arg}"
     puts cmd
