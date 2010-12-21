@@ -7,9 +7,10 @@ NUM_THREADS = 12
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 res = conn.query("SELECT * FROM rna_seq_alignment ORDER BY created_at desc")
 res.each_hash do |rna_seq_alignment|
-  output_folder_name            = rna_seq_alignment["person"] + "_" + rna_seq_alignment["sample"]
+  person                        = rna_seq_alignment["person"]
+  output_folder_name            = person + "_" + rna_seq_alignment["sample"]
   running_file                  = running_file(output_folder_name, "cufflinks")
-  output_folder_path            = "#{TOPHAT_FOLDER}/#{output_folder_name}"
+  output_folder_path            = "#{TOPHAT_FOLDER}/#{person}/#{output_folder_name}"
   accepted_hits                 = "#{output_folder_path}/accepted_hits.bam"
   junctions                     = "#{output_folder_path}/junctions.bed"
   puts "Checking for existence of #{output_folder_path}"
