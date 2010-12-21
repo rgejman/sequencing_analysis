@@ -33,7 +33,7 @@ res.each_hash do |pair|
   puts "exists"
   print "Checking existence of #{background_folder}/transcripts/transcripts.gtf ... "
   next unless File.exists? "#{background_folder}/transcripts/transcripts.gtf"
-  print "exists"
+  puts "exists"
   running_file      = running_file(output_folder_name, "cuffdiff")
   
   #-r #{BOWTIE_INDEXES}/#{GENOME}.fa
