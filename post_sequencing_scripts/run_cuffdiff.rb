@@ -12,14 +12,17 @@ res.each_hash do |pair|
   foreground        = conn.query("SELECT * FROM rna_seq_alignment WHERE id = '#{foreground_id}'").fetch_hash
   background        = conn.query("SELECT * FROM rna_seq_alignment WHERE id = '#{background_id}'").fetch_hash
   
-  foreground_name   = foreground["person"] + "_" + foreground["sample"]
-  background_name   = background["person"] + "_" + background["sample"]
+  f_person          = foreground["person"]
+  b_person          = background["person"]
   
-  foreground_folder = "#{TOPHAT_FOLDER}/#{foreground_name}"
-  background_folder = "#{TOPHAT_FOLDER}/#{background_name}"
+  foreground_name   = f_person + "_" + foreground["sample"]
+  background_name   = b_person + "_" + background["sample"]
   
-  output_folder_name  = "#{foreground['person']}_#{foreground['sample']}_#{background['sample']}"
-  output_folder_path  = "#{DIFF_EXPR_FOLDER}/#{output_folder_name}"
+  foreground_folder = "#{TOPHAT_FOLDER}/#{f_person}/#{foreground_name}"
+  background_folder = "#{TOPHAT_FOLDER}/#{b_person}/#{background_name}"
+  
+  output_folder_name  = "#{f_person}_#{foreground['sample']}_#{background['sample']}"
+  output_folder_path  = "#{DIFF_EXPR_FOLDER}/#{f_person}/#{output_folder_name}"
   
   labels              = background["sample"] + "," + foreground["sample"]
   
@@ -37,6 +40,7 @@ res.each_hash do |pair|
   REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.gtf"
   `touch #{running_file}`
   begin
+    `mkdir -p #{output_folder_path}`
     cmd = "cuffdiff -o #{output_folder_path} -p #{NUM_THREADS} -L #{labels} #{REF_TRANSCRIPTS_FILE} #{background_folder}/accepted_hits.bam #{foreground_folder}/accepted_hits.bam"
     puts cmd
     `#{cmd}`
