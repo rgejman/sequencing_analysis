@@ -33,7 +33,8 @@ class WigReaderFast < WigReader
         end
         line = lines.shift
         puts line
-        raise "This was supposed to be a header line. Instead go: #{line}." if line[0,1] != "v"
+        raise "This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line[0,1] != "v"
+        puts "Got header (#{line})"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
         d = {}
