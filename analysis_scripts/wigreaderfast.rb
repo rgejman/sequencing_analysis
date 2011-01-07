@@ -32,6 +32,7 @@ class WigReaderFast < WigReader
           lines = lines[header_pos...next_header_pos] #Trim the array; keep only the lines for my header
         end
         line = lines.shift
+        puts line
         raise "This was supposed to be a header line. Instead go: #{line}." if line[0,1] != "v"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
