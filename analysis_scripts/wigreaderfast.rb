@@ -1,7 +1,7 @@
 # Ron Shlomo Gejman
 # ron.gejman@gmail.com
 # All rights granted for commercial and non-commercial use
-require 'WigReader'
+require 'wigreader.rb'
 
 class WigReaderFast < WigReader
   
