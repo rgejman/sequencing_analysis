@@ -9,21 +9,29 @@ class WigReaderFast < WigReader
     @data = {}
     chr   = nil
     step  = nil
-    puts "Getting header locations"
-    
+    print "Getting header locations..."
     # Use grep to identify the locations of the chromosome headers in the wiggle file
     headers = `grep -n v #{filename}`.split("\n").collect{|l| l.split(":")[0].to_i - 1} #subtract one to get base-0 pos.
+    puts "done"
     ## MEMORY INTENSIVE STEP
-    puts "Reading wiggle file"
+    print "Slurping wiggle file..."
     lines = File.readlines(filename)
+    puts "done"
     
     puts "Parsing wiggle file"
     ## END MEMORY INTENSIVE STEP
     pipes = []
-    for header_start in headers
+    for header_pos_index in (0...headers.length)
+      header_pos = headers[header_pos_index]
+      next_header_pos = if header_pos_index < (headers.length-1) ? header_pos_index+1 : nil
       rd, wr = IO.pipe
       fork do
-        line = lines[header_start]
+        if next_header_pos.nil?
+          lines[header_pos..-1]
+        else
+          lines = lines[header_pos...next_header_pos] #Trim the array; keep only the lines for my header
+        end
+        line = lines.shift
         raise "This was supposed to be a header line. Instead go: #{line}." if line[0,1] != "v"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
@@ -32,7 +40,7 @@ class WigReaderFast < WigReader
         d[chr] = {:step=>step, :positions=>{}, :chr=>chr}
         last_pos      = nil
         puts "Reading #{chr} with #{step}nt steps"
-        for i in ((header_start+1)...lines.length)
+        for i in (0...lines.length)
           line = lines[i].chomp!
           pos,fpkm = line.split(" ")
           pos = pos.to_i
