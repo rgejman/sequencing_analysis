@@ -26,11 +26,13 @@ class WigReaderFast < WigReader
       next_header_pos = header_pos_index < (headers.length-1) ? header_pos_index+1 : nil
       rd, wr = IO.pipe
       fork do
+        pre = lines.length
         if next_header_pos.nil?
           lines = lines[header_pos..-1]
         else
           lines = lines[header_pos...next_header_pos] #Trim the array; keep only the lines for my header
         end
+        puts "There were #{pre} lines. After trimming there are #{lines.length}"
         line = lines.shift
         raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
         puts "Got header (#{line}) for pos #{header_pos}. next_header_pos: #{next_header_pos}"
