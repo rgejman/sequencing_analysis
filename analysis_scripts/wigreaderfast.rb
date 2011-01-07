@@ -10,7 +10,9 @@ class WigReaderFast < WigReader
     chr   = nil
     step  = nil
     puts "Getting header locations"
-    headers = `grep -n v #{filename}`.split("\n").collect{|l| l.split(":")[0].to_i}
+    
+    # Use grep to identify the locations of the chromosome headers in the wiggle file
+    headers = `grep -n v #{filename}`.split("\n").collect{|l| l.split(":")[0].to_i - 1} #subtract one to get base-0 pos.
     ## MEMORY INTENSIVE STEP
     puts "Reading wiggle file"
     lines = File.readlines(filename)
@@ -22,6 +24,7 @@ class WigReaderFast < WigReader
       rd, wr = IO.pipe
       fork do
         line = lines[header_start]
+        raise "This was supposed to be a header line. Instead go: #{line}." if line[0,1] != "v"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
         d = {}
