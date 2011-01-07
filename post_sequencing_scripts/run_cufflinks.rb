@@ -13,6 +13,7 @@ res.each_hash do |rna_seq_alignment|
   output_folder_path            = "#{TOPHAT_FOLDER}/#{person}/#{output_folder_name}"
   accepted_hits                 = "#{output_folder_path}/accepted_hits.bam"
   junctions                     = "#{output_folder_path}/junctions.bed"
+  transcripts                   = "#{output_folder_path}/transcripts"
   puts "Checking for existence of #{output_folder_path}"
   puts "Checking for existence of #{accepted_hits}"
   puts "Checking for existence of #{junctions}"
@@ -25,11 +26,24 @@ res.each_hash do |rna_seq_alignment|
   REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.gtf"
   `touch #{running_file}`
   begin
-    cmd = "cufflinks -G #{REF_TRANSCRIPTS_FILE} -p #{NUM_THREADS} -o #{output_folder_path}/transcripts #{accepted_hits}" # -r #{BOWTIE_INDEXES}/#{GENOME}.fa
+    cmd = "cufflinks -G #{REF_TRANSCRIPTS_FILE} -p #{NUM_THREADS} -o #{transcripts} #{accepted_hits}" # -r #{BOWTIE_INDEXES}/#{GENOME}.fa
     puts cmd
     `#{cmd}`
     Dir.chdir("#{output_folder_path}/transcripts")
     `cuffcompare -r #{REF_TRANSCRIPTS_FILE} -o cuffcompare transcripts.gtf`
+    
+    # Replace cufflinks gene_ids with the gene symbols
+    gene_expr = File.readlines("#{transcripts}/genes.expr").collect{|l| l.chomp.split("\t")}
+    loci = {}
+    File.readlines("#{transcripts}/cuffcompare.loci").each{|l| t=l.split("\t"); loci[t[0]]=t[2].split("|").first}
+    File.open("#{transcripts}/genes.symbols.expr","w") do |f|
+      f.puts gene_expr.shift.join("\t")
+      for line in gene_expr
+        line[0] = loci[line[0]]
+        f.puts line.join("\t")
+      end
+    end
+    
   rescue => e
     throw e
   ensure

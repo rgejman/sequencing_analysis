@@ -132,15 +132,15 @@ WTK4_KRK4_WTK9_KRK9 = WTK4_KRK4_WTK9_KRK9[,-(1:1)] # Remove the "row.names" colu
 ## 1. Change values <1 to 1 and log-transform the data. This smoothes everything and is nice to look for big trends.
 ## 2. Don't normalize. The values get capped automatically in the heatmap making stage.
 # Changes values <1 to 1 and log-transform the data
-WTK4_KRK4 			= remove_less_one_and_log(WTK4_KRK4)
-WTK9_KRK9 			= remove_less_one_and_log(WTK9_KRK9)
-WTK4_KRK4_WTK9_KRK9 = remove_less_one_and_log(WTK4_KRK4_WTK9_KRK9)
+#WTK4_KRK4 			= remove_less_one_and_log(WTK4_KRK4)
+#WTK9_KRK9 			= remove_less_one_and_log(WTK9_KRK9)
+#WTK4_KRK4_WTK9_KRK9 = remove_less_one_and_log(WTK4_KRK4_WTK9_KRK9)
 
 clusters = c(8,10,15) #16,6,10,20,
 
-make_wss_plot(WTK4_KRK4, "WTK4_KRK4")
-make_wss_plot(WTK9_KRK9, "WTK9_KRK9")
-make_wss_plot(WTK4_KRK4_WTK9_KRK9, "WTK4_KRK4_WTK9_KRK9")
+#make_wss_plot(WTK4_KRK4, "WTK4_KRK4")
+#make_wss_plot(WTK9_KRK9, "WTK9_KRK9")
+#make_wss_plot(WTK4_KRK4_WTK9_KRK9, "WTK4_KRK4_WTK9_KRK9")
 
 bk = c(seq(from=0,to=max_mean_plus_sd(WTK4_KRK4),by=0.5),10000)
 breaks = list(bk,bk)
