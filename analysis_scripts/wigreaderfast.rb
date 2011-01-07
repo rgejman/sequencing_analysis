@@ -26,6 +26,7 @@ class WigReaderFast < WigReader
       next_header_pos = header_pos_index < (headers.length-1) ? header_pos_index+1 : nil
       rd, wr = IO.pipe
       fork do
+        puts lines.length
         if next_header_pos.nil?
           lines = lines[header_pos..-1]
         else
