@@ -23,7 +23,7 @@ class WigReaderFast < WigReader
     pipes = []
     for header_pos_index in (0...headers.length)
       header_pos = headers[header_pos_index]
-      next_header_pos = header_pos_index < (headers.length-1) ? header_pos_index+1 : nil
+      next_header_pos = header_pos_index < (headers.length-1) ? headers[header_pos_index]+1 : nil
       rd, wr = IO.pipe
       fork do
         pre = lines.length
