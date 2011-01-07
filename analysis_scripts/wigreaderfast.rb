@@ -27,14 +27,14 @@ class WigReaderFast < WigReader
       rd, wr = IO.pipe
       fork do
         if next_header_pos.nil?
-          lines[header_pos..-1]
+          lines = lines[header_pos..-1]
         else
           lines = lines[header_pos...next_header_pos] #Trim the array; keep only the lines for my header
         end
         line = lines.shift
         puts line
         raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
-        puts "Got header (#{line})"
+        puts "Got header (#{line}) for pos #{header_pos}"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
         d = {}
