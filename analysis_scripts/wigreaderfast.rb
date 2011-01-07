@@ -4,7 +4,7 @@
 require 'wigreader.rb'
 
 class WigReaderFast < WigReader
-  
+
   def initialize(filename)
     @data = {}
     chr   = nil
@@ -17,13 +17,13 @@ class WigReaderFast < WigReader
     print "Slurping wiggle file..."
     lines = File.readlines(filename)
     puts "done"
-    
+
     puts "Parsing wiggle file"
     ## END MEMORY INTENSIVE STEP
     pipes = []
     for header_pos_index in (0...headers.length)
       header_pos = headers[header_pos_index]
-      next_header_pos = if header_pos_index < (headers.length-1) ? header_pos_index+1 : nil
+      next_header_pos = header_pos_index < (headers.length-1) ? header_pos_index+1 : nil
       rd, wr = IO.pipe
       fork do
         if next_header_pos.nil?
@@ -63,7 +63,7 @@ class WigReaderFast < WigReader
       end
       pipes << [rd,wr]
     end
-    
+
     Process.waitall()
     for rd,wr in pipes
       wr.close
@@ -80,30 +80,24 @@ class WigReaderFast < WigReader
       raise "Unexpected error" if @data.has_key? chr
       @data[chr] = {:step=>step,:positions=>positions}
     end
-    
+
     lines_skipped = 0
-    
+
     # After we have read in the entire dataset, we go back and find the first and last positions on the chromosome.
     # This could be a tad faster if performed while reading... but it clutters up the code too much to do it that way
-    
+
     for chr in @data.keys
       positions = @data[chr][:positions].keys.sort
       @data[chr][:start]  = positions.first
       @data[chr][:end]    = positions.last
     end
-    
+
     # Set the "lines" array to nil and hope that the GC notices it.
     lines = nil
-    
+
     # Print how many lines were skipped (hopefully at the end of the chromosomes)
     # Should not be more lines than the # of chromosomes.
     puts "Skipped #{lines_skipped} lines."
     #pp @data
   end
-end
-
-if __FILE__ == $0
-  #reader = WigReader.new("smalltest.wig")
-  #reader = nil
-  reader = WigReader.new("bigtest.wig")
 end
