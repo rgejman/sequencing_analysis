@@ -28,14 +28,13 @@ class WigReaderFast < WigReader
       rd, wr = IO.pipe
       forks << fork do
         rd.close
-        pre = lines.length
         if next_header_pos.nil?
           lines = lines[header_pos..-1]
         else
           lines = lines[header_pos,next_header_pos-header_pos] #Trim the array; keep only the lines for my header
         end
         line = lines.shift.chomp
-        raise "ERROR: Last line should be data, not header or nil. #{lines.last} | #{lines[lines.length-2]}" if lines.last == nil or lines.last[0,1] == "v"
+        raise "ERROR: Last line should be data, not header or nil. #{next_header_pos}. #{lines.last} | #{lines[lines.length-2]}" if lines.last == nil or lines.last[0,1] == "v"
         raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
@@ -78,6 +77,7 @@ class WigReaderFast < WigReader
      Process.wait child_id
      puts "Child #{child_id} done. [#{forks.join(",")}] remaining"
     end
+    Process.waitall()
     puts "Finished waiting for processes"
     for rd,wr in pipes
       puts "Reading from pipe"
@@ -115,4 +115,9 @@ class WigReaderFast < WigReader
     puts "Skipped #{lines_skipped} lines."
     #pp @data
   end
+end
+
+if __FILE__ == $0
+  f = "/media/bigdisk/sequencing/wig/Eugene/Eugene_WT_H3K9me2_CD4_all.sorted.wig"
+  reader = WigReaderFast.new(f)
 end
