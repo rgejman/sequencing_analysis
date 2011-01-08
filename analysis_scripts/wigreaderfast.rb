@@ -21,11 +21,12 @@ class WigReaderFast < WigReader
     puts "Parsing wiggle file"
     ## END MEMORY INTENSIVE STEP
     pipes = []
+    forks = []
     for header_pos_index in (0...headers.length)
       header_pos = headers[header_pos_index]
       next_header_pos = header_pos_index < (headers.length-1) ? headers[header_pos_index]+1 : nil
       rd, wr = IO.pipe
-      fork do
+      forks << fork do
         rd.close
         pre = lines.length
         if next_header_pos.nil?
@@ -71,7 +72,7 @@ class WigReaderFast < WigReader
       pipes << [rd,wr]
     end
     puts "Waiting for processes to finish"
-    Process.waitall()
+    forks.each {|id| Process.wait(id); puts "Process #{id} done"}
     puts "Finished waiting for processes"
     for rd,wr in pipes
       puts "Reading from pipe"
