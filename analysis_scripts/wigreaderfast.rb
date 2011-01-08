@@ -72,7 +72,11 @@ class WigReaderFast < WigReader
       pipes << [rd,wr]
     end
     puts "Waiting for processes to finish"
-    forks.each {|id| Process.wait(id); puts "Process #{id} done"}
+    while forks.length != 0
+     child_id = forks.shift
+     Process.wait child_id
+     puts "Child #{id} done. [#{forks.join(",")}] remaining"
+    end
     puts "Finished waiting for processes"
     for rd,wr in pipes
       puts "Reading from pipe"
