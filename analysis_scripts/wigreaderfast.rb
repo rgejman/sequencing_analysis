@@ -32,7 +32,7 @@ class WigReaderFast < WigReader
         if next_header_pos.nil?
           lines = lines[header_pos..-1]
         else
-          lines = lines[header_pos...next_header_pos] #Trim the array; keep only the lines for my header
+          lines = lines[header_pos,next_header_pos-header_pos] #Trim the array; keep only the lines for my header
         end
         line = lines.shift.chomp
         raise "ERROR: Last line should be data, not header or nil. #{lines.last} | #{lines[lines.length-2]}" if lines.last == nil or lines.last[0,1] == "v"
