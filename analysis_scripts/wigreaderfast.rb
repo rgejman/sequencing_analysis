@@ -65,12 +65,12 @@ class WigReaderFast < WigReader
           wr.flush
         end
         wr.close
-        puts "Done passing to pipe. Will exit"
+        puts "Done passing #{chr} to pipe. Will exit"
         exit(0)
       end
       pipes << [rd,wr]
     end
-
+    puts "Waiting for processes to finish"
     Process.waitall()
     puts "Finished waiting for processes"
     for rd,wr in pipes
