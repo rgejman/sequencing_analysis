@@ -33,10 +33,8 @@ class WigReaderFast < WigReader
         else
           lines = lines[header_pos...next_header_pos] #Trim the array; keep only the lines for my header
         end
-        puts "There were #{pre} lines. After trimming there are #{lines.length}"
         line = lines.shift.chomp
         raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
-        puts "Got header (#{line}) for pos #{header_pos}. next_header_pos: #{next_header_pos}"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
         d = {}
@@ -63,6 +61,7 @@ class WigReaderFast < WigReader
         wr.puts step
         for position in d[chr][:positions].keys.sort
           wr.puts "#{position} #{d[chr][:positions][position]}"
+          wr.flush
         end
         wr.close
         exit(0)
