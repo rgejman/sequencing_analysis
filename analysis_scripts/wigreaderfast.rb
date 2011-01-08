@@ -13,13 +13,7 @@ class WigReaderFast < WigReader
     # Use grep to identify the locations of the chromosome headers in the wiggle file
     headers = `grep -n v #{filename}`.split("\n").collect{|l| l.split(":")[0].to_i - 1} #subtract one to get base-0 pos.
     puts "done"
-    ## MEMORY INTENSIVE STEP
-    print "Slurping wiggle file..."
-    lines = File.readlines(filename)
-    puts "done"
-
-    puts "Parsing wiggle file"
-    ## END MEMORY INTENSIVE STEP
+    
     pipes = []
     forks = []
     for header_pos_index in (0...headers.length)
@@ -28,14 +22,13 @@ class WigReaderFast < WigReader
       rd, wr = IO.pipe
       forks << fork do
         rd.close
-        pre = lines.length
         if next_header_pos.nil?
-          lines = lines[header_pos..-1]
+          lines = `tail -n +#{header_pos} #{filename}`.split("\n")
         else
-          puts "Will take lines #{header_pos} to #{next_header_pos} (#{next_header_pos-header_pos}) "
-          lines = lines[header_pos,next_header_pos-header_pos] #next_header_pos-header_pos #Trim the array; keep only the lines for my header
+          len = next_header_pos-header_pos
+          lines = `tail -n +#{header_pos} #{filename} | head -n #{len}`.split("\n")
         end
-        puts "#{pre}-->#{lines.length} lines"
+        puts "#{lines.length} lines"
         line = lines.shift.chomp
         raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
         raise "ERROR: Last line should be data, not header or nil. #{next_header_pos}. #{lines.last} | #{lines[lines.length-2]}" if lines.last == nil or lines.last[0,1] == "v"
