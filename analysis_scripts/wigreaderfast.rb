@@ -11,7 +11,7 @@ class WigReaderFast < WigReader
     step  = nil
     print "Getting header locations..."
     # Use grep to identify the locations of the chromosome headers in the wiggle file
-    headers = `grep -n v #{filename}`.split("\n").collect{|l| l.split(":")[0].to_i - 1} #subtract one to get base-0 pos.
+    headers = `grep -n v #{filename}`.split("\n").collect{|l| l.split(":")[0].to_i} #subtract one to get base-0 pos.
     puts "done"
     
     pipes = []
