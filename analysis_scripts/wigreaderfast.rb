@@ -35,6 +35,7 @@ class WigReaderFast < WigReader
           lines = lines[header_pos...next_header_pos] #Trim the array; keep only the lines for my header
         end
         line = lines.shift.chomp
+        raise "ERROR: Last line should be data, not header or nil. #{lines.last}" if lines.last == nil or lines.last[0,1] == "v"
         raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
@@ -75,7 +76,7 @@ class WigReaderFast < WigReader
     while forks.length != 0
      child_id = forks.shift
      Process.wait child_id
-     puts "Child #{id} done. [#{forks.join(",")}] remaining"
+     puts "Child #{child_id} done. [#{forks.join(",")}] remaining"
     end
     puts "Finished waiting for processes"
     for rd,wr in pipes
