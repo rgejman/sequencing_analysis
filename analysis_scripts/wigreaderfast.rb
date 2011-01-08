@@ -59,18 +59,22 @@ class WigReaderFast < WigReader
         puts "Done reading #{chr} with #{step}nt steps"
         wr.puts chr 
         wr.puts step
+        wr.flush
         for position in d[chr][:positions].keys.sort
           wr.puts "#{position} #{d[chr][:positions][position]}"
           wr.flush
         end
         wr.close
+        puts "Done passing to pipe. Will exit"
         exit(0)
       end
       pipes << [rd,wr]
     end
 
     Process.waitall()
+    puts "Finished waiting for processes"
     for rd,wr in pipes
+      puts "Reading from pipe"
       wr.close
       d = rd.read.split("\n")
       rd.close
