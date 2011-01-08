@@ -28,13 +28,15 @@ class WigReaderFast < WigReader
       rd, wr = IO.pipe
       forks << fork do
         rd.close
+        pre = lines.length
         if next_header_pos.nil?
           lines = lines[header_pos..-1]
         else
-          lines = lines[header_pos..-1] #next_header_pos-header_pos #Trim the array; keep only the lines for my header
+          lines = lines[header_pos,next_header_pos-header_pos] #next_header_pos-header_pos #Trim the array; keep only the lines for my header
         end
+        puts "#{pre}-->#{lines.length} lines"
         line = lines.shift.chomp
-        #raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] == "v"
+        raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] == "v"
         raise "ERROR: Last line should be data, not header or nil. #{next_header_pos}. #{lines.last} | #{lines[lines.length-2]}" if lines.last == nil or lines.last[0,1] == "v"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
@@ -60,6 +62,7 @@ class WigReaderFast < WigReader
         end
         puts "Done reading #{chr} with #{step}nt steps"
         wr.puts chr 
+        wr.flush
         wr.puts step
         wr.flush
         for position in d[chr][:positions].keys.sort
