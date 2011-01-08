@@ -36,7 +36,7 @@ class WigReaderFast < WigReader
         end
         puts "#{pre}-->#{lines.length} lines"
         line = lines.shift.chomp
-        raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] == "v"
+        raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
         raise "ERROR: Last line should be data, not header or nil. #{next_header_pos}. #{lines.last} | #{lines[lines.length-2]}" if lines.last == nil or lines.last[0,1] == "v"
         tmp, chr, step = line.split(" ").collect{|a| a.split("=")[1]}
         step = step.to_i
