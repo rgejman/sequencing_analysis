@@ -58,6 +58,7 @@ class WigReaderFast < WigReader
           d[chr][:positions][pos] = fpkm.to_f
           last_pos = pos
         end
+        puts "Done reading #{chr} with #{step}nt steps"
         wr.puts chr 
         wr.puts step
         for position in d[chr][:positions].keys.sort
