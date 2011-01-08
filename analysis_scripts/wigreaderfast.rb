@@ -28,7 +28,6 @@ class WigReaderFast < WigReader
           len = next_header_pos-header_pos
           lines = `tail -n +#{header_pos} #{filename} | head -n #{len}`.split("\n")
         end
-        puts "#{lines.length} lines"
         line = lines.shift.chomp
         raise "ERROR: This was supposed to be a header line. Instead got: #{line} for #{header_pos}." if line == nil or line[0,1] != "v"
         raise "ERROR: Last line should be data, not header or nil. #{next_header_pos}. #{lines.last} | #{lines[lines.length-2]}" if lines.last == nil or lines.last[0,1] == "v"
@@ -38,7 +37,13 @@ class WigReaderFast < WigReader
         d[chr] = {}
         d[chr] = {:step=>step, :positions=>{}, :chr=>chr}
         last_pos      = nil
-        puts "Reading #{chr} with #{step}nt steps"
+        
+        # this is a partial chr. No need to grab it.
+        if lines.length < 5
+          wr.close
+          exit(0)
+        end
+        puts "Reading #{chr} with #{step}nt steps and #{lines.length} lines}"
         for i in (0...lines.length)
           line = lines[i].chomp
           break if line[0,1] == "v"
@@ -54,48 +59,32 @@ class WigReaderFast < WigReader
           d[chr][:positions][pos] = fpkm.to_f
           last_pos = pos
         end
-        puts "Done reading #{chr} with #{step}nt steps"
-        wr.puts chr 
-        wr.flush
-        wr.puts step
-        wr.flush
+        puts "Done reading #{chr} with #{step}nt steps and #{lines.length} lines"
         for position in d[chr][:positions].keys.sort
-          wr.puts "#{position} #{d[chr][:positions][position]}"
-          wr.flush
+          wr.puts "#{chr} #{step} #{position} #{d[chr][:positions][position]}"
         end
         wr.close
         puts "Done passing #{chr} to pipe. Will exit"
         exit(0)
       end
-      pipes << [rd,wr]
-    end
-    puts "Waiting for processes to finish"
-    while forks.length != 0
-     child_id = forks.shift
-     Process.wait child_id
-     puts "Child #{child_id} done. [#{forks.join(",")}] remaining"
-    end
-    Process.waitall()
-    puts "Finished waiting for processes"
-    for rd,wr in pipes
-      puts "Reading from pipe"
       wr.close
-      d = rd.read.split("\n")
-      rd.close
-      chr = d.shift
-      step = d.shift
-      positions = {}
-      for l in d #iterate over the array of positions
-        pos,fpkm = l.split(" ")
-        positions[pos.to_i] = fpkm.to_f
-      end
-      next if positions.keys.length < 5 # this is the continuation of a chr that did not fit evently into the wig blocks
-      raise "Unexpected error" if @data.has_key? chr
-      @data[chr] = {:step=>step,:positions=>positions}
+      pipes << rd
     end
-
-    lines_skipped = 0
-
+    
+    #If there are pipes whose contents have not been emptied:
+    while pipes.any? {|rd| !rd.eof? } do
+      for rd in pipes
+        next if rd.eof?
+        tokens = rd.readline.chomp.split(" ")
+        chr = tokens[0]
+        step = tokens[1].to_i
+        pos = tokens[2].to_i
+        val = tokens[3].to_f
+        @data[chr] ||= {:step=>step}
+        @data[chr][:positions] ||= {}
+        @data[chr][:positions][pos] = val
+      end
+    end
     # After we have read in the entire dataset, we go back and find the first and last positions on the chromosome.
     # This could be a tad faster if performed while reading... but it clutters up the code too much to do it that way
 
