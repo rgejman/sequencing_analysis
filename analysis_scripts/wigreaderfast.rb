@@ -32,6 +32,7 @@ class WigReaderFast < WigReader
         if next_header_pos.nil?
           lines = lines[header_pos..-1]
         else
+          puts "Will take lines #{header_pos} to #{next_header_pos} (#{next_header_pos-header_pos}) "
           lines = lines[header_pos,next_header_pos-header_pos] #next_header_pos-header_pos #Trim the array; keep only the lines for my header
         end
         puts "#{pre}-->#{lines.length} lines"
