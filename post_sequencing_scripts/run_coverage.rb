@@ -7,7 +7,7 @@ files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.bam")
 for file in files
   pid = fork do
     base                  = file.split("/").last.gsub('.bam','') #.bam is added automatically
-    user                    = base.split("_").first
+    user                  = base.split("_").first
     running_file          = running_file(base, "coverage")
     tmp_file1             = "#{TMP_FOLDER}/#{base}.cov.tdf"
     tmp_file2             = "#{TMP_FOLDER}/#{base}.wig"
@@ -15,6 +15,8 @@ for file in files
     output_file_2         = "#{WIG_FOLDER}/#{user}/#{base}.wig"
   
     input_path            = file
+    
+    GENOME                = "mm9"
   
     next if File.exists? output_file_1 #Already processed
     next if File.exists? output_file_2 #Already processed
