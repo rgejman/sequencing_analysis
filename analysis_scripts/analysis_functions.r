@@ -1,3 +1,24 @@
+make_colors = function(data,by=0.5,max=10000) {
+	colors = c(seq(from=0,to=max_mean_plus_sd(data),by=by),max)
+	return(colors)
+}
+
+read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",header=TRUE) {
+	t 				= read.table(file,header=header,sep=sep,quote=quote)
+	t 				= t[-match(cols,names(t))]
+	row.names(t) 	= t$symbol
+	return(t)
+}
+
+merge_all = function(data_frames, all.x=FALSE,all.y=TRUE,sort=FALSE,by="row.names"){
+	data = data.frame()
+	for(item in data_frames) {
+		data = merge(data,item, all.x=all.x,all.y=all.y,sort=sort, by=by)
+		data = data[,-(1:1)] # Remove the "row.names" column which was added automatically on merge
+	}
+	return(data)
+}
+
 max_mean_plus_sd = function(d,stdevs=2) {
 	return(max(mean(d, trim=0.05)+(stdevs * sd(d))));
 }

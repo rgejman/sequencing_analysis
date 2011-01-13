@@ -33,7 +33,7 @@ samples_res.each_hash do |sample|
   `touch #{running_file}`
   begin
     ## Do not align the last base because it has a higher error rate.
-    bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best -m 2 #{genome} --trim3 1 --sam \"#{fastq_file}\""
+    bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best --strata -m 2 #{genome} --trim3 1 --sam \"#{fastq_file}\""
     convert_bam   = "samtools view -hbSu -"
     sort_bam      = "samtools sort - #{tmp_file}"
     `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
