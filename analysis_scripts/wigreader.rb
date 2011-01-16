@@ -86,6 +86,14 @@ class WigReader
   
   #Return the FPKM value for the region between coordinates "a" and "b"
   def fpkm(chr,a,b)
+    if !@data.has_key? chr
+      new_key = "chr" + chr
+      if !@data.has_key? new_key
+        raise "Neither #{chr} nor #{new_key} are in the wig file"
+      else
+        chr = new_key
+      end
+    end
     raise "Start and End cannot be equal" if a == b
     start = @data[chr][:start]
     last  = @data[chr][:end]
