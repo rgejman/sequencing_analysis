@@ -2,6 +2,7 @@
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 EXTEND_LENGTH = 100
+WINDOW_SIZE   = 25
 files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.bam")
 
 for file in files
@@ -12,7 +13,7 @@ for file in files
     tmp_file1             = "#{TMP_FOLDER}/#{base}.cov.tdf"
     tmp_file2             = "#{TMP_FOLDER}/#{base}.wig"
     output_file_1         = "#{COVERAGE_FOLDER}/#{user}/#{base}.cov.tdf"
-    output_file_2         = "#{WIG_FOLDER}/#{user}/#{base}.wig"
+    output_file_2         = "#{WIG_FOLDER}/#{user}/#{base}.#{WINDOW_SIZE}.wig"
   
     input_path            = file
     
@@ -24,7 +25,7 @@ for file in files
     puts file
     `touch #{running_file}`
     begin
-      `igvtools count -e #{EXTEND_LENGTH} "#{input_path}" "#{tmp_file1},#{tmp_file2}" "#{GENOMES_FOLDER}/#{GENOME}.genome"`
+      `igvtools count -e #{EXTEND_LENGTH} -w #{WINDOW_SIZE} "#{input_path}" "#{tmp_file1},#{tmp_file2}" "#{GENOMES_FOLDER}/#{GENOME}.genome"`
       `mkdir -p #{COVERAGE_FOLDER}/#{user}`
       `mkdir -p #{WIG_FOLDER}/#{user}`
       FileUtils.mv(tmp_file1, output_file_1)

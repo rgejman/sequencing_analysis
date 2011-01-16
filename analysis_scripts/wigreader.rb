@@ -80,6 +80,7 @@ class WigReader
     # Print how many lines were skipped (hopefully at the end of the chromosomes)
     # Should not be more lines than the # of chromosomes.
     puts "Skipped #{lines_skipped} lines."
+    puts "Chrs: #{@data.keys.join(',')}"
     #pp @data
   end
   
@@ -87,7 +88,7 @@ class WigReader
   def fpkm(chr,a,b)
     raise "Start and End cannot be equal" if a == b
     start = @data[chr][:start]
-    last = @data[chr][:end]
+    last  = @data[chr][:end]
     step  = @data[chr][:step]
     if a < b
       raise "Start (#{a}) is before first pos on this chromosome (#{start})" if a < start
