@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby -wKU
+
 ## This script will shorten alignment files to an approximately equal # of mapped reads.
 ## To ensure that the shortening is done randomly w/o reading the entire alignment into memory,
 ## each read is challenged independently until the end of the file, yielding an approximately
@@ -18,7 +20,7 @@ EQUIVALENCE_THRESHOLD = 0.05
 
 for i in (0...num_alignments)
   alignment_file  = alignments[i]
-  raise "File could not be found: #{alignment_file}" unless FIle.exists? alignment_file
+  raise "File could not be found: #{alignment_file}" unless File.exists? alignment_file
   l = `samtools flagstat #{alignment_file}`.split("\n")[3].split(/\s/)[0].to_i
   lengths << l
   min_length = l if min_length.nil? or l < min_length
