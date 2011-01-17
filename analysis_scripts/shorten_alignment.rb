@@ -35,7 +35,7 @@ for i in (0...num_alignments)
   l               = lengths[i]
   if l >= (1-EQUIVALENCE_THRESHOLD) * min_length and l <= (1 + EQUIVALENCE_THRESHOLD) * min_length
     # This alignment is within 5% of the minimum size.
-    puts "#{alignment} #{lengths[i].to_f / min_length}% of min size."
+    puts "#{alignment_file} #{lengths[i].to_f / min_length}% of min size."
   elsif l > min_length
     p = min_length.to_f / l.to_f
     output_file_tokens = alignment_file.split(".")
