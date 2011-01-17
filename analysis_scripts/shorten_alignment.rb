@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby -wKU
+require 'rubygems'
+require 'open3'
+
 
 ## This script will shorten alignment files to an approximately equal # of mapped reads.
 ## To ensure that the shortening is done randomly w/o reading the entire alignment into memory,
