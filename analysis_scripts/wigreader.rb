@@ -87,7 +87,11 @@ class WigReader
   #Return the FPKM value for the region between coordinates "a" and "b"
   def fpkm(chr,a,b)
     if !@data.has_key? chr
-      new_key = "chr" + chr
+      if chr == "MT"
+        new_key = "chrM"
+      else
+        new_key = "chr" + chr
+      end
       if !@data.has_key? new_key
         raise "Neither #{chr} nor #{new_key} are in the wig file"
       else
