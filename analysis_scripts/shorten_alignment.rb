@@ -35,19 +35,20 @@ for i in (0...num_alignments)
   l               = lengths[i]
   if l >= (1-EQUIVALENCE_THRESHOLD) * min_length and l <= (1 + EQUIVALENCE_THRESHOLD) * min_length
     # This alignment is within 5% of the minimum size.
-    puts "#{alignment_file} #{lengths[i].to_f / min_length}% of min size."
+    puts "#{alignment_file} #{lengths[i].to_f / min_length.to_f*100}% of min size."
   elsif l > min_length
     p = min_length.to_f / l.to_f
     output_file_tokens = alignment_file.split(".")
     output_file = output_file_tokens.shift + ".approx_#{min_length}." + output_file_tokens.join(".")
-    Open3.popen3("bamtools filter -in #{alignment_file} -isMapped true | samtools view -h -") do |i_stdin, i_stdout, i_stderr|
-      Open3.popen3("samtools view -hbS - | samtools sort - #{output_file}") do |o_stdin, o_stdout, o_stderr|
+    Open3.popen2("bamtools filter -in #{alignment_file} -isMapped true | samtools view -h -") do |i_stdin, i_stdout,t1|
+      Open3.popen2("samtools view -hbS - | samtools sort - #{output_file}") do |o_stdin, o_stdout,t2|
         while (line = i_stdout.gets)
           if line[0,1] != "@"
             next if rand() > p
           end
           o_stdin.print line
         end
+        t2.join
       end
     end
   else
