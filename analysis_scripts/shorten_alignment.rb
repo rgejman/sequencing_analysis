@@ -40,17 +40,20 @@ for i in (0...num_alignments)
     p = min_length.to_f / l.to_f
     output_file_tokens = alignment_file.split(".")
     output_file = output_file_tokens.shift + ".approx_#{min_length}." + output_file_tokens.join(".")
-    Open3.popen3("bamtools filter -in #{alignment_file} -isMapped true | samtools view -h -") do |i_stdin, i_stdout,i_stderr,t1|
-      Open3.popen3("samtools view -hbS - | samtools sort - #{output_file}") do |o_stdin, o_stdout,o_stderr,t2|
+    Open3.popen3("bamtools filter -in #{alignment_file} -isMapped true | samtools view -h -") do |i_stdin, i_stdout,i_stderr|
+      Open3.popen3("samtools view -hbS - | samtools sort - #{output_file}") do |o_stdin, o_stdout,o_stderr|
+        t = Thread.new(o_stdout) do |o|
+           while (line = o.gets)
+           end
+         end
         while (line = i_stdout.gets)
           if line[0,1] != "@"
             next if rand() > p
           end
           o_stdin.print line
         end
-        t2.value
+        t.join
       end
-      t1.value
     end
   else
     raise "Error: #{alignment_file} cannot be smaller than min_length. #{l} #{min_length}"
