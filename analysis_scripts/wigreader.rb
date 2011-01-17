@@ -29,7 +29,7 @@ class WigReader
     # Digest Wiggle file, line by line.
     # When a header line is encountered we initialize a new hash (inside @data) for the chromosome.
     
-    for line in lines
+    while line = lines.shift
       line.chomp!
       if line[0,1] == "v" #e.g. variableStep chrom=chr11 span=25
         skip_until_header = false
@@ -65,6 +65,10 @@ class WigReader
       last_pos = pos
     end
     
+    # Set the "lines" array to nil and hope that the GC notices it.
+    lines = nil
+    GC.start
+    
     # After we have read in the entire dataset, we go back and find the first and last positions on the chromosome.
     # This could be a tad faster if performed while reading... but it clutters up the code too much to do it that way
     
@@ -73,10 +77,6 @@ class WigReader
       @data[chr][:start]  = positions.first
       @data[chr][:end]    = positions.last
     end
-    
-    # Set the "lines" array to nil and hope that the GC notices it.
-    lines = nil
-    GC.start
     
     # Print how many lines were skipped (hopefully at the end of the chromosomes)
     # Should not be more lines than the # of chromosomes.
