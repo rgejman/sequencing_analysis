@@ -60,6 +60,7 @@ for i in (0...num_alignments)
         t.join
       end
     end
+    `bamtools index -in #{output_file}.bam`
   else
     raise "Error: #{alignment_file} cannot be smaller than min_length. #{l} #{min_length}"
   end

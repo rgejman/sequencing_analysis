@@ -76,6 +76,7 @@ class WigReader
     
     # Set the "lines" array to nil and hope that the GC notices it.
     lines = nil
+    GC.start
     
     # Print how many lines were skipped (hopefully at the end of the chromosomes)
     # Should not be more lines than the # of chromosomes.
