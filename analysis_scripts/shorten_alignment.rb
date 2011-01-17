@@ -48,8 +48,9 @@ for i in (0...num_alignments)
           end
           o_stdin.print line
         end
-        t2.join
+        t2.value
       end
+      t1.value
     end
   else
     raise "Error: #{alignment_file} cannot be smaller than min_length. #{l} #{min_length}"
