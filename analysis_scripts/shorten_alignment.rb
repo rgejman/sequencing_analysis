@@ -42,8 +42,12 @@ for i in (0...num_alignments)
     output_file = output_file_tokens.shift + ".approx_#{min_length}." + output_file_tokens.join(".")
     Open3.popen3("bamtools filter -in #{alignment_file} -isMapped true | samtools view -h -") do |i_stdin, i_stdout,i_stderr|
       Open3.popen3("samtools view -hbS - | samtools sort - #{output_file}") do |o_stdin, o_stdout,o_stderr|
-        t = Thread.new(o_stdout) do |o|
-           while (line = o.gets)
+        t = Thread.new(o_stdout, o_stderr) do |o_o,o_e|
+           while (line = o_o.gets)
+             puts line
+           end
+           while (line = o_e.gets)
+             puts line
            end
          end
         while (line = i_stdout.gets)
@@ -52,6 +56,7 @@ for i in (0...num_alignments)
           end
           o_stdin.print line
         end
+        o_stdin.close
         t.join
       end
     end
