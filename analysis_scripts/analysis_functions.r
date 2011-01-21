@@ -144,6 +144,9 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 				colors = rev(gray(0:(length(brk)-2)/(length(brk)-2)))
 			}
 			else if(color_function == "redgreen") {
+				if(even(length(brk))) {
+					brk = brk[-1]
+				}
 				colors = rev(maPalette(low="green", high="red",mid="white",k=(length(brk)-1)))
 			}
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
