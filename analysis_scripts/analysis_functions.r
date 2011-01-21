@@ -59,7 +59,7 @@ read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",heade
 	return(t)
 }
 
-merge_all = function(data_frames, all.x=FALSE,all.y=TRUE,sort=FALSE,by="row.names"){
+merge_all = function(data_frames, all.x=FALSE,all.y=FALSE,sort=FALSE,by="row.names"){
 	data = data.frame()
 
 	for(item in data_frames) {
