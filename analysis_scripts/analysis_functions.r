@@ -53,7 +53,7 @@ merge_all = function(data_frames, all.x=FALSE,all.y=TRUE,sort=FALSE,by="row.name
 		if(length(last_names) == 0) {
 			last_names = row.names(item)
 		}
-		if(last_names != row.names(item)) {
+		if(!all(last_names == row.names(item))) {
 			print("Error! Row names do not all match in merge_all()")
 		}
 	}
