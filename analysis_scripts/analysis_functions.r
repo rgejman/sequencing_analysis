@@ -1,3 +1,4 @@
+library("marray")
 normalize_data = function(data, inf_to=1,na_to=1,lt=0.1, gt=NA) {
 	data[data == Inf] = inf_to
 	data[data == -Inf] = inf_to
@@ -143,7 +144,7 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 				colors = rev(gray(0:(length(brk)-2)/(length(brk)-2)))
 			}
 			else if(color_function == "redgreen") {
-				colors = redgreen(length(brk)-1)
+				colors = rev(maPalette(low="green", high="red",mid="white",k=length(brk)-1))
 			}
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
 			nr = nrow(data_plot)
