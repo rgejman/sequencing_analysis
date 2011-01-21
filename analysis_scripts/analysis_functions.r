@@ -8,6 +8,7 @@ normalize_data = function(data, inf_to=1,na_to=1,lt=0.1, gt=NA) {
 	if(is.numeric(gt)) {
 		data[data > gt] = gt
 	}
+	return(data);
 }
 
 remove_rows_with_inf_or_na = function(data) {
