@@ -1,6 +1,8 @@
 remove_rows_with_inf_or_na = function(data) {
 	
 	return(data[apply(data,1,none_are_na),])
+	return(data[apply(data,1,none_are_inf),])
+	return(data[apply(data,1,none_are_nan),])
 }
 
 none_are_na = function(l) {
@@ -8,7 +10,11 @@ none_are_na = function(l) {
 }
 
 none_are_inf = function(l) {
-	return(!any(is.inf(l)))
+	return(!any(is.infinite(l)))
+}
+
+none_are_nan = function(l) {
+	return(!any(is.nan(l)))
 }
 
 remove_rows_with_mean_lt(data, lt) {
