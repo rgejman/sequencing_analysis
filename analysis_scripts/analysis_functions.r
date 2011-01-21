@@ -41,8 +41,8 @@ make_colors = function(data,by=0.5,max=10000) {
 
 read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",header=TRUE) {
 	t 				= read.table(file,header=header,sep=sep,quote=quote)
-	t 				= t[-match(cols,names(t))]
 	row.names(t) 	= t$symbol
+	t 				= t[-match(cols,names(t))]
 	return(t)
 }
 
