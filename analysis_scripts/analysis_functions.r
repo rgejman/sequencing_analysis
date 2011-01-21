@@ -17,7 +17,7 @@ none_are_nan = function(l) {
 	return(!any(is.nan(l)))
 }
 
-remove_rows_with_mean_lt(data, lt) {
+remove_rows_with_mean_lt = function(data, lt) {
 	return(data[apply(data,1,mean) > lt,])
 }
 
