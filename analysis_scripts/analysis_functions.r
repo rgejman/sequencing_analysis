@@ -1,3 +1,20 @@
+remove_rows_with_inf_or_na = function(data) {
+	
+	return(data[apply(data,1,none_are_na),])
+}
+
+none_are_na = function(l) {
+	return(!any(is.na(l)))
+}
+
+none_are_inf = function(l) {
+	return(!any(is.inf(l)))
+}
+
+remove_rows_with_mean_lt(data, lt) {
+	return(data[apply(data,1,mean) > lt,])
+}
+
 make_colors = function(data,by=0.5,max=10000) {
 	colors = c(seq(from=0,to=max_mean_plus_sd(data),by=by),max)
 	return(colors)
@@ -61,7 +78,7 @@ make_wss_plot = function(data,name,n=25) {
 # b1	b1		b1		b1
 # etc	etc		etc		etc
 # data_to_add is useful if you want to cluster on one set of data, but put another cluster aside it.
-make_heatmaps = function(data, breaks, symbol, cols_per_heatmap, clusters, postfix, cols_to_cluster=c()) {
+make_heatmaps = function(data, breaks, symbol, cols_per_heatmap, clusters, postfix, color_function="gray", cols_to_cluster=c()) {
 	if(length(cols_to_cluster) == 0) {
 		cols_to_cluster = colnames(data)
 	}
@@ -88,7 +105,12 @@ make_heatmaps = function(data, breaks, symbol, cols_per_heatmap, clusters, postf
 		
 		for(n in 1:nheatmaps) {
 			brk = unlist(breaks[n])
-			colors = rev(gray(0:(length(brk)-2)/(length(brk)-2)))
+			if(color_function == "gray") {
+				colors = rev(gray(0:(length(brk)-2)/(length(brk)-2)))
+			}
+			else if(color_function == "redgreen") {
+				colors = redgreen((length(brk)-2)/(length(brk)-2)+1)
+			}
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
 			nr = nrow(data_plot)
 			nc = ncol(data_plot)
