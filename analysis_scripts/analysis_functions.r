@@ -34,7 +34,19 @@ remove_rows_with_mean_lt = function(data, lt) {
 	return(data[apply(data,1,mean) > lt,])
 }
 
-make_colors = function(data,by=0.5,max=10000, stdevs=2) {
+make_bidirectional_colors = function(data,by=0.5,max=10000) {
+	if(abs(max(data)) > abs(min(data))) {
+		m = abs(max(data))
+	}
+	else {
+		m = abs(min(data))
+	}
+	colors = c(seq(from=(-1 * m),to=(m-by),by=by),m)
+	return(colors)
+}
+
+make_colors = function(data, by=0.5, max=10000, stdevs=2) {
+	
 	colors = c(seq(from=0,to=max_mean_plus_sd(data,stdevs=stdevs),by=by),max)
 	return(colors)
 }
