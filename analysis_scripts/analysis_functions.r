@@ -35,12 +35,12 @@ remove_rows_with_mean_lt = function(data, lt) {
 	return(data[apply(data,1,mean) > lt,])
 }
 
-make_bidirectional_colors = function(data,by=0.5,max=10000) {
-	if(abs(max(data)) > abs(min(data))) {
-		m = abs(max(data))
+make_bidirectional_colors = function(data,by=0.5,max=10000,stdevs=2) {
+	if(abs(max_mean_plus_sd(data,stdevs=stdevs)) > abs(min_mean_minus_sd(data,stdevs=stdevs))) {
+		m = max_mean_plus_sd(data,stdevs=stdevs)
 	}
 	else {
-		m = abs(min(data))
+		m = abs(min_mean_minus_sd(data,stdevs=stdevs))
 	}
 	colors = c(seq(from=(-1 * m),to=(m-by),by=by),m)
 	return(colors)
@@ -73,6 +73,11 @@ merge_all = function(data_frames, all.x=FALSE,all.y=TRUE,sort=FALSE,by="row.name
 max_mean_plus_sd = function(d,stdevs=2) {
 	return(max(mean(d, trim=0.05)+(stdevs * sd(d))));
 }
+
+min_mean_minus_sd = function(d,stdevs=2) {
+	return(min(mean(d, trim=0.05)-(stdevs * sd(d))));
+}
+
 
 remove_less_one_and_log = function(d) {
 	# Changes values <1 to 1 and log-transforms the data
