@@ -10,7 +10,7 @@ none_are_na = function(l) {
 }
 
 none_are_inf = function(l) {
-	return(!any(is.infinite(l)))
+	return(!any(is.inf(l)))
 }
 
 none_are_nan = function(l) {
