@@ -2,10 +2,10 @@ normalize_data = function(data, inf_to=1,na_to=1,lt=0.1, gt=NA) {
 	data[data == Inf] = inf_to
 	data[data == -Inf] = inf_to
 	data[is.na(data)] = na_to
-	if(lt != NA) {
+	if(is.numeric(lt)) {
 		data[data < lt] = lt
 	}
-	if(gt != NA) {
+	if(is.numeric(gt)) {
 		data[data > gt] = gt
 	}
 }
