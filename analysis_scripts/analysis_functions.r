@@ -48,19 +48,11 @@ read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",heade
 
 merge_all = function(data_frames, all.x=FALSE,all.y=TRUE,sort=FALSE,by="row.names"){
 	data = data.frame()
-	last_names = c()
-	for(item in data_frames) {
-		if(length(last_names) == 0) {
-			last_names = row.names(item)
-		}
-		if(!all(last_names == row.names(item))) {
-			print("Error! Row names do not all match in merge_all()")
-		}
-	}
+
 	for(item in data_frames) {
 		data = merge(data,item, all.x=all.x,all.y=all.y,sort=sort, by=by)
+		row.names(data) = data[,1]
 		data = data[,-(1:1)] # Remove the "row.names" column which was added automatically on merge
-		row.names(data) = row.names(item) # this will set row.names multiple times, but that's OK
 	}
 	return(data)
 }
