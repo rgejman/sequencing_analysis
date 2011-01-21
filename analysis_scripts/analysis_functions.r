@@ -1,3 +1,15 @@
+normalize_data = function(data, inf_to=1,na_to=1,lt=0.1, gt=NA) {
+	data[data == Inf] = inf_to
+	data[data == -Inf] = inf_to
+	data[is.na(data)] = na_to
+	if(lt != NA) {
+		data[data < lt] = lt
+	}
+	if(gt != NA) {
+		data[data > gt] = gt
+	}
+}
+
 remove_rows_with_inf_or_na = function(data) {
 	
 	return(data[apply(data,1,none_are_na),])
