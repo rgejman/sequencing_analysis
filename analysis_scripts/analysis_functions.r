@@ -48,9 +48,9 @@ read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",heade
 
 merge_all = function(data_frames, all.x=FALSE,all.y=TRUE,sort=FALSE,by="row.names"){
 	data = data.frame()
-	last_names = NA
+	last_names = c()
 	for(item in data_frames) {
-		if(last_names == NA) {
+		if(length(last_names) == 0) {
 			last_names = row.names(item)
 		}
 		if(last_names != row.names(item)) {
