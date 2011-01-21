@@ -48,9 +48,19 @@ read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",heade
 
 merge_all = function(data_frames, all.x=FALSE,all.y=TRUE,sort=FALSE,by="row.names"){
 	data = data.frame()
+	last_names = NA
+	for(item in data_frames) {
+		if(last_names == NA) {
+			last_names = row.names(item)
+		}
+		if(last_names != row.names(item)) {
+			print("Error! Row names do not all match in merge_all()")
+		}
+	}
 	for(item in data_frames) {
 		data = merge(data,item, all.x=all.x,all.y=all.y,sort=sort, by=by)
 		data = data[,-(1:1)] # Remove the "row.names" column which was added automatically on merge
+		row.names(data) = row.names(item) # this will set row.names multiple times, but that's OK
 	}
 	return(data)
 }
@@ -97,7 +107,8 @@ make_wss_plot = function(data,name,n=25) {
 # b1	b1		b1		b1
 # etc	etc		etc		etc
 # data_to_add is useful if you want to cluster on one set of data, but put another cluster aside it.
-make_heatmaps = function(data, breaks, symbol, cols_per_heatmap, clusters, postfix, color_function="gray", cols_to_cluster=c()) {
+make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, color_function="gray", cols_to_cluster=c()) {
+	symbol = row.names(data)
 	if(length(cols_to_cluster) == 0) {
 		cols_to_cluster = colnames(data)
 	}
