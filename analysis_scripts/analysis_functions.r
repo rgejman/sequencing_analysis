@@ -34,8 +34,8 @@ remove_rows_with_mean_lt = function(data, lt) {
 	return(data[apply(data,1,mean) > lt,])
 }
 
-make_colors = function(data,by=0.5,max=10000) {
-	colors = c(seq(from=0,to=max_mean_plus_sd(data),by=by),max)
+make_colors = function(data,by=0.5,max=10000, stdevs=2) {
+	colors = c(seq(from=0,to=max_mean_plus_sd(data,stdevs=stdevs),by=by),max)
 	return(colors)
 }
 
