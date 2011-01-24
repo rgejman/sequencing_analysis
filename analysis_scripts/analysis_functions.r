@@ -44,7 +44,7 @@ make_bidirectional_colors = function(data,by=0.5,max=10000,stdevs=2) {
 	else {
 		m = mi
 	}
-	colors = c(seq(from=(-1 * m),to=(m-by),by=by),m)
+	colors = c(max * -1, seq(from=(-1 * m),to=(m-by),by=by),m, max)
 	return(colors)
 }
 
@@ -154,7 +154,8 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 			}
 			else if(color_function == "redgreen") {
 				if(even(length(brk))) {
-					brk = brk[-1]
+					step = brk[length(brk)] - brk[length(brk)-1]
+					brk = c(brk,brk[length(brk)]+step)
 				}
 				colors = maPalette(low="green", high="red",mid="white",k=(length(brk)-1))
 			}
