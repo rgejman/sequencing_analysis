@@ -36,11 +36,13 @@ remove_rows_with_mean_lt = function(data, lt) {
 }
 
 make_bidirectional_colors = function(data,by=0.5,max=10000,stdevs=2) {
-	if(abs(max_mean_plus_sd(data,stdevs=stdevs)) > abs(min_mean_minus_sd(data,stdevs=stdevs))) {
-		m = max_mean_plus_sd(data,stdevs=stdevs)
+	ma=abs(max_mean_plus_sd(data,stdevs=stdevs))
+	mi=abs(min_mean_minus_sd(data,stdevs=stdevs))
+	if(ma > mi) {
+		m = ma
 	}
 	else {
-		m = abs(min_mean_minus_sd(data,stdevs=stdevs))
+		m = mi
 	}
 	colors = c(seq(from=(-1 * m),to=(m-by),by=by),m)
 	return(colors)
@@ -154,7 +156,7 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 				if(even(length(brk))) {
 					brk = brk[-1]
 				}
-				colors = rev(maPalette(low="green", high="red",mid="white",k=(length(brk)-1)))
+				colors = maPalette(low="green", high="red",mid="white",k=(length(brk)-1))
 			}
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
 			nr = nrow(data_plot)
