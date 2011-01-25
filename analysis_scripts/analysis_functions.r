@@ -12,6 +12,11 @@ normalize_data = function(data, inf_to=1,na_to=1,lt=0.1, gt=NA) {
 	return(data);
 }
 
+lappend <- function(lst, obj) {
+    lst[[length(lst)+1]] <- obj
+    return(lst)
+}
+
 remove_rows_with_inf_or_na = function(data) {
 	
 	return(data[apply(data,1,none_are_na),])
