@@ -2,15 +2,28 @@
 
 blocks = seq(from=-3000, to=2975,by=25)
 
-f = read.table("Eugene_KR_H3K9me2_CD4_all.profile.6000.240.txt", header=TRUE,sep="\t",quote="")
-b = read.table("Eugene_WT_H3K9me2_CD4_all.profile.6000.240.txt", header=TRUE,sep="\t",quote="")
+f = read.table("Eugene_KR_H3K9me2_CD4_2x.profile.6000.240.txt", header=TRUE,sep="\t",quote="")
+b = read.table("Eugene_WT_H3K9me2_CD4_2x.profile.6000.240.txt", header=TRUE,sep="\t",quote="")
 
-make_composite_plot(f,b,c("KR", "WT"),"Eugene_KR_H3K9me2_CD4_all",blocks)
+make_composite_plot(f,b,c("KR", "WT"),"Eugene_H3K9me2_CD4_2x",blocks)
 
 f = read.table("Eugene_KR_H3K4me3_CD4.profile.6000.240.txt", header=TRUE,sep="\t",quote="")
 b = read.table("Eugene_WT_H3K4me3_CD4.profile.6000.240.txt", header=TRUE,sep="\t",quote="")
 
-make_composite_plot(f,b,c("KR", "WT"),"Eugene_KR_H3K4me2_CD4_all",blocks)
+make_composite_plot(f,b,c("KR", "WT"),"Eugene_H3K4me2_CD4_2x",blocks)
+
+base = "/media/bigdisk/sequencing/profiles/Eugene"
+
+f = read.table(paste(sep="/", base,"Eugene_KR_H3K9me2_CD4_3x_no_chrX.profile.6000.240.txt"), header=TRUE,sep="\t",quote="")
+b = read.table(paste(sep="/", base,"Eugene_WT_H3K9me2_CD4_3x_no_chrX.profile.6000.240.txt"), header=TRUE,sep="\t",quote="")
+
+make_composite_plot(f,b,c("KR", "WT"),"Eugene_H3K9me2_CD4_3x_no_chrX",blocks)
+
+f = read.table(paste(sep="/", base,"Eugene_KR_H3K4me3_CD4_no_chrX.profile.6000.240.txt"), header=TRUE,sep="\t",quote="")
+b = read.table(paste(sep="/", base,"Eugene_WT_H3K4me3_CD4_no_chrX.profile.6000.240.txt"), header=TRUE,sep="\t",quote="")
+
+make_composite_plot(f,b,c("KR", "WT"),"Eugene_H3K4me2_CD4_3x_no_chrX",blocks)
+
 
 make_composite_plot = function(f,b,legend,output_basename,blocks) {
 	non_numeric_cols = c("symbol","chr","start","end","strand")

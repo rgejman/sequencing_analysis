@@ -18,10 +18,10 @@ lappend <- function(lst, obj) {
 }
 
 remove_rows_with_inf_or_na = function(data) {
-	
-	return(data[apply(data,1,none_are_na),])
-	return(data[apply(data,1,none_are_inf),])
-	return(data[apply(data,1,none_are_nan),])
+	data = data[!apply(data,1,function(y){any(is.na(y))}),]
+	data = data[!apply(data,1,function(y){any(!is.finite(y))}),]
+	data = data[!apply(data,1,function(y){any(is.nan(y))}),]
+	return(data)
 }
 
 none_are_na = function(l) {
