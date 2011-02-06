@@ -4,13 +4,9 @@ require "open3"
 
 if ARGV.length < 1
   puts "Usage: bamstats.rb *.bam"
-  puts "ARGS:"
-  ARGV.each_with_index{|s,i| puts "#{i}: #{s}"}
   exit(1)
 end
-s = ARGV[0]
-puts "Search: #{s}"
-files = Dir[s].select {|f| f =~ /\.bam$/}
+files = ARGV.select {|f| f =~ /\.bam$/}
 puts "Processing:"
 files.each {|f| puts f}
 
