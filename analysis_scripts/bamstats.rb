@@ -9,9 +9,9 @@ if ARGV.length < 1
   exit(1)
 end
 s = ARGV[0]
-files = Dir[s]
-files = files.select {|f| f =~ /\.bam$/}
-puts "Doing:"
+puts "Search: #{s}"
+files = Dir[s].select {|f| f =~ /\.bam$/}
+puts "Processing:"
 files.each {|f| puts f}
 
 if files.length == 0
