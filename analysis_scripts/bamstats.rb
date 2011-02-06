@@ -4,10 +4,13 @@ require "open3"
 
 if ARGV.length != 1
   puts "Usage: bamstats.rb *.bam"
+  exit(1)
 end
 s = ARGV[0]
 files = Dir[s]
 files = files.select {|f| f =~ /\.bam$/}
+puts "Doing:"
+file.each {|f| puts f}
 
 if files.length == 0
   puts "No BAM files found."
