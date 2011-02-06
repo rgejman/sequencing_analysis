@@ -2,7 +2,7 @@
 require 'thread'
 require "open3"
 
-if ARGV.length != 1
+if ARGV.length < 1
   puts "Usage: bamstats.rb *.bam"
   exit(1)
 end
