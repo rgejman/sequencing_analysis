@@ -4,6 +4,8 @@ require "open3"
 
 if ARGV.length < 1
   puts "Usage: bamstats.rb *.bam"
+  puts "ARGS:"
+  ARGV.each_with_index{|s,i| puts "#{i}: #{s}"}
   exit(1)
 end
 s = ARGV[0]
