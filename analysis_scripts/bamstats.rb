@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -wKU
+#!/usr/bin/ruby -wKU
 
 if ARGV.length != 1
   puts "Usage: bamstats.rb *.bam"
