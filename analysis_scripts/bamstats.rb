@@ -1,4 +1,5 @@
 #!/usr/bin/ruby -wKU
+require 'thread'
 
 if ARGV.length != 1
   puts "Usage: bamstats.rb *.bam"
