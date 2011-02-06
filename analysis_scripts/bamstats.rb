@@ -44,3 +44,5 @@ for file in files
     }
   end
 end
+
+threads.each {|t| t.join()}
