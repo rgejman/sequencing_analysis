@@ -20,8 +20,8 @@ semaphore = Mutex.new
 
 
 for file in files
-  threads << Thread.new do
-    Open3.popen3("bamtools stats -in #{file}") { |stdin, stdout, stderr|
+  threads << Thread.new(f) do
+    Open3.popen3("bamtools stats -in #{f}") { |stdin, stdout, stderr|
       # stdin = input stream
       # stdout = output stream
       # stderr = stderr stream
@@ -40,7 +40,7 @@ for file in files
       end
       io_threads.each{|t| t.join()} #in order to cleanup when you're done.
       semaphore.synchronize do
-        puts "#{file}: #{out}"
+        puts "#{f}: #{out}"
       end
     }
   end
