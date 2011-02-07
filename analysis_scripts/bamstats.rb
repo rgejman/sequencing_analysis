@@ -25,7 +25,7 @@ for file in files
       # stdin = input stream
       # stdout = output stream
       # stderr = stderr stream
-      out = []
+      out = nil
       io_threads = []
       io_threads << Thread.new(stderr) do |terr|
         while (line = terr.gets)
@@ -34,14 +34,13 @@ for file in files
       end
       io_threads << Thread.new(stdout) do |tout|
         while (line = tout.gets)
-          next unless line =~ /(Total)|(Mapped)/
-          out << line
+          next unless line =~ /(Mapped)/
+          out = line
         end
       end
       io_threads.each{|t| t.join()} #in order to cleanup when you're done.
       semaphore.synchronize do
-        puts file
-        out.each {|o| puts o}
+        puts "#{file}: #{out}"
       end
     }
   end
