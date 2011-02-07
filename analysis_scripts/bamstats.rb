@@ -20,7 +20,7 @@ semaphore = Mutex.new
 
 
 for file in files
-  threads << Thread.new(f) do
+  threads << Thread.new(file) do |f|
     Open3.popen3("bamtools stats -in #{f}") { |stdin, stdout, stderr|
       # stdin = input stream
       # stdout = output stream
