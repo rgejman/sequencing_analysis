@@ -9,7 +9,7 @@ for path in files
     user                          = name.split("_")[0]
     running_file                  = running_file(name, "fastqc")
     fastqc_tmp_folder_path        = path.gsub(".txt","") + "c"
-    fastqc_tmp_zip_path           = "#{path}.zip"
+    fastqc_tmp_zip_path           = "#{path}c.zip"
     fastqc_output_folder_path     = "#{FASTQC_FOLDER}/#{user}/#{name}_fastqc"
 
     next if File.exists? fastqc_output_folder_path # The file has been processed in the past

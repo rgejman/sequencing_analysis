@@ -3,7 +3,7 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 EXTEND_LENGTH = 100
 WINDOW_SIZE   = 25
-files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.bam")
+files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.sorted.bam")
 
 for file in files
   pid = fork do
