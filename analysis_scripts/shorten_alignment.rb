@@ -39,7 +39,7 @@ for i in (0...num_alignments)
   elsif l > min_length
     p = min_length.to_f / l.to_f
     output_file_tokens = alignment_file.split(".")
-    output_file = output_file_tokens.shift + ".approx_#{min_length}." + output_file_tokens.join(".").gsub(".bam","")
+    output_file = output_file_tokens.shift + "_approx_#{min_length}." + output_file_tokens.join(".").gsub(".bam","")
     Open3.popen3("bamtools filter -in #{alignment_file} -isMapped true | samtools view -h -") do |i_stdin, i_stdout,i_stderr|
       Open3.popen3("samtools view -hbS - | samtools sort - #{output_file}") do |o_stdin, o_stdout,o_stderr|
         t = Thread.new(o_stdout, o_stderr) do |o_o,o_e|

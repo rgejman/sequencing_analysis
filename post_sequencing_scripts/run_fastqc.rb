@@ -22,9 +22,9 @@ for path in files
       `mkdir -p #{FASTQC_FOLDER}/#{user}/`
       FileUtils.mv(fastqc_tmp_folder_path,fastqc_output_folder_path)
     rescue => e
-      FileUtils.rm(fastqc_tmp_folder_path,        :force=>true)
-      FileUtils.rm(fastqc_tmp_zip_path,           :force=>true)
       FileUtils.rm(fastqc_output_folder_path,     :force=>true)
+      FileUtils.rm(fastqc_tmp_zip_path,           :force=>true)
+      FileUtils.rm(fastqc_tmp_folder_path,        :force=>true)
       throw e
     ensure
       FileUtils.rm(fastqc_tmp_folder_path,        :force=>true)
