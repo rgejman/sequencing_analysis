@@ -2,7 +2,7 @@ library("marray")
 
 scatter_abline_cor = function(x,y,mark,xlab,ylab,lim) {
 	main = paste(sep=" ", mark, xlab, "v", ylab)
-	png(main, width=1000, height=1000)
+	png(paste(sep=".",main,"png"), width=1000, height=1000)
 	c = cor(x, y, method = "pearson")
 	plot(x, y, main=main,  xlab=xlab, ylab=ylab, ylim=c(0,lim), xlim=c(0,lim))
 	abline(lm(y~x), col="red") # regression line (y~x) 
