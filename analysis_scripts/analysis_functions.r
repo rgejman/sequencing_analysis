@@ -1,10 +1,14 @@
 library("marray")
 
-scatter_abline_cor = function(x,y,mark,xlab,ylab,low_lim,high_lim,line=T) {
+scatter_abline_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=NA,y_high_lim=NA,line=T,) {
+	if(is.na(y_low_lim) | is.na(y_high_lim)) {
+		y_low_lim = x_low_lim
+		y_high_lim = x_high_lim
+	}
 	main = paste(sep=" ", mark, xlab, "v", ylab)
 	png(paste(sep=".",main,"png"), width=1000, height=1000)
 	c = cor(x, y, method = "pearson")
-	plot(x, y, main=main,  xlab=xlab, ylab=ylab, ylim=c(low_lim,high_lim), xlim=c(low_lim,high_lim))
+	plot(x, y, main=main,  xlab=xlab, ylab=ylab, ylim=c(y_low_lim,y_high_lim), xlim=c(x_low_lim,x_high_lim))
 	if(line) {
 		abline(lm(y~x), col="red") # regression line (y~x) 
 	}
