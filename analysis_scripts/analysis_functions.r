@@ -1,4 +1,15 @@
 library("marray")
+
+scatter_abline_cor = function(x,y,mark,xlab,ylab,lim) {
+	main = paste(sep=" ", mark, xlab, "v", ylab)
+	png(main, width=1000, height=1000)
+	c = cor(x, y, method = "pearson")
+	plot(x, y, main=main,  xlab=xlab, ylab=ylab, ylim=c(0,lim), xlim=c(0,lim))
+	abline(lm(y~x), col="red") # regression line (y~x) 
+	mtext(paste(sep="", "r=",c,",  r^2=",c*c),side=3)
+	dev.off();
+}
+
 normalize_data = function(data, inf_to=1,na_to=1,lt=0.1, gt=NA) {
 	data[data == Inf] = inf_to
 	data[data == -Inf] = inf_to
