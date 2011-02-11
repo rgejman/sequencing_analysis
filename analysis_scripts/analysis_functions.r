@@ -1,5 +1,13 @@
 library("marray")
 
+even = function(x) {
+	if(x %% 2) return(F) else return(T)
+}
+
+odd = function(x) {
+	if(x %% 2) return(T) else return(F)
+}
+
 scatter_abline_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=NA,y_high_lim=NA,line=T) {
 	if(is.na(y_low_lim) | is.na(y_high_lim)) {
 		y_low_lim = x_low_lim
