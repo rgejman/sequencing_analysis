@@ -8,7 +8,7 @@ odd = function(x) {
 	if(x %% 2) return(T) else return(F)
 }
 
-smoothscatter_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=NA,y_high_lim=NA,line=T) {
+smoothscatter_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=NA,y_high_lim=NA,line=T,bw=NA) {
 	if(is.na(y_low_lim) | is.na(y_high_lim)) {
 		y_low_lim = x_low_lim
 		y_high_lim = x_high_lim
@@ -16,7 +16,7 @@ smoothscatter_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=N
 	main = paste(sep=" ", mark, xlab, "v", ylab)
 	png(paste(sep=".",main,"png"), width=1000, height=1000)
 	c = cor(x, y, method = "pearson")
-	smoothScatter(x, y, main=main,  xlab=xlab, ylab=ylab, ylim=c(y_low_lim,y_high_lim), xlim=c(x_low_lim,x_high_lim))
+	smoothScatter(x, y, bandwith=bw, main=main,  xlab=xlab, ylab=ylab, ylim=c(y_low_lim,y_high_lim), xlim=c(x_low_lim,x_high_lim))
 	if(line) {
 		abline(0,1, col="red") # regression line (y~x) 
 	}
