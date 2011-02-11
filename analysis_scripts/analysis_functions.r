@@ -8,6 +8,23 @@ odd = function(x) {
 	if(x %% 2) return(T) else return(F)
 }
 
+
+scatter_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=NA,y_high_lim=NA,line=T) {
+	if(is.na(y_low_lim) | is.na(y_high_lim)) {
+		y_low_lim = x_low_lim
+		y_high_lim = x_high_lim
+	}
+	main = paste(sep=" ", mark, xlab, "v", ylab)
+	png(paste(sep=".",main,"png"), width=1000, height=1000)
+	c = cor(x, y, method = "pearson")
+	plot(x, y, main=main,  xlab=xlab, ylab=ylab, ylim=c(y_low_lim,y_high_lim), xlim=c(x_low_lim,x_high_lim))
+	if(line) {
+		abline(0,1, col="red") # regression line (y~x) 
+	}
+	mtext(paste(sep="", "r=",c,",  r^2=",c*c),side=3)
+	dev.off();
+}
+
 scatter_abline_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=NA,y_high_lim=NA,line=T) {
 	if(is.na(y_low_lim) | is.na(y_high_lim)) {
 		y_low_lim = x_low_lim
