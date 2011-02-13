@@ -3,22 +3,10 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 require 'mysql'
 
-conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
-samples_res = conn.query("SELECT * FROM sequencing_samples,sequencing_run where sequencing_run_id = sequencing_run.id and user != 'Control' and user != 'control' and type = 'chip'")
-
-# Bowtie options
 BT_NUM_THREADS	= 24
 
-samples_res.each_hash do |sample|
-  date          = sample["run_at"][0,10].gsub("-","_")
-  lane          = sample["lane"].to_i
-  user          = sample["user"].capitalize
-  name          = sample["name"]
-  type          = sample["type"].downcase
-  run_id        = sample["sequencing_run_id"]
-  genome        = GENOMES[sample["genome"]]
-  
-  base_file     = sample_filebase(run_id, date, lane, user, name)
+
+def run_alignment(user, base_file, genome)
   running_file  = running_file(base_file, "alignment")
   fastq_file    = "#{FASTQ_CHIP_FOLDER}/#{user}/#{base_file}_fastq.txt"
   base          = base_file + ".sorted" #.bam is added automatically
@@ -47,5 +35,34 @@ samples_res.each_hash do |sample|
     FileUtils.rm(tmp_file,        :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
+end
+
+conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+samples_res = conn.query("SELECT * FROM sequencing_samples,sequencing_run where sequencing_run_id = sequencing_run.id and user != 'Control' and user != 'control' and type = 'chip'")
+
+# Run through the files in the DB
+
+samples_res.each_hash do |sample|
+  date          = sample["run_at"][0,10].gsub("-","_")
+  lane          = sample["lane"].to_i
+  user          = sample["user"].capitalize
+  name          = sample["name"]
+  type          = sample["type"].downcase
+  run_id        = sample["sequencing_run_id"]
+  genome        = GENOMES[sample["genome"]]
   
+  base_file     = sample_filebase(run_id, date, lane, user, name)
+  
+  run_alignment(user, base_file, genome)
+end
+
+# Run through all the files to make sure we didn't miss any.
+
+files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.sorted.bam")
+
+for file in files
+  base_file   = file.split("/").last.gsub('_fastq.txt','') #.bam is added automatically
+  user        = base.split("_").first
+  genome = "mm9"
+  run_alignment(user, base_file, genome)
 end
