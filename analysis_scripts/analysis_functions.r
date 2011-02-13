@@ -97,9 +97,11 @@ remove_rows_with_mean_lt = function(data, lt) {
 	return(data[apply(data,1,mean) > lt,])
 }
 
-make_bidirectional_colors = function(data,by=0.5,max=10000,stdevs=2) {
-	ma=abs(max_mean_plus_sd(data,stdevs=stdevs))
-	mi=abs(min_mean_minus_sd(data,stdevs=stdevs))
+make_bidirectional_colors = function(data,by=0.5,max=10000000,stdevs=2) {
+	d[d == -Inf] 	= NA
+	d[d == Inf] 	= NA
+	ma=abs(max_mean_plus_sd(d,stdevs=stdevs))
+	mi=abs(min_mean_minus_sd(d,stdevs=stdevs))
 	if(ma > mi) {
 		m = ma
 	}
@@ -110,9 +112,12 @@ make_bidirectional_colors = function(data,by=0.5,max=10000,stdevs=2) {
 	return(colors)
 }
 
-make_colors = function(data, by=0.5, max=10000, stdevs=2) {
-	
-	colors = c(seq(from=0,to=max_mean_plus_sd(data,stdevs=stdevs),by=by),max)
+make_colors = function(data, by=0.5, max=10000000, stdevs=2) {
+	d[d == -Inf] 	= NA
+	d[d == Inf] 	= NA
+	max_m = max_mean_plus_sd(d,stdevs=stdevs)
+	min_m = min_mean_minus_sd(d,stdevs=stdevs)
+	colors = c((max * -1),seq(from=min_m,to=max_m,by=by),max)
 	return(colors)
 }
 
@@ -136,12 +141,12 @@ merge_all = function(data_frames, all.x=FALSE,all.y=FALSE,sort=FALSE,by="row.nam
 	return(data)
 }
 
-max_mean_plus_sd = function(d,stdevs=2) {
-	return(max(mean(d, trim=0.05)+(stdevs * sd(d))));
+max_mean_plus_sd = function(d,stdevs=3,na.rm=T) {
+	return(max(mean(d, trim=0.01,na.rm=na.rm)+(stdevs * sd(d,na.rm=na.rm))));
 }
 
-min_mean_minus_sd = function(d,stdevs=2) {
-	return(min(mean(d, trim=0.05)-(stdevs * sd(d))));
+min_mean_minus_sd = function(d,stdevs=3,na.rm=T) {
+	return(min(mean(d, trim=0.01,na.rm=na.rm)-(stdevs * sd(d,na.rm=na.rm))));
 }
 
 
