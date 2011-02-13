@@ -28,7 +28,7 @@ for file in files
     begin
       `igvtools count -e #{EXTEND_LENGTH} -w #{WINDOW_SIZE} "#{input_path}" "#{tmp_file1},#{tmp_file2}" "#{GENOMES_FOLDER}/#{GENOME}.genome"`
       num_mapped_reads = 0
-      popen3.popen3("bamstats #{tmp_file2}") { |stdin, stdout, stderr|
+      Open3.popen3("bamstats #{tmp_file2}") { |stdin, stdout, stderr|
         lines = []
         while(line = stdout.gets)
           lines << line
