@@ -13,9 +13,9 @@ def run_alignment(user, base_file, genome)
   tmp_file      = "#{TMP_FOLDER}/#{base}"
   output_file   = "#{ALIGNMENTS_FOLDER}/#{user}/#{base}.bam"
   
-  break if File.exists? tmp_file
-  break if File.exists? output_file
-  break if File.exists? running_file
+  return if File.exists? tmp_file
+  return if File.exists? output_file
+  return if File.exists? running_file
   
   puts fastq_file
   `touch #{running_file}`
