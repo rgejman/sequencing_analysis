@@ -58,7 +58,7 @@ end
 
 # Run through all the files to make sure we didn't miss any.
 
-files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*.sorted.bam")
+files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.txt")
 
 for file in files
   base_file   = file.split("/").last.gsub('_fastq.txt','') #.bam is added automatically
