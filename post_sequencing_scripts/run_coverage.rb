@@ -31,15 +31,10 @@ for file in files
       c =  "bamstats #{file}"
       puts c
       Open3.popen3(c) { |stdin, stdout, stderr|
-        lines = []
         while(line = stdout.gets)
-          lines << line
+          rd = line if line =~ /Mapped/
         end
-        lines = lines.select {|l| l =~ /Mapped reads/}
-        if(lines.length != 1)
-          throw "Error calculating mapped reads for #{file}"
-        end
-        num_mapped_reads = lines.first.split(/\s+/)[3].to_i
+        num_mapped_reads = rd.split(/\s+/)[3].to_i
       }
       puts "#{file}: #{num_mapped_reads} reads"
       `normalizeWig #{num_mapped_reads} #{tmp_file2}`
