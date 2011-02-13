@@ -20,8 +20,7 @@ for file in files
 
     GENOME                = "mm9"
 
-    next if File.exists? output_file_1 #Already processed
-    next if File.exists? output_file_2 #Already processed
+    next if File.exists?(output_file_1) and File.exists?(output_file_2) #Already processed
     next if File.exists? running_file #Being processed
     puts file
     `touch #{running_file}`
