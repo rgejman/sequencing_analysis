@@ -62,7 +62,7 @@ files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.sorted.bam")
 
 for file in files
   base_file   = file.split("/").last.gsub('_fastq.txt','') #.bam is added automatically
-  user        = base.split("_").first
+  user        = base_file.split("_").first
   genome = "mm9"
   run_alignment(user, base_file, genome)
 end
