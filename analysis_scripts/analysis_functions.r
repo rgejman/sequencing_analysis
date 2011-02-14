@@ -99,6 +99,7 @@ remove_rows_with_mean_lt = function(data, lt) {
 }
 
 make_bidirectional_colors = function(data,by=0.5,max=10000000,stdevs=2) {
+	d = data
 	d[d == -Inf] 	= NA
 	d[d == Inf] 	= NA
 	ma=abs(max_mean_plus_sd(d,stdevs=stdevs))
@@ -114,6 +115,7 @@ make_bidirectional_colors = function(data,by=0.5,max=10000000,stdevs=2) {
 }
 
 make_colors = function(data, by=0.5, max=10000000, stdevs=2) {
+	d = data
 	d[d == -Inf] 	= NA
 	d[d == Inf] 	= NA
 	max_m = max_mean_plus_sd(d,stdevs=stdevs)
