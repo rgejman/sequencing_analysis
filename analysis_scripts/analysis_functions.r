@@ -16,8 +16,8 @@ smoothscatter_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=N
 	main = paste(sep=" ", mark, xlab, "v", ylab)
 	png(paste(sep=".",main,"png"), width=1000, height=1000)
 	c = cor(x, y, method = "pearson")
-	col =  densCols(x,y)
-	smoothScatter(x, y, bandwidth=bw, main=main,  xlab=xlab, ylab=ylab, ylim=c(y_low_lim,y_high_lim), xlim=c(x_low_lim,x_high_lim),col=col)
+	#cr =colorRampPalette(c("white","#FFFFCC","#FFFFCC","#FFEDA0","#FED976","#FEB24C","#FD8D3C","#FC4E2A","#E31A1C","#BD0026","#800026"))
+	smoothScatter(x, y, bandwidth=bw, main=main,  xlab=xlab, ylab=ylab, ylim=c(y_low_lim,y_high_lim), xlim=c(x_low_lim,x_high_lim)) #colramp=cr
 	if(line) {
 		abline(0,1, col="black") # regression line (y~x) 
 	}
