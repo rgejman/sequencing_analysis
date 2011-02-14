@@ -16,7 +16,7 @@ smoothscatter_cor = function(x,y,mark,xlab,ylab,x_low_lim,x_high_lim,y_low_lim=N
 	main = paste(sep=" ", mark, xlab, "v", ylab)
 	png(paste(sep=".",main,"png"), width=1000, height=1000)
 	c = cor(x, y, method = "pearson")
-	col =  colorRampPalette(RColorBrewer::brewer.pal(100,"YlOrRd" ))
+	col =  densCols(x,y)
 	smoothScatter(x, y, bandwidth=bw, main=main,  xlab=xlab, ylab=ylab, ylim=c(y_low_lim,y_high_lim), xlim=c(x_low_lim,x_high_lim),colram=col)
 	if(line) {
 		abline(0,1, col="black") # regression line (y~x) 
