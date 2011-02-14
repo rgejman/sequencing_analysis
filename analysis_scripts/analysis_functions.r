@@ -196,6 +196,8 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 	if(length(cols_to_cluster) == 0) {
 		cols_to_cluster = colnames(data)
 	}
+	data[data == -Inf] 	= breaks[1]
+	data[data == Inf] 	= breaks[length(breaks)]
 	for(cluster in clusters) {
 		######## CLUSTERING ########
 		fit <- kmeans(subset(data, select=cols_to_cluster), cluster, iter.max=50,nstart=10)
