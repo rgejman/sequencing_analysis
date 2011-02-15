@@ -19,7 +19,7 @@ for file in files
     input_path            = file
 
     GENOME                = "mm9"
-
+    next if File.new(file).size < 1024*1024 # 1 megabyte
     next if File.exists?(output_file_1) and File.exists?(output_file_2) #Already processed
     next if File.exists? running_file #Being processed
     puts file
@@ -35,8 +35,9 @@ for file in files
         end
         num_mapped_reads = rd.split(/\s+/)[3].to_i
       }
-      puts "#{file}: #{num_mapped_reads} reads"
-      `normalizeWig #{num_mapped_reads} #{tmp_file2}`
+      norm = 1000000.0/num_mapped_reads.to_f
+      puts "#{file}: #{num_mapped_reads} reads. Will normalize by #{norm}."
+      `normalizeWig #{norm} #{tmp_file2}`
       `mkdir -p #{COVERAGE_FOLDER}/#{user}`
       `mkdir -p #{WIG_FOLDER}/#{user}`
       FileUtils.mv(tmp_file1, output_file_1)
