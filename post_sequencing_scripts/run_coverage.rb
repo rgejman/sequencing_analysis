@@ -19,7 +19,7 @@ for file in files
     input_path            = file
 
     GENOME                = "mm9"
-    next if File.new(file).size < 1024*1024 # 1 megabyte
+    next if File.size(file) < 1024*1024 # 1 megabyte
     next if File.exists?(output_file_1) and File.exists?(output_file_2) #Already processed
     next if File.exists? running_file #Being processed
     puts file
