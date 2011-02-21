@@ -3,7 +3,7 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 require 'mysql'
 
-BT_NUM_THREADS	= 22
+BT_NUM_THREADS	= 18
 
 
 def run_alignment(user, base_file, genome)

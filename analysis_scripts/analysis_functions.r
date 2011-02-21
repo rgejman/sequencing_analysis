@@ -98,29 +98,13 @@ remove_rows_with_mean_lt = function(data, lt) {
 	return(data[apply(data,1,mean) > lt,])
 }
 
-make_bidirectional_colors = function(data,by=0.5,max=10000000,stdevs=2) {
-	d = data
-	d[d == -Inf] 	= NA
-	d[d == Inf] 	= NA
-	ma=abs(max_mean_plus_sd(d,stdevs=stdevs))
-	mi=abs(min_mean_minus_sd(d,stdevs=stdevs))
-	if(ma > mi) {
-		m = ma
-	}
-	else {
-		m = mi
-	}
-	colors = c(max * -1, seq(from=(-1 * m),to=(m-by),by=by),m, max)
-	return(colors)
-}
 
-make_colors = function(data, by=0.5, max=10000000, stdevs=2) {
-	d = data
-	d[d == -Inf] 	= NA
-	d[d == Inf] 	= NA
-	max_m = max_mean_plus_sd(d,stdevs=stdevs)
-	min_m = min_mean_minus_sd(d,stdevs=stdevs)
-	colors = c((max * -1),seq(from=min_m,to=max_m,by=by),max)
+# Bidirectional colors only apply to fold change values. e.g. vector(a) / vector(b)
+
+
+make_bidirectional_colors = function(data,ncolors=20) {
+	range = color_range(data,ncolors=ncolors)
+	colors = range()
 	return(colors)
 }
 
@@ -144,14 +128,18 @@ merge_all = function(data_frames, all.x=FALSE,all.y=FALSE,sort=FALSE,by="row.nam
 	return(data)
 }
 
-max_mean_plus_sd = function(d,stdevs=3,na.rm=T) {
-	return(max(mean(d, trim=0.01,na.rm=na.rm)+(stdevs * sd(d,na.rm=na.rm))));
+#Use "color_range" instead of max_mean_plus_sd or min_mean_minus_sd
+color_range = function(d,stdevs=3,na.rm=T,ncolors=20) {
+	d[d == -Inf] 	= NA
+	d[d == Inf] 	= NA
+	m = mean(unlist(d),trim=0.01,na.rm=T)
+	sd = sd(unlist(d),na.rm=na.rm) * stdevs
+	max = m+sd
+	min = m-sd
+	by = (max-min) / ncolors
+	breaks = c(-Inf,seq(from=min,to=max,by=by),Inf)
+	return(breaks)
 }
-
-min_mean_minus_sd = function(d,stdevs=3,na.rm=T) {
-	return(min(mean(d, trim=0.01,na.rm=na.rm)-(stdevs * sd(d,na.rm=na.rm))));
-}
-
 
 remove_less_one_and_log = function(d) {
 	# Changes values <1 to 1 and log-transforms the data
