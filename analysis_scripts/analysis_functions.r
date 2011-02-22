@@ -186,8 +186,7 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 	print(paste(sep=" ", "Setting NA/NaN to", na_to))
 	print(paste(sep=" ", "Setting -Inf to", min_inf_to))
 	print(paste(sep=" ", "Setting Inf to", max_inf_to))
-	data[is.na(data)] = NA #changes NaN to NA
-	data[data == NA] = na_to ## set NAs to "empty"/"middle" values.
+	data[is.na(data)] = na_to #changes NaN also.
 	data[data == -Inf] 	= min_inf_to
 	data[data == Inf]	= max_inf_to
 	
