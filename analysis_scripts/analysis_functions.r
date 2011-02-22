@@ -181,6 +181,7 @@ make_wss_plot = function(data,name,n=25) {
 # data_to_add is useful if you want to cluster on one set of data, but put another cluster aside it.
 make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, color_function="gray", cols_to_cluster=c()) {
 	symbol = row.names(data)
+	data[data == NA] = breaks[[1]][floor(length(breaks[[1]])/2)] ## set NAs to "empty"/"middle" values.
 	data[data == -Inf] 	= breaks[[1]][1]
 	data[data == Inf]	= breaks[[1]][length(breaks[[1]])]
 	if(length(cols_to_cluster) == 0) {
