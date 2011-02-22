@@ -181,19 +181,16 @@ make_wss_plot = function(data,name,n=25) {
 make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, color_function="gray", cols_to_cluster=c()) {
 	symbol = row.names(data)
 	na_to = breaks[[1]][floor(length(breaks[[1]])/2)]
-	nan_to = breaks[[1]][floor(length(breaks[[1]])/2)]
 	min_inf_to = breaks[[1]][1]
 	max_inf_to = breaks[[1]][length(breaks[[1]])]
-	print(paste(sep=" ", "Setting NA to", na_to))
-	print(paste(sep=" ", "Setting NaN to", nan_to))
+	print(paste(sep=" ", "Setting NA/NaN to", na_to))
 	print(paste(sep=" ", "Setting -Inf to", min_inf_to))
 	print(paste(sep=" ", "Setting Inf to", max_inf_to))
-	
+	data[is.na(data)] = NA #changes NaN to NA
 	data[data == NA] = na_to ## set NAs to "empty"/"middle" values.
-	data[data == NaN] = nan_to
-	
 	data[data == -Inf] 	= min_inf_to
 	data[data == Inf]	= max_inf_to
+	
 	if(length(cols_to_cluster) == 0) {
 		cols_to_cluster = colnames(data)
 	}
