@@ -137,7 +137,7 @@ color_range = function(d,stdevs=3,na.rm=T,ncolors=20) {
 	max = m+sd
 	min = m-sd
 	by = (max-min) / ncolors
-	breaks = c(-Inf,seq(from=min,to=max,by=by),Inf)
+	breaks = c(-1000000,seq(from=min,to=max,by=by),1000000)
 	return(breaks)
 }
 
