@@ -107,6 +107,12 @@ make_bidirectional_colors = function(data,ncolors=20) {
 	return(colors)
 }
 
+read_table_remove_cols = function(file,cols,sep="	",quote="",header=TRUE) {
+	t 				= read.table(file,header=header,sep=sep,quote=quote)
+	t 				= t[-match(cols,names(t))]
+	return(t)
+}
+
 read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",header=TRUE) {
 	t 				= read.table(file,header=header,sep=sep,quote=quote)
 	row.names(t) 	= t$symbol
