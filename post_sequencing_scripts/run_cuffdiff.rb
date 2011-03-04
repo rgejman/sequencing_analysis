@@ -37,7 +37,7 @@ res.each_hash do |pair|
   running_file      = running_file(output_folder_name, "cuffdiff")
   
   #-r #{BOWTIE_INDEXES}/#{GENOME}.fa
-  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/mm9.ensembl.genes.for.cuffdiff.gtf"
+  REF_TRANSCRIPTS_FILE = "#{USEFUL_BED_FILES}/Mus_musculus.NCBIM37.61.for-tophat.gtf"
   `touch #{running_file}`
   begin
     `mkdir -p #{output_folder_path}`
