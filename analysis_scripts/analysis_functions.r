@@ -134,10 +134,10 @@ merge_all = function(data_frames, all.x=FALSE,all.y=FALSE,sort=FALSE,by="row.nam
 }
 
 #Use "color_range" instead of max_mean_plus_sd or min_mean_minus_sd
-color_range = function(d,stdevs=3,na.rm=T,ncolors=20) {
+color_range = function(d,stdevs=3,na.rm=T,ncolors=100) {
 	d[d == -Inf] 	= NA
 	d[d == Inf] 	= NA
-	m = mean(unlist(d),trim=0.01,na.rm=T)
+	m = mean(unlist(d),trim=0.01,na.rm=na.rm)
 	sd = sd(unlist(d),na.rm=na.rm) * stdevs
 	max = m+sd
 	min = m-sd
