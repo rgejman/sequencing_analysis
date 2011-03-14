@@ -102,7 +102,7 @@ remove_rows_with_mean_lt = function(data, lt) {
 # Bidirectional colors only apply to fold change values. e.g. vector(a) / vector(b)
 
 
-make_bidirectional_colors = function(data,ncolors=20) {
+make_bidirectional_colors = function(data,ncolors=100) {
 	range = color_range(data,ncolors=ncolors)
 	return(range)
 }
@@ -141,6 +141,7 @@ color_range = function(d,stdevs=3,na.rm=T,ncolors=100) {
 	sd = sd(unlist(d),na.rm=na.rm) * stdevs
 	max = m+sd
 	min = m-sd
+	print(paste("Color Range Min: ",min, " max: ", max," mean: ", m, " sd: ", sd))
 	by = (max-min) / ncolors
 	breaks = c(-1000000,seq(from=min,to=max,by=by),1000000)
 	return(breaks)
