@@ -253,6 +253,13 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 				}
 				colors = maPalette(low="blue", high="white",k=(length(brk)-1))
 			}
+			else if(color_function == "whiteyellowred") {
+				if(even(length(brk))) {
+					step = brk[length(brk)] - brk[length(brk)-1]
+					brk = c(brk,brk[length(brk)]+step)
+				}
+				colors = maPalette(low="white", mid="yellow", high="red",k=(length(brk)-1))
+			}
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
 			nr = nrow(data_plot)
 			nc = ncol(data_plot)
