@@ -104,7 +104,7 @@ remove_rows_with_mean_lt = function(data, lt) {
 
 make_bidirectional_colors = function(data,ncolors=20) {
 	range = color_range(data,ncolors=ncolors)
-	return(colors)
+	return(range)
 }
 
 read_table_remove_cols = function(file,cols,sep="	",quote="",header=TRUE) {
