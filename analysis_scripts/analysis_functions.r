@@ -137,10 +137,16 @@ merge_all = function(data_frames, all.x=FALSE,all.y=FALSE,sort=FALSE,by="row.nam
 color_range = function(d,stdevs=3,na.rm=T,ncolors=100) {
 	d[d == -Inf] 	= NA
 	d[d == Inf] 	= NA
-	m = mean(unlist(d),trim=0.01,na.rm=na.rm)
+	m = mean(unlist(d),na.rm=na.rm)
 	sd = sd(unlist(d),na.rm=na.rm) * stdevs
 	max = m+sd
 	min = m-sd
+	if(max > max(unlist(d))) {
+		max = max(unlist(d))
+	}
+	if(min < min(unlist(d))) {
+		min = min(unlist(d))
+	}
 	print(paste("Color Range Min: ",min, " max: ", max," mean: ", m, " sd: ", sd))
 	by = (max-min) / ncolors
 	breaks = c(-1000000,seq(from=min,to=max,by=by),1000000)
