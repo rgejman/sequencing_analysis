@@ -120,7 +120,7 @@ read_table_remove_cols_set_row_names = function(file,cols,sep="	",quote="",heade
 	return(t)
 }
 
-merge_all = function(data_frames, all.x=FALSE,all.y=FALSE,sort=FALSE,by="row.names"){
+merge_all = function(data_frames, all.x=F,all.y=F,sort=F,by="row.names"){
 	data = merge(data_frames[[1]], data_frames[[2]], all.x=all.x,all.y=all.y,sort=sort, by=by)
 	row.names(data) = data[,1]
 	data = data[,-(1:1)]
@@ -270,21 +270,50 @@ make_heatmaps = function(data, breaks, cols_per_heatmap, clusters, postfix, colo
 			data_plot = t(d[,as.vector(cols_per_heatmap[,n])]) # transpose the array
 			nr = nrow(data_plot)
 			nc = ncol(data_plot)
-			image(1:nr,1:nc,data.matrix(data_plot),breaks=brk,col=colors,axes=FALSE,xlab=colnames(cols_per_heatmap)[n],ylab="")
+			image(1:nr,1:nc,data.matrix(data_plot),breaks=brk,col=colors,axes=F,xlab=colnames(cols_per_heatmap)[n],ylab="")
 		}
 		## Now we add the cluster labels
 				
 		label_breaks = c(0,seq(from=1,to=length(fit$size),by=1))
 		colors = gray(1:(length(label_breaks)-1)/(length(label_breaks)))
 		data_plot = t(data.matrix(d$fit.cluster))
-		image(1:nrow(data_plot),1:ncol(data_plot),data_plot,breaks=label_breaks,col=colors,axes=FALSE,ylab="",xlab="Clusters")
+		image(1:nrow(data_plot),1:ncol(data_plot),data_plot,breaks=label_breaks,col=colors,axes=F,ylab="",xlab="Clusters")
 		dev.off()
 
 		######## OUTPUT SYMBOLS ########
 
 		## Output the symbols in each group.
-		write.table(d,file=paste("cluster-",cluster,".",postfix,".txt",sep=""),sep="\t",quote=FALSE)
+		write.table(d,file=paste("cluster-",cluster,".",postfix,".txt",sep=""),sep="\t",quote=F)
 
 		print(paste("Finished cluster", cluster,sep=" "))
 	}
+}
+
+make_hclust_heatmap = function(data, main, colors, breaks) {
+	data		= data.matrix(data)
+	distance 	= dist(data)
+	cluster		= hclust(distance, method="ward")
+	dendrogram	= as.dendrogram(cluster)
+	Rowv <- rowMeans(data, na.rm = T)
+	dendrogram <- reorder(dendrogram, Rowv)
+	
+	## Produce the heatmap from the calculated dendrogram.
+	## Don't allow it to re-order rows because we have already re-ordered them above.
+	
+	reorderfun = function(d,w) { d }
+	png(paste(main,".png",sep=""), res=150, height=22,width=17,units="in")
+	
+	heatmap(data,col=colors,breaks=breaks,scale="none",Colv=NA,Rowv=dendrogram,labRow=NA, reorderfun=reorderfun)
+
+	dev.off()
+	
+	
+	## Re-order the original data using the computed dendrogram
+	rowInd = rev(order.dendrogram(dendrogram))
+	di = dim(data)
+	nc = di[2L]
+	nr = di[1L]
+	colInd = 1L:nc
+	data_ordered <- data[rowInd, colInd]
+	write.table(data_ordered, paste(main,".txt",sep=""),quote=F, sep="\t",row.names=T, col.names=T)
 }
