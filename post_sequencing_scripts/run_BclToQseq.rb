@@ -28,7 +28,10 @@ res.each_hash do |sequencing_run|
     q = "#{QSEQ_FOLDER}/#{user}/" + sample["qseq_file"]
     c = "#{FASTQ_CHIP_FOLDER}/#{user}/#{fq}"
     r = "#{FASTQ_RNA_SEQ_FOLDER}/#{user}/#{fq}"
-    if File.exists? q or File.exists? r or File.exists? c
+    c_gz = "#{FASTQ_CHIP_FOLDER}/#{user}/#{fq}.gz"
+    r_gz = "#{FASTQ_CHIP_FOLDER}/#{user}/#{fq}.gz"
+    
+    if File.exists? q or File.exists? r or File.exists? c or File.exists? c_gz or File.exists? r_gz
       next
     else
       nsamples_not_converted += 1 if user.downcase != "control"
