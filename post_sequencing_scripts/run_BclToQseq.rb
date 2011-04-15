@@ -11,7 +11,6 @@ res.each_hash do |sequencing_run|
   run_id                        = sequencing_run["illumina_run_id"]
   running_file                  = running_file(run_id, "BclToQseq")
   next if File.exists? running_file
-  intensities_folder            = "#{RAW_FOLDER}/#{run_id}/Data/Intensities"
   base_calls_folder             = "#{intensities_folder}/BaseCalls"
   output_folder                 = base_calls_folder
   samples = {}
@@ -31,6 +30,7 @@ res.each_hash do |sequencing_run|
     c_gz = "#{FASTQ_CHIP_FOLDER}/#{user}/#{fq}.gz"
     r_gz = "#{FASTQ_CHIP_FOLDER}/#{user}/#{fq}.gz"
     
+    next if sample["post_process"].to_i == 0
     if File.exists? q or File.exists? r or File.exists? c or File.exists? c_gz or File.exists? r_gz
       next
     else
@@ -42,11 +42,11 @@ res.each_hash do |sequencing_run|
 
   `touch #{running_file}`
   begin
-    cmd = "setupBclToQseq.py -b #{base_calls_folder} -p #{intensities_folder} -o #{output_folder} --in-place --overwrite"
+    cmd = "setupBclToQseq.py -b #{base_calls_folder} --in-place --overwrite"
     puts cmd
     `#{cmd}`
     Dir.chdir(output_folder)
-    cmd = "make -j #{NUM_THREADS}> /dev/null 2>&1"
+    cmd = "make -j #{NUM_THREADS}"
     puts cmd
     `#{cmd}`
     forks = []
