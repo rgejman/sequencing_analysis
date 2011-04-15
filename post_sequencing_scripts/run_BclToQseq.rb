@@ -11,8 +11,8 @@ res.each_hash do |sequencing_run|
   run_id                        = sequencing_run["illumina_run_id"]
   running_file                  = running_file(run_id, "BclToQseq")
   next if File.exists? running_file
+  intensities_folder            = "#{RAW_FOLDER}/#{run_id}/Data/Intensities"
   base_calls_folder             = "#{intensities_folder}/BaseCalls"
-  output_folder                 = base_calls_folder
   samples = {}
   samples_res = conn.query("SELECT * FROM sequencing_samples WHERE sequencing_run_id = '#{seq_run_id}' ORDER BY lane desc")
   date    = sequencing_run["run_at"][0,10].gsub("-","_")
@@ -45,7 +45,7 @@ res.each_hash do |sequencing_run|
     cmd = "setupBclToQseq.py -b #{base_calls_folder} --in-place --overwrite"
     puts cmd
     `#{cmd}`
-    Dir.chdir(output_folder)
+    Dir.chdir(base_calls_folder)
     cmd = "make -j #{NUM_THREADS}"
     puts cmd
     `#{cmd}`
