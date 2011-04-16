@@ -29,6 +29,7 @@ rows.each_hash do |row|
   next if missing_files
   
   `touch #{running_file}`
+  puts "Merging #{lanes.length} lanes into #{merged_name}"
   begin
     for lane in lanes
       `samtools merge #{tmp_file} #{lanes.join(" ")}`
