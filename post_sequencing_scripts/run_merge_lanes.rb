@@ -24,7 +24,7 @@ rows.each_hash do |row|
   for l in 1..10
     lane = row["lane_#{l}"]
     next if lane.nil? || lane.strip == ""
-    lane = "#{ALIGNMENTS_FOLDER}/#{user}/#{lane}"
+    lane = "#{ALIGNMENTS_FOLDER}/#{user}/#{lane}.sorted.bam"
     lanes << lane
     unless File.exists? lane # Already been merged
       puts "#{merged_name} missing: #{lane}"
