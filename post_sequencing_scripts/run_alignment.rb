@@ -52,7 +52,7 @@ samples_res.each_hash do |sample|
   genome        = GENOMES[sample["genome"]]
   
   base_file     = sample_filebase(run_id, date, lane, user, name)
-  
+  next if sample["post_process"].to_i == 0
   run_alignment(user, base_file, genome)
 end
 

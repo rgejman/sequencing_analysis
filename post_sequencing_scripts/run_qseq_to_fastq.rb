@@ -22,6 +22,7 @@ samples_res.each_hash do |sample|
   next unless File.exists? qseq_file
   next if File.exists? fastq_file
   next if File.exists? running_file
+  next if sample["post_process"].to_i == 0
   `touch #{running_file}`
   forks << fork do
     puts qseq_file
