@@ -1,3 +1,8 @@
+#!/usr/bin/env ruby -wKU
+$: << File.expand_path(File.dirname(__FILE__) + "/../")
+require 'constants'
+require 'mysql'
+
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 rows = conn.query("SELECT * FROM lanes_to_merge")
 
