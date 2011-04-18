@@ -13,7 +13,7 @@ rows.each_hash do |row|
   user            = row["user"]
   merged_filename = merged_name + ".sorted.bam"
   merged_filepath = "#{ALIGNMENTS_FOLDER}/#{user}/#{merged_filename}"
-  tmp_file        = "#{TMP_FOLDER}/#{merged_filename}.sorted.bam"
+  tmp_file        = "#{TMP_FOLDER}/#{merged_filename}"
   running_file    = running_file(merged_name, "merge_lanes")
   
   next if File.exists? merged_filepath # Already been merged
@@ -42,10 +42,11 @@ rows.each_hash do |row|
       `samtools index #{merged_filepath}`
     end
   rescue => e
+    FileUtils.rm(merged_filepath, :force=>true)
+    FileUtils.rm(merged_filepath + ".bai", :force=>true)
     throw e
   ensure
     FileUtils.rm(tmp_file,        :force=>true)
-    FileUtils.rm(merged_filepath, :force=>true)
     FileUtils.rm(running_file,    :force=>true)
   end
   
