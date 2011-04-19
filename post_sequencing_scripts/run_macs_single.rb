@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby -KU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
+files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.sorted.bam")
 
-Dir.foreach("#{ALIGNMENTS_FOLDER}/") do |file|
-  next unless file =~ /\.sorted.bam$/
-  file_path             = "#{ALIGNMENTS_FOLDER}/#{file}"
-  analysis_folder_name  = file.gsub(".sorted.bam","")
+for file_path in files
+  next unless file_path =~ /\.sorted.bam$/
+  analysis_folder_name  = file.split("/").last.gsub(".sorted.bam","")
   analysis_folder_path  = "#{MACS_FOLDER}/#{analysis_folder_name}"
   next if File.exists? analysis_folder_path #this has already been analyzed.
   next unless File.exists? "#{file_path}"
