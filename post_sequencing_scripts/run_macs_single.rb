@@ -1,9 +1,17 @@
 #!/usr/bin/env ruby -KU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
+
+if ARGV.length > 0
+  specified_file = ARGV[0]
+end
+
 files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.sorted.bam")
 
 for file_path in files
+  if ARGV.length > 0
+    next unless file_path.include? specified_file
+  end
   next unless file_path =~ /\.sorted.bam$/
   analysis_folder_name  = file_path.split("/").last.gsub(".sorted.bam","")
   analysis_folder_path  = "#{MACS_FOLDER}/#{analysis_folder_name}"
