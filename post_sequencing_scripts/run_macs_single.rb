@@ -5,7 +5,7 @@ files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.sorted.bam")
 
 for file_path in files
   next unless file_path =~ /\.sorted.bam$/
-  analysis_folder_name  = file.split("/").last.gsub(".sorted.bam","")
+  analysis_folder_name  = file_path.split("/").last.gsub(".sorted.bam","")
   analysis_folder_path  = "#{MACS_FOLDER}/#{analysis_folder_name}"
   next if File.exists? analysis_folder_path #this has already been analyzed.
   next unless File.exists? "#{file_path}"
