@@ -17,7 +17,8 @@ for file_path in files
   file = tokens.pop
   user = tokens.pop
   analysis_folder_name  = file.gsub(".sorted.bam","")
-  Dir.mkdir("#{MACS_FOLDER}/#{user}")
+  macs_user_folder = "#{MACS_FOLDER}/#{user}"
+  Dir.mkdir(macs_user_folder) unless File.exists? macs_user_folder
   analysis_folder_path  = "#{MACS_FOLDER}/#{user}/#{analysis_folder_name}"
   next if File.exists? analysis_folder_path #this has already been analyzed.
   next unless File.exists? "#{file_path}"
