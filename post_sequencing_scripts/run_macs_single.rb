@@ -13,16 +13,19 @@ for file_path in files
     next unless file_path.include? specified_file
   end
   next unless file_path =~ /\.sorted.bam$/
-  analysis_folder_name  = file_path.split("/").last.gsub(".sorted.bam","")
-  analysis_folder_path  = "#{MACS_FOLDER}/#{analysis_folder_name}"
+  tokens = file_path.split("/")
+  file = tokens.pop
+  user = tokens.pop
+  analysis_folder_name  = file.gsub(".sorted.bam","")
+  analysis_folder_path  = "#{MACS_FOLDER}/#{user}/#{analysis_folder_name}"
   next if File.exists? analysis_folder_path #this has already been analyzed.
   next unless File.exists? "#{file_path}"
   running_file        = running_file(analysis_folder_name, "run_macs_single")
-  output_folder       = "#{MACS_FOLDER}/#{analysis_folder_name}"
+  output_folder       = "#{MACS_FOLDER}/#{user}/#{analysis_folder_name}"
   complete_file       = "#{output_folder}/#{analysis_folder_name}_model.pdf"
   next if File.exists? complete_file # We use the model pdf as evidence that the run has completed.
   next if File.exists? running_file #This is being processed
-  model_file          = "#{MACS_FOLDER}/#{analysis_folder_name}_model.r"
+  model_file          = "#{MACS_FOLDER}/#{user}/#{analysis_folder_name}_model.r"
     
   puts analysis_folder_name
   `touch #{running_file}`
