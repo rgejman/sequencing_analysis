@@ -19,11 +19,11 @@ for file_path in files
   analysis_folder_name  = file.gsub(".sorted.bam","")
   macs_user_folder = "#{MACS_FOLDER}/#{user}"
   Dir.mkdir(macs_user_folder) unless File.exists? macs_user_folder
-  analysis_folder_path  = "#{MACS_FOLDER}/#{user}/#{analysis_folder_name}"
+  analysis_folder_path  = "#{macs_user_folder}/#{analysis_folder_name}"
   next if File.exists? analysis_folder_path #this has already been analyzed.
   next unless File.exists? "#{file_path}"
   running_file        = running_file(analysis_folder_name, "run_macs_single")
-  output_folder       = "#{MACS_FOLDER}/#{user}/#{analysis_folder_name}"
+  output_folder       = "#{macs_user_folder}/#{analysis_folder_name}"
   complete_file       = "#{output_folder}/#{analysis_folder_name}_model.pdf"
   next if File.exists? complete_file # We use the model pdf as evidence that the run has completed.
   next if File.exists? running_file #This is being processed

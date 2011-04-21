@@ -17,8 +17,10 @@ for file in files
     output_file_1         = "#{COVERAGE_FOLDER}/#{user}/#{base}.cov.tdf"
     output_file_2         = "#{WIG_FOLDER}/#{user}/#{base}.#{WINDOW_SIZE}.wig"
     input_path            = file
-
-    GENOME                = "mm9"
+    genome = "mm9"
+    if file =~ /A549/ 
+      genome = "hg19"
+    end
     next if File.size(file) < 1024*1024 # 1 megabyte
     next if File.exists?(output_file_1) and File.exists?(output_file_2) #Already processed
     next if File.exists? running_file #Being processed
