@@ -27,7 +27,7 @@ for file in files
     puts file
     `touch #{running_file}`
     begin
-      `igvtools count -e #{EXTEND_LENGTH} -w #{WINDOW_SIZE} "#{input_path}" "#{tmp_file1},#{tmp_file2}" "#{GENOMES_FOLDER}/#{GENOME}.genome"`
+      `igvtools count -e #{EXTEND_LENGTH} -w #{WINDOW_SIZE} "#{input_path}" "#{tmp_file1},#{tmp_file2}" "#{GENOMES_FOLDER}/#{genome}.genome"`
       num_mapped_reads = 0
       c =  "bamstats #{file}"
       puts c
