@@ -6,6 +6,7 @@ require 'mysql'
 BT_NUM_THREADS	= 18
 
 
+
 def run_alignment(user, base_file, genome)
   running_file  = running_file(base_file, "alignment")
   fastq_file    = "#{FASTQ_CHIP_FOLDER}/#{user}/#{base_file}_fastq.txt"
