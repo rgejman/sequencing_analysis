@@ -36,10 +36,10 @@ res.each_hash do |sequencing_run|
       sample["qseq_file_2"]   = base + "_2_qseq.txt"
       fq1 = sample["qseq_file_1"] + "_1_fastq.txt"
       fq2 = sample["qseq_file_2"] + "_2_fastq.txt"
-      next if File.exists? "#{qseq_base}" + sample["qseq_file_1"] && File.exists? "#{qseq_base}" + sample["qseq_file_2"]
-      next if File.exists? "#{chip_base}" + fq1 && File.exists? "#{chip_base}" + fq2
-      next if File.exists? "#{rna_seq_base}" + fq1 && File.exists? "#{rna_seq_base}" + fq2
-      next if File.exists? "#{hic_base}" + fq1 && File.exists? "#{hic_base}" + fq2
+      next if File.exists?("#{qseq_base}" + sample["qseq_file_1"]) and File.exists?("#{qseq_base}" + sample["qseq_file_2"])
+      next if File.exists?("#{chip_base}" + fq1) and File.exists?("#{chip_base}" + fq2)
+      next if File.exists?("#{rna_seq_base}" + fq1) and File.exists?("#{rna_seq_base}" + fq2)
+      next if File.exists?("#{hic_base}" + fq1) and File.exists?("#{hic_base}" + fq2)
       nsamples_not_converted += 1 if user.downcase != "control"
     else
       sample["qseq_file"]     = base + "_qseq.txt"
