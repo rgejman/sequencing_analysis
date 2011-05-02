@@ -23,7 +23,7 @@ samples_res.each_hash do |sample|
   when "hic"
     FASTQ_HIC_FOLDER
   end
-  folder += "/#{user}"
+  folder        += "/#{user}"
   fastq_file    = "#{folder}/#{base_file}_fastq.txt"
   tmp_file      = "#{TMP_FOLDER}/#{base_file}_fastq.txt"
   running_file  = running_file(base_file, "qseq_to_fastq")
