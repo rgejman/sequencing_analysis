@@ -15,12 +15,12 @@ samples_res.each_hash do |sample|
   run_id        = sample["sequencing_run_id"]
   base_file     = sample_filebase(run_id, date, lane, user, name)
   qseq_file     = "#{QSEQ_FOLDER}/#{user}/" + base_file + "_qseq.txt"
-  folder = case type
+  folder = case type.downcase
   when "chip"
     FASTQ_CHIP_FOLDER
   when "rna_seq"
     FASTQ_RNA_SEQ_FOLDER
-  when "HiC"
+  when "hic"
     FASTQ_HIC_FOLDER
   end
   folder += "/#{user}"
