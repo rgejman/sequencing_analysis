@@ -60,8 +60,8 @@ samples_res.each_hash do |sample|
         cat2  = "cat #{qseq_2_file}"
         awk1 = "gawk '{gsub(/\\./, \"N\", $9);print}'"
         awk2 = "awk '{print \"@\"$1\":#{base_file}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\"; print $9; print \"+\"$1\":#{base_file}:\" $11 \":\" $3 \":\" $4 \":\" $5 \":\" $6\"#0/1\" ; print $10}'"
-        out_1  = "> #{tmp_1_file}"
-        out_2  = "> #{tmp_2_file}"
+        out1  = "> #{tmp_1_file}"
+        out2  = "> #{tmp_2_file}"
         
         `#{cat1} | #{awk1} | #{awk2} #{out1}`
         `#{cat2} | #{awk1} | #{awk2} #{out2}`
