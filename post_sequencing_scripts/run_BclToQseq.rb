@@ -73,8 +73,8 @@ res.each_hash do |sequencing_run|
 
       puts "P: Cat'ing lane #{lane}"
       if paired
-        qseq_files_1    = Dir.glob("s_#{lane}_1_*_qseq.txt")
-        qseq_files_2    = Dir.glob("s_#{lane}_2_*_qseq.txt")
+        qseq_files_1    = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
+        qseq_files_2    = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
         qseq_file_1     = sample["qseq_file_1"]
         qseq_file_2     = sample["qseq_file_2"]
         
