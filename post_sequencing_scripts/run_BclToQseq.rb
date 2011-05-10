@@ -85,8 +85,8 @@ res.each_hash do |sequencing_run|
         tmp_filepath_2  = "#{TMP_FOLDER}/" + qseq_file_2
         
         ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
-        cat_cmd_1 = "cat #{qseq_files_1.join(" ")} | grep -e \"1$\" > #{tmp_filepath_1}"
-        cat_cmd_2 = "cat #{qseq_files_2.join(" ")} | grep -e \"1$\" > #{tmp_filepath_2}"
+        cat_cmd_1 = "cat #{qseq_files_1.join(" ")} > #{tmp_filepath_1}"
+        cat_cmd_2 = "cat #{qseq_files_2.join(" ")} > #{tmp_filepath_2}"
         puts "C: #{cat_cmd_1}"
         puts "C: #{cat_cmd_2}"
         forks << fork do
