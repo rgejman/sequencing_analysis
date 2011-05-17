@@ -37,7 +37,7 @@ samples_res.each_hash do |sample|
     tmp_1_file      = "#{TMP_FOLDER}/#{base_file}_1_fastq.txt"
     tmp_2_file      = "#{TMP_FOLDER}/#{base_file}_2_fastq.txt"
     next unless File.exists? qseq_1_file and File.exists? qseq_2_file
-    next if File.exists? fastq_1_file and File.exists fastq_2_file
+    next if File.exists? fastq_1_file and File.exists? fastq_2_file
   else
     fastq_file    = "#{folder}/#{base_file}_fastq.txt"
     tmp_file      = "#{TMP_FOLDER}/#{base_file}_fastq.txt"

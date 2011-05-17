@@ -40,7 +40,6 @@ res.each_hash do |sequencing_run|
       next if File.exists?("#{chip_base}" + fq1) and File.exists?("#{chip_base}" + fq2)
       next if File.exists?("#{rna_seq_base}" + fq1) and File.exists?("#{rna_seq_base}" + fq2)
       next if File.exists?("#{hic_base}" + fq1) and File.exists?("#{hic_base}" + fq2)
-      
       next if File.exists?("#{qseq_base}" + sample["qseq_file_1"] + ".gz") and File.exists?("#{qseq_base}" + sample["qseq_file_2"] + ".gz")
       next if File.exists?("#{chip_base}" + fq1 + ".gz") and File.exists?("#{chip_base}" + fq2 + ".gz")
       next if File.exists?("#{rna_seq_base}" + fq1 + ".gz") and File.exists?("#{rna_seq_base}" + fq2 + ".gz")
