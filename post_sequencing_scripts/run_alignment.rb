@@ -66,7 +66,9 @@ for file in files
   base_file   = file.split("/").last.gsub('_fastq.txt','') #.bam is added automatically
   user        = base_file.split("_").first
   genome = "mm9"
-  if file =~ /A549/ 
+  if file =~ /A549/ and user =~ /Ivan/
+    genome = "hg18"
+  elsif file =~ /A549/
     genome = "hg19"
   end
   run_alignment(user, base_file, genome)
