@@ -19,7 +19,7 @@ def run_alignment(user, base_file, genome, trim_from_end = 1)
   return if File.exists? output_file
   return if File.exists? running_file
   
-  puts fastq_file
+  puts fastq_file + " with #{trim_from_end}nt trimmed from 3'"
   `touch #{running_file}`
   begin
     ## Do not align the last base because it has a higher error rate.
