@@ -7,7 +7,7 @@ BT_NUM_THREADS	= 18
 
 
 
-def run_alignment(user, base_file, genome)
+def run_alignment(user, base_file, genome, trim_from_end = 1)
   running_file  = running_file(base_file, "alignment")
   fastq_file    = "#{FASTQ_CHIP_FOLDER}/#{user}/#{base_file}_fastq.txt"
   base          = base_file + ".sorted" #.bam is added automatically
@@ -23,7 +23,7 @@ def run_alignment(user, base_file, genome)
   `touch #{running_file}`
   begin
     ## Do not align the last base because it has a higher error rate.
-    bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best --strata -m 2 #{genome} --trim3 1 --sam \"#{fastq_file}\""
+    bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best --strata -m 2 #{genome} --trim3 #{trim_from_end} --sam \"#{fastq_file}\""
     convert_bam   = "samtools view -hbSu -"
     sort_bam      = "samtools sort - #{tmp_file}"
     `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
@@ -51,11 +51,13 @@ samples_res.each_hash do |sample|
   name          = sample["name"]
   type          = sample["type"].downcase
   run_id        = sample["sequencing_run_id"]
+  trim_to       = sample["trim_to"].nil? ? nil : sample["trim_to"].to_i 
   genome        = GENOMES[sample["genome"]]
+  trim_from_end = sample["cycles"].to_i - trim_to
   
   base_file     = sample_filebase(run_id, date, lane, user, name)
   next if sample["post_process"].to_i == 0
-  run_alignment(user, base_file, genome)
+  run_alignment(user, base_file, genome, trim_from_end)
 end
 
 # Run through all the files to make sure we didn't miss any.
