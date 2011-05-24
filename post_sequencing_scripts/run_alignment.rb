@@ -51,7 +51,7 @@ samples_res.each_hash do |sample|
   name          = sample["name"]
   type          = sample["type"].downcase
   run_id        = sample["sequencing_run_id"]
-  genome        = [sample["genome"]]
+  genome        = GENOMES[sample["genome"]]
   
   base_file     = sample_filebase(run_id, date, lane, user, name)
   next if sample["post_process"].to_i == 0
