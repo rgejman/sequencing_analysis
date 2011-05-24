@@ -53,7 +53,7 @@ samples_res.each_hash do |sample|
   run_id        = sample["sequencing_run_id"]
   trim_to       = sample["trim_to"].nil? ? nil : sample["trim_to"].to_i 
   genome        = GENOMES[sample["genome"]]
-  trim_from_end = trim_to.nil? 1 : sample["cycles"].to_i - trim_to
+  trim_from_end = trim_to.nil? ? 1 : sample["cycles"].to_i - trim_to
   
   base_file     = sample_filebase(run_id, date, lane, user, name)
   next if sample["post_process"].to_i == 0
