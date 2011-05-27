@@ -13,6 +13,10 @@ res.each_hash do |sequencing_run|
   running_file                  = running_file(run_id, "BclToQseq")
   next if File.exists? running_file
   intensities_folder            = "#{RAW_FOLDER}/#{run_id}/Data/Intensities"
+  rta_complete_file             = "#{RAW_FOLDER}/#{run_id}/RTAComplete.txt"
+  basecalling_complete_file     = "#{RAW_FOLDER}/#{run_id}/Basecalling_Netcopy_complete.txt"
+  next unless File.exists? rta_complete_file
+  next unless File.exists? basecalling_complete_file
   base_calls_folder             = "#{intensities_folder}/BaseCalls"
   samples = {}
   samples_res = conn.query("SELECT * FROM sequencing_samples WHERE sequencing_run_id = '#{seq_run_id}' ORDER BY lane desc")
