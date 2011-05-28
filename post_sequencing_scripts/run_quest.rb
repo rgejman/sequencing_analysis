@@ -29,7 +29,30 @@ res.each_hash do |row|
     GENOME = "mm9"
     x = "generate_QuEST_parameters.pl -silent -bam_align_ChIP #{f_path} -bam_align_RX_noIP #{b_path} -gt #{QUEST_GENOME_TABLES}/#{GENOME} -ap #{tmp_folder}"
     puts x
-    
+    Open3.popen3(x) {
+      |stdin, stdout, stderr|
+      t = Thread.new(stderr) do |terr|
+        while (line = terr.gets)
+          puts "stderr: #{line}"
+        end
+      end
+      t = Thread.new(stdout) do |terr|
+         while (line = terr.gets)
+           puts "stdout: #{line}"
+         end
+       end
+      #stdin.puts "" #ONLY CALL THIS IF WE DO NOT HAVE A CONTROL.
+      chip_config = 3
+      if f_name =~ /PolII/
+        chip_config = 2
+      elsif f_name =~ /(H3)|(H4)/
+        chip_config = 3
+      end
+      stdin.puts chip_config # options: 1:TF, 2:polII-like, 3:histone ChIP, 4:individual config. # in the future this must be parsed from the filename
+      stdin.puts 2 #recommended peak calling params.
+      stdin.puts "y" #to run QuEST analysis now.
+      t.join()
+    }
     `mkdir -p #{QUEST_FOLDER}/#{f_user}`
     `mv #{tmp_folder} #{analysis_folder_path}`
   ensure
