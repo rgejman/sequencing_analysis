@@ -1,3 +1,4 @@
+require 'yaml'
 require 'rubygems'
 require 'fileutils'
 require 'pp'
