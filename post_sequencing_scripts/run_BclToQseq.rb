@@ -67,7 +67,7 @@ res.each_hash do |sequencing_run|
 
   `touch #{running_file}`
   begin
-    cmd = "setupBclToQseq.py -b #{base_calls_folder} -P .locs --in-place --overwrite"
+    cmd = "setupBclToQseq.py -b #{base_calls_folder} -P .clocs --in-place --overwrite"
     puts cmd
     `#{cmd}`
     Dir.chdir(base_calls_folder)
