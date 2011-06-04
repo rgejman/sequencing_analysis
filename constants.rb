@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'daemons'
 require 'fileutils'
 require 'pp'
 path = File.expand_path(File.dirname(__FILE__))
@@ -56,12 +55,6 @@ def running_file(name, tool)
   return "#{LOG_FOLDER}/#{name}.#{tool}.running"
 end
 
-def call(script_name, options)
-  Daemons.call(options) do
-    Dir.chdir(SCRIPTS_FOLDER)
-    `ruby #{SCRIPTS_FOLDER}/#{script_name}`
-  end
-end
 
 #Takes in a mysql row (or any hashtable)
 def sample_filebase(run_id, date, lane, user, name)
