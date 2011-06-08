@@ -2,11 +2,18 @@
 require 'rubygems'
 require 'open3'
 
+EQUIVALENCE_THRESHOLD = 0.05
 
+## Ron Gejman
+## 2011
+## Tarakhovsky Lab, Rockefeller University
+##
+## Copyright: This script is free for any use, academic or commercial.
+##
 ## This script will shorten alignment files to an approximately equal # of mapped reads.
 ## To ensure that the shortening is done randomly w/o reading the entire alignment into memory,
 ## each read is challenged independently until the end of the file, yielding an approximately
-## equal # of reads.
+## equal # of reads (how equal is governed by the EQUIVALENT_THRESHOLD parameter).
 ##
 ## Unmapped reads are discarded.
 ##
@@ -14,12 +21,16 @@ require 'open3'
 ## and you want to compare  alignments with the same # of reads and/or to get comparable
 ## RPKM values.
 
+if ARGV.length == 0
+  puts "Usage: ruby shorten_alignment.rb file1.bam file2.bam file3.bam ... filex.bam"
+  exit
+end
+
 num_alignments  = ARGV.length
 alignments      = ARGV
 lengths         = []
 min_length      = nil
 
-EQUIVALENCE_THRESHOLD = 0.05
 
 for i in (0...num_alignments)
   alignment_file  = alignments[i]
