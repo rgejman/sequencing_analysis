@@ -23,7 +23,6 @@ res.each_hash do |sequencing_run|
   date    = sequencing_run["run_at"][0,10].gsub("-","_")
   nsamples_not_converted = 0
   samples_res.each_hash do |sample|
-    next if lanes_processed.includes? lane
     lane        = sample["lane"].to_i
     user        = sample["user"].capitalize
     name        = sample["name"]
