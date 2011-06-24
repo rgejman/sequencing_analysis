@@ -86,7 +86,7 @@ res.each_hash do |sequencing_run|
       next if sample["user"].downcase == "control"
 
       puts "P: Cat'ing lane #{lane}"
-      if paired and index.nil?
+      if paired and sample["index"].nil?
         qseq_files_1    = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
         qseq_files_2    = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
         qseq_file_1     = sample["qseq_file_1"]
@@ -110,7 +110,7 @@ res.each_hash do |sequencing_run|
           FileUtils.mv(tmp_filepath_1, qseq_filepath_1)
           FileUtils.mv(tmp_filepath_2, qseq_filepath_2)
         end
-      elsif !paired and !index.nil?
+      elsif !paired and !sample["index"].nil?
         qseq_files          = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
         qseq_files_indices  = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
         qseq_file           = sample["qseq_file"]
@@ -139,14 +139,14 @@ res.each_hash do |sequencing_run|
           # do the rest of the samples
           `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
           for sample in samples
-            file = lane_sample_filebase + "_" + sample[index] + "_qseq.txt"
+            file = lane_sample_filebase + "_" + sample["index"] + "_qseq.txt"
             FileUtils.mv(file, sample["qseq_file"])
           end
           FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
           FileUtils.rm(unmultiplexed_indices_file,    :force=>true)
           
         end
-      elsif !paired and index.nil?
+      elsif !paired and sample["index"].nil?
         qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
         qseq_file     = sample["qseq_file"]
         qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + sample["qseq_file"]
