@@ -124,22 +124,19 @@ res.each_hash do |sequencing_run|
 
         qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + qseq_file
 
-        tmp_filepath          = "#{TMP_FOLDER}/" + qseq_file
-        tmp_filepath_indices  = "#{TMP_FOLDER}/" + qseq_file_indices
+        lane_sample_filebase        = sample_filebase(run_id, date, lane, "user_#{run_id}", "lane_#{lane}")
+        unmultiplexed_qseq_file     = "#{TMP_FOLDER}/" + lane_sample_filebase + "_qseq.txt"
+        unmultiplexed_indices_file  = "#{TMP_FOLDER}/" + lane_sample_filebase + "indices_qseq.txt"
+
 
         ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
-        cat_cmd_1 = "cat #{qseq_files.join(" ")} > #{tmp_filepath}"
-        cat_cmd_2 = "cat #{qseq_files_indices.join(" ")} > #{tmp_filepath_indices}"
+        cat_cmd_1 = "cat #{qseq_files.join(" ")} > #{unmultiplexed_qseq_file}"
+        cat_cmd_2 = "cat #{qseq_files_indices.join(" ")} > #{unmultiplexed_indices_file}"
         puts "C: #{cat_cmd_1}"
         puts "C: #{cat_cmd_2}"
         forks << fork do
           `#{cat_cmd_1}`
           `#{cat_cmd_2}`
-          lane_sample_filebase        = sample_filebase(run_id, date, lane, user, "lane_#{lane}")
-          unmultiplexed_qseq_file     = "#{TMP_FOLDER}/" + lane_sample_filebase + "_qseq.txt"
-          unmultiplexed_indices_file  = "#{TMP_FOLDER}/" + lane_sample_filebase + "indices_qseq.txt"
-          FileUtils.mv(tmp_filepath, unmultiplexed_qseq_file)
-          FileUtils.mv(tmp_filepath_indices, unmultiplexed_indices_file)
           `ruby demultiplexer.rb #{unmultiplexed_qseq_file} #{unmultiplexed_indices_file}`
           
           # do the rest of the samples
