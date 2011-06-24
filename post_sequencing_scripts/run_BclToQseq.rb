@@ -3,9 +3,14 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 require 'mysql'
 NUM_THREADS = 24
-
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
-res = conn.query("SELECT * FROM sequencing_run WHERE run_at IS NOT NULL and illumina_run_id IS NOT NULL ORDER BY run_at desc")
+
+if ARGV.length > 0
+  il_rn_id = ARGV[0]
+  res = conn.query("SELECT * FROM sequencing_run WHERE run_at IS NOT NULL and illumina_run_id = '#{il_rn_id}' ORDER BY run_at desc")
+else
+  res = conn.query("SELECT * FROM sequencing_run WHERE run_at IS NOT NULL and illumina_run_id IS NOT NULL ORDER BY run_at desc")
+end
 res.each_hash do |sequencing_run|
   seq_run_id                    = sequencing_run["id"]
   run_id                        = sequencing_run["illumina_run_id"]
