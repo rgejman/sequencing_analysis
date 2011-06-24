@@ -126,7 +126,7 @@ res.each_hash do |sequencing_run|
 
         lane_sample_filebase        = sample_filebase(run_id, date, lane, "user_#{run_id}", "lane_#{lane}")
         unmultiplexed_qseq_file     = "#{TMP_FOLDER}/" + lane_sample_filebase + "_qseq.txt"
-        unmultiplexed_indices_file  = "#{TMP_FOLDER}/" + lane_sample_filebase + "indices_qseq.txt"
+        unmultiplexed_indices_file  = "#{TMP_FOLDER}/" + lane_sample_filebase + "_indices_qseq.txt"
 
 
         ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
