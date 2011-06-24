@@ -23,10 +23,12 @@ res.each_hash do |sequencing_run|
   date    = sequencing_run["run_at"][0,10].gsub("-","_")
   nsamples_not_converted = 0
   samples_res.each_hash do |sample|
+    next if lanes_processed.includes? lane
     lane        = sample["lane"].to_i
     user        = sample["user"].capitalize
     name        = sample["name"]
     type        = sample["type"]
+    index       = sample["index"]
     base        = sample_filebase(run_id, date, lane, user, name)
     next if sample["post_process"].to_i == 0
 
@@ -48,10 +50,13 @@ res.each_hash do |sequencing_run|
       next if File.exists?("#{chip_base}" + fq1 + ".gz") and File.exists?("#{chip_base}" + fq2 + ".gz")
       next if File.exists?("#{rna_seq_base}" + fq1 + ".gz") and File.exists?("#{rna_seq_base}" + fq2 + ".gz")
       next if File.exists?("#{hic_base}" + fq1 + ".gz") and File.exists?("#{hic_base}" + fq2 + ".gz")
-      
+
       nsamples_not_converted += 1 if user.downcase != "control"
     else
       sample["qseq_file"]     = base + "_qseq.txt"
+      unless index.nil?
+        sample["qseq_index_file"] = base + "_index_qseq.txt"
+      end
       fq = base + "_fastq.txt"
       q = qseq_base + sample["qseq_file"]
       c = chip_base + fq
@@ -61,7 +66,8 @@ res.each_hash do |sequencing_run|
       next if File.exists? q or File.exists? r or File.exists? c or File.exists? c_gz or File.exists? r_gz
       nsamples_not_converted += 1 if user.downcase != "control"
     end
-    samples[lane] = sample
+    samples[lane] ||= []
+    samples[lane] << sample
   end
   next if nsamples_not_converted == 0
 
@@ -76,23 +82,23 @@ res.each_hash do |sequencing_run|
     `#{cmd}`
     forks = []
     for lane in samples.keys
-      sample        = samples[lane]
+      sample = samples[lane].first # take only the first sample. If this is a multiplexed lane we deal with it later
       ##### WE DO NOT CONVERT CONTROL LANES TO QSEQ. WASTE OF SPACE! 
       next if sample["user"].downcase == "control"
 
       puts "P: Cat'ing lane #{lane}"
-      if paired
+      if paired and index.nil?
         qseq_files_1    = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
         qseq_files_2    = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
         qseq_file_1     = sample["qseq_file_1"]
         qseq_file_2     = sample["qseq_file_2"]
-        
+
         qseq_filepath_1 = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + qseq_file_1
         qseq_filepath_2 = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + qseq_file_2
-        
+
         tmp_filepath_1  = "#{TMP_FOLDER}/" + qseq_file_1
         tmp_filepath_2  = "#{TMP_FOLDER}/" + qseq_file_2
-        
+
         ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
         cat_cmd_1 = "cat #{qseq_files_1.join(" ")} > #{tmp_filepath_1}"
         cat_cmd_2 = "cat #{qseq_files_2.join(" ")} > #{tmp_filepath_2}"
@@ -105,7 +111,43 @@ res.each_hash do |sequencing_run|
           FileUtils.mv(tmp_filepath_1, qseq_filepath_1)
           FileUtils.mv(tmp_filepath_2, qseq_filepath_2)
         end
-      else
+      elsif !paired and !index.nil?
+        qseq_files          = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
+        qseq_files_indices  = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
+        qseq_file           = sample["qseq_file"]
+        qseq_file_indices   = sample["qseq_index_file"]
+
+        qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + qseq_file
+
+        tmp_filepath          = "#{TMP_FOLDER}/" + qseq_file
+        tmp_filepath_indices  = "#{TMP_FOLDER}/" + qseq_file_indices
+
+        ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
+        cat_cmd_1 = "cat #{qseq_files.join(" ")} > #{tmp_filepath}"
+        cat_cmd_2 = "cat #{qseq_files_indices.join(" ")} > #{tmp_filepath_indices}"
+        puts "C: #{cat_cmd_1}"
+        puts "C: #{cat_cmd_2}"
+        forks << fork do
+          `#{cat_cmd_1}`
+          `#{cat_cmd_2}`
+          lane_sample_filebase        = sample_filebase(run_id, date, lane, user, "lane_#{lane}")
+          unmultiplexed_qseq_file     = "#{TMP_FOLDER}/" + lane_sample_filebase + "_qseq.txt"
+          unmultiplexed_indices_file  = "#{TMP_FOLDER}/" + lane_sample_filebase + "indices_qseq.txt"
+          FileUtils.mv(tmp_filepath, unmultiplexed_qseq_file)
+          FileUtils.mv(tmp_filepath_indices, unmultiplexed_indices_file)
+          `ruby demultiplexer.rb #{unmultiplexed_qseq_file} #{unmultiplexed_indices_file}`
+          
+          # do the rest of the samples
+          `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
+          for sample in samples
+            file = lane_sample_filebase + "_" + sample[index] + "_qseq.txt"
+            FileUtils.mv(file, sample["qseq_file"])
+          end
+          FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
+          FileUtils.rm(unmultiplexed_indices_file,    :force=>true)
+          
+        end
+      elsif !paired and index.nil?
         qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
         qseq_file     = sample["qseq_file"]
         qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + sample["qseq_file"]

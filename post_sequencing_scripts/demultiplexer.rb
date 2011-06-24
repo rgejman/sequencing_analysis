@@ -10,7 +10,7 @@ INDEX_MAP = {
 read_1_file = ARGV[0]
 index_file  = ARGV[1]
 
-basename    = read_1_file.gsub(".txt", "")
+basename    = read_1_file.gsub("_qseq.txt", "")
 
 INDEX_FILES = {}
 
@@ -21,7 +21,7 @@ File.open(read_1_file, "r") do |read_1_in|
       index = index_line.split("\t")[8]
       next unless INDEX_MAP.has_key? index
       unless INDEX_FILES.has_key? index
-        INDEX_FILES[index] = File.open(basename + "_" + INDEX_MAP[index] + ".txt","w")
+        INDEX_FILES[index] = File.open(basename + "_" + INDEX_MAP[index] + "_qseq.txt","w")
       end
       INDEX_FILES[index].puts read_1_line
     end
