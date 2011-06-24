@@ -9,7 +9,6 @@ CONFIG = YAML.load_file("#{path}/config.yml")
 SCRIPTS_FOLDER          = CONFIG["scripts_folder"]
 BASE_FOLDER             = CONFIG["base_folder"]
 GENOMICS_FOLDER         = CONFIG["genomics_folder"]
-POST_PROCESSING_SCRIPTS = "#{SCRIPTS_FOLDER}/post_processing_scripts"
 RAW_FOLDER	            = "#{BASE_FOLDER}/raw"
 QSEQ_FOLDER	            = "#{BASE_FOLDER}/qseq"
 FASTQ_CHIP_FOLDER	      = "#{BASE_FOLDER}/fastq_chip"
