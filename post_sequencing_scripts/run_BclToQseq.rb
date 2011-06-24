@@ -116,6 +116,7 @@ res.each_hash do |sequencing_run|
           FileUtils.mv(tmp_filepath_2, qseq_filepath_2)
         end
       elsif !paired and !sample["index"].nil?
+        puts "Lane #{lane}: SR indexed"
         qseq_files          = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
         qseq_files_indices  = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
         qseq_file           = sample["qseq_file"]
@@ -152,6 +153,8 @@ res.each_hash do |sequencing_run|
           
         end
       elsif !paired and sample["index"].nil?
+        puts "Lane #{lane}: SR Non-indexed"
+        
         qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
         qseq_file     = sample["qseq_file"]
         qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + sample["qseq_file"]
