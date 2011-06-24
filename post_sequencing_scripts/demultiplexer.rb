@@ -3,7 +3,7 @@ INDEX_MAP = {
     "TGACCA"  =>  "AR04",
     "ACAGTG"  =>  "AR05",
     "GCCAAT"  =>  "AR06",
-    "CAGATC"  =>  "AR07"
+    "CAGATC"  =>  "AR07",
     "CTTGTA"  =>  "AR12"
   }
 
