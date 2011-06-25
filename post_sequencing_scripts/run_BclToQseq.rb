@@ -137,7 +137,8 @@ res.each_hash do |sequencing_run|
         forks << fork do
           `#{cat_cmd_1}`
           `#{cat_cmd_2}`
-          `ruby #{SCRIPTS_FOLDER}/demultiplexer.rb #{unmultiplexed_qseq_file} #{unmultiplexed_indices_file}`
+          indices = samples[lane].collect {|s| s['index']}
+          `ruby #{SCRIPTS_FOLDER}/demultiplexer.rb #{unmultiplexed_qseq_file} #{unmultiplexed_indices_file} #{indices.join(" ")}`
           
           # do the rest of the samples
           `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
