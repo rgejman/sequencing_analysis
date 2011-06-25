@@ -19,6 +19,7 @@ File.open(read_1_file, "r") do |read_1_in|
     while read_1_line = read_1_in.gets
       index_line = index_in.gets.chomp
       index = index_line.split("\t")[8]
+      puts index
       next unless INDEX_MAP.has_key? index
       unless INDEX_FILES.has_key? index
         INDEX_FILES[index] = File.open(basename + "_" + INDEX_MAP[index] + "_qseq.txt","w")
