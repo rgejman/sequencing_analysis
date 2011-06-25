@@ -141,9 +141,7 @@ res.each_hash do |sequencing_run|
           
           # do the rest of the samples
           `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
-          for sample in samples.values
-            puts lane_sample_filebase
-            puts sample['index']
+          for sample in samples[lane].values
             file = "#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq.txt"
             FileUtils.mv(file, sample["qseq_file"])
           end
