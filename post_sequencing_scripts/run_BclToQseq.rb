@@ -143,7 +143,7 @@ res.each_hash do |sequencing_run|
           # do the rest of the samples
           `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
           for sample in samples[lane]
-            file = "#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq.txt"
+            file = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq.txt"
             FileUtils.mv(file, sample["qseq_file"])
           end
           FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
