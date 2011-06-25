@@ -58,9 +58,6 @@ res.each_hash do |sequencing_run|
       nsamples_not_converted += 1 if user.downcase != "control"
     else
       sample["qseq_file"]     = base + "_qseq.txt"
-      unless index.nil?
-        sample["qseq_index_file"] = base + "_index_qseq.txt"
-      end
       fq = base + "_fastq.txt"
       q = qseq_base + sample["qseq_file"]
       c = chip_base + fq
@@ -120,7 +117,6 @@ res.each_hash do |sequencing_run|
         qseq_files          = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
         qseq_files_indices  = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
         qseq_file           = sample["qseq_file"]
-        qseq_file_indices   = sample["qseq_index_file"]
 
         qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + qseq_file
 
@@ -144,7 +140,7 @@ res.each_hash do |sequencing_run|
           `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
           for sample in samples[lane]
             file = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq.txt"
-            FileUtils.mv(file, sample["qseq_file"])
+            FileUtils.mv(file, "#{QSEQ_FOLDER}/#{sample['qseq_file']}")
           end
           #FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
           #FileUtils.rm(unmultiplexed_indices_file,    :force=>true)
