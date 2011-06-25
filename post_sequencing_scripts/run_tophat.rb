@@ -24,7 +24,6 @@ res.each_hash do |rna_seq_alignment|
       reads << "#{FASTQ_RNA_SEQ_FOLDER}/#{person}/#{file['name']}_fastq.txt"
     end
   end
-  read_length           = rna_seq_alignment["read_length"].to_i
   mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
   genome                = rna_seq_alignment["genome"]
   genome                = GENOMES[genome]
@@ -32,8 +31,7 @@ res.each_hash do |rna_seq_alignment|
   mean_dist_arg         = ""
   if reads[0].length == 2 #the first "reads entry" has 2 files, so it's paired.
     files_arg = reads.collect {|p| p[0] }.join(",") + " " + reads.collect {|p| p[1] }.join(",")
-    mean_dist           = mean_fragment_length - (read_length*2)# - 70 #70 accounts for the illumina primers
-    mean_dist_arg       = "-r #{mean_dist}" #-r = mean distance between ends of paired reads.
+    mean_dist_arg       = "-r #{mean_fragment_length}" #-r = mean distance between ends of paired reads.
   else
     files_arg = reads.collect {|p| p[0] }.join(",")
   end
