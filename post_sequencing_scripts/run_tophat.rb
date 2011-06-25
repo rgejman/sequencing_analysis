@@ -37,7 +37,13 @@ res.each_hash do |rna_seq_alignment|
   else
     files_arg = reads.collect {|p| p[0] }.join(",")
   end
-  GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/rna_seq/Mus_musculus.NCBIM37.61.for-tophat.gtf"
+  if genome == "hg19"
+    GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/rna_seq/Human.GRCh37_hg19.gtf"
+  elsif genome == "mm9"
+    GTF_FILE_ARG = "-G #{USEFUL_BED_FILES}/rna_seq/Mus_musculus.NCBIM37.61.for-tophat.gtf"
+  else
+    throw "Unknown genome: #{genome}!"
+  end
   LIBRARY_TYPE_ARG = "--library-type fr-unstranded"
   OUTPUT_FOLDER_ARG = "-o #{output_folder_path}"
   begin
