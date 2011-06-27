@@ -118,8 +118,6 @@ res.each_hash do |sequencing_run|
         qseq_files_indices  = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
         qseq_file           = sample["qseq_file"]
 
-        qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + qseq_file
-
         lane_sample_filebase        = sample_filebase(run_id, date, lane, "user_#{run_id}", "lane_#{lane}")
         unmultiplexed_qseq_file     = "#{TMP_FOLDER}/" + lane_sample_filebase + "_qseq.txt"
         unmultiplexed_indices_file  = "#{TMP_FOLDER}/" + lane_sample_filebase + "_indices_qseq.txt"
@@ -137,10 +135,11 @@ res.each_hash do |sequencing_run|
           `ruby #{SCRIPTS_FOLDER}/demultiplexer.rb #{unmultiplexed_qseq_file} #{unmultiplexed_indices_file} #{indices.join(" ")}`
           
           # do the rest of the samples
+          qseq_base_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}"
           `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
           for sample in samples[lane]
             file = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq.txt"
-            FileUtils.mv(file, "#{QSEQ_FOLDER}/#{sample['qseq_file']}")
+            FileUtils.mv(file, "#{qseq_base_filepath}/#{sample['qseq_file']}")
           end
           #FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
           #FileUtils.rm(unmultiplexed_indices_file,    :force=>true)

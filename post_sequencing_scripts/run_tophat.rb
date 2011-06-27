@@ -11,6 +11,7 @@ res.each_hash do |rna_seq_alignment|
   output_folder_name  = person + "_" + rna_seq_alignment["sample"]
   output_folder_path  = "#{TOPHAT_FOLDER}/#{person}/#{output_folder_name}"
   next if File.exists? output_folder_path #this has already been analyzed. 
+  puts output_folder_name
   `mkdir -p #{output_folder_path}`
   files_res = conn.query("SELECT * FROM rna_seq_pairs WHERE rna_seq_alignment_id = #{rna_seq_alignment['id']}")
   reads = []
@@ -25,7 +26,7 @@ res.each_hash do |rna_seq_alignment|
     end
   end
   mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
-  genome                = rna_seq_alignment["genome"]
+  genome                = rna_seq_alignment["genome"]  
   genome                = GENOMES[genome]
   
   mean_dist_arg         = ""
