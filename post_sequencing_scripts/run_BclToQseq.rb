@@ -145,8 +145,8 @@ res.each_hash do |sequencing_run|
             file = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq.txt"
             FileUtils.mv(file, "#{qseq_base_filepath}/#{sample['qseq_file']}")
           end
-          #FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
-          #FileUtils.rm(unmultiplexed_indices_file,    :force=>true)
+          FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
+          FileUtils.rm(unmultiplexed_indices_file,    :force=>true)
           
         end
       elsif !paired and sample["index"].nil?
