@@ -65,7 +65,7 @@ res.each_hash do |sequencing_run|
       c_gz = "#{FASTQ_CHIP_FOLDER}/#{user}/#{fq}.gz"
       r_gz = "#{FASTQ_RNA_SEQ_FOLDER}/#{user}/#{fq}.gz"
       next if File.exists? q or File.exists? r or File.exists? c or File.exists? c_gz or File.exists? r_gz
-      puts "Sample not converted: " + samples["qseq_file"]
+      puts "Sample not converted: " + sample["qseq_file"]
       nsamples_not_converted += 1 if user.downcase != "control"
     end
     samples[lane] ||= []
