@@ -22,7 +22,7 @@ res.each_hash do |rna_seq_alignment|
       f2 = "#{FASTQ_RNA_SEQ_FOLDER}/#{person}/#{file['name']}_2_fastq.txt"
       reads << [f1,f2]
     else
-      reads << "#{FASTQ_RNA_SEQ_FOLDER}/#{person}/#{file['name']}_fastq.txt"
+      reads << ["#{FASTQ_RNA_SEQ_FOLDER}/#{person}/#{file['name']}_fastq.txt"]
     end
   end
   mean_fragment_length  = rna_seq_alignment["mean_fragment_length"].to_i
