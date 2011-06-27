@@ -36,7 +36,7 @@ USEFUL_BED_FILES        = "#{GENOMICS_FOLDER}/useful_bed_files"
 BOWTIE_INDEXES          = CONFIG["bowtie_indexes_folder"]
 
 GENOMES                 = { "mm"=>"mm9",
-                            "mm9"=>"mm9"
+                            "mm9"=>"mm9",
                             "hg"=>"hg19",
                             "phix"=>"phix174",
                             "hg18"=>"hg18",
