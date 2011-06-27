@@ -49,7 +49,8 @@ res.each_hash do |rna_seq_alignment|
     cmd = "tophat -a 7 -p #{NUM_THREADS} #{mean_dist_arg} #{GTF_FILE_ARG} #{LIBRARY_TYPE_ARG} #{OUTPUT_FOLDER_ARG} #{genome} #{files_arg}"
     puts cmd
     `#{cmd}`
-    `bamtools index -in #{output_folder_path}/accepted_hits.bam`
+    FileUtils.mv("#{output_folder_path}/accepted_hits.bam", "#{output_folder_path}/#{output_folder_name}.bam")
+    `bamtools index -in #{output_folder_path}/#{output_folder_name}.bam`
   rescue => e
     throw e
   ensure
