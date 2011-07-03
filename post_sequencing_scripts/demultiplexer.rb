@@ -1,9 +1,15 @@
 INDEX_MAP = {
+    "ATCACG"  =>  "AR01",
     "CGATGT"  =>  "AR02",
+    "TTAGGC"  =>  "AR03",
     "TGACCA"  =>  "AR04",
     "ACAGTG"  =>  "AR05",
     "GCCAAT"  =>  "AR06",
     "CAGATC"  =>  "AR07",
+    "ACTTGA"  =>  "AR08",
+    "GATCAG"  =>  "AR09",
+    "TAGCTT"  =>  "AR10",
+    "GGCTAC"  =>  "AR11",
     "CTTGTA"  =>  "AR12"
   }
 
