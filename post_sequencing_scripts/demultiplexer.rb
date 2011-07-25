@@ -12,6 +12,15 @@ INDEX_MAP = {
     "GGCTAC"  =>  "AR11",
     "CTTGTA"  =>  "AR12"
   }
+  
+for key in INDEX_MAP.keys
+  a = key.split("")
+  for i in 0...a.length
+    index = a[0,i].to_s + "." + a[i+1,6].to_s
+    INDEX_MAP[index] = INDEX_MAP[index]
+    puts index
+  end
+end
 
 read_1_file = ARGV[0]
 index_file  = ARGV[1]
