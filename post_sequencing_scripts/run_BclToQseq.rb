@@ -152,7 +152,7 @@ res.each_hash do |sequencing_run|
       elsif !paired and sample["index"].nil?
         puts "Lane #{lane}: SR Non-indexed"
         
-        qseq_files    = Dir.glob("s_#{lane}_*_qseq.txt")
+        qseq_files    = Dir.glob("s_#{lane}_1_*_qseq.txt")
         qseq_file     = sample["qseq_file"]
         qseq_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}/" + sample["qseq_file"]
         tmp_filepath  = "#{TMP_FOLDER}/" + sample["qseq_file"]
