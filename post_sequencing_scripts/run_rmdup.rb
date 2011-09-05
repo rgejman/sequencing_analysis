@@ -7,21 +7,21 @@ BT_NUM_THREADS	= 18
 
 def run_rmdup(user, base_file)
   running_file  = running_file(base_file, "rmdup")
-  bam_in        = base_file + ".sorted.bam"
-  bam_out       = base_file + ".rmdup.sorted.bam"
+  bam_in        = "#{ALIGNMENTS_FOLDER}/#{user}/#{base_file}.sorted.bam"
+  bam_out       = "#{ALIGNMENTS_FOLDER}/#{user}/#{base_file}.rmdup.sorted.bam"
   tmp_file      = "#{TMP_FOLDER}/#{bam_out}"
-  output_file   = "#{ALIGNMENTS_FOLDER}/#{user}/#{bam_out}"
   
   return unless File.exists? bam_in
   return if File.exists? tmp_file
   return if File.exists? bam_out
   return if File.exists? running_file
   
-  puts bam_in + ": remove duplicate reads"
-  `touch #{running_file}`
+  puts "#{bam_in}--removing duplicate reads"
   begin
     ## Do not align the last base because it has a higher error rate.
     cmd        = "samtools rmdup #{bam_in} #{tmp_file}"
+    puts cmd
+    `#{cmd}`
     FileUtils.mv(tmp_file, bam_out)
     puts `samtools index #{bam_out}`
   rescue => e
