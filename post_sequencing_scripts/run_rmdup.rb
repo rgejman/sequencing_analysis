@@ -25,7 +25,7 @@ def run_rmdup(user, base_file)
     FileUtils.mv(tmp_file, bam_out)
     puts `samtools index #{bam_out}`
   rescue => e
-    FileUtils.rm(output_file,     :force=>true)
+    FileUtils.rm(bam_out,     :force=>true)
     throw e
   ensure
     FileUtils.rm(tmp_file,        :force=>true)
