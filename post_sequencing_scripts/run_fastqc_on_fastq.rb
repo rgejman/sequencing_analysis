@@ -1,5 +1,15 @@
 #!/usr/bin/env ruby -wKU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
+def alive?(pid)
+  pid = Integer("#{ pid }")
+  begin
+    Process::kill 0, pid
+    true
+  rescue Errno::ESRCH
+    false
+  end
+end
+
 require 'constants'
 files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.*") + Dir.glob("#{FASTQ_RNA_SEQ_FOLDER}/**/*_fastq.*")
 forks = []
@@ -35,7 +45,7 @@ for path in files
   while forks >= 10
     puts "#{forks} running. #{MAX_FORKS} max."
     sleep(5)
-    forks.delete_if {|t| !t.alive?}
+    forks.delete_if {|t| alive? t}
   end
   
 end
