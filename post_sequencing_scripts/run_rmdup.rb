@@ -8,8 +8,8 @@ BT_NUM_THREADS	= 18
 def run_rmdup(user, base_file)
   running_file  = running_file(base_file, "rmdup")
   bam_in        = "#{ALIGNMENTS_FOLDER}/#{user}/#{base_file}.sorted.bam"
-  bam_out       = "#{ALIGNMENTS_FOLDER}/#{user}/#{base_file}.rmdup.sorted.bam"
-  tmp_file      = "#{TMP_FOLDER}/#{base_file}.rmdup.sorted.bam"
+  bam_out       = "#{ALIGNMENTS_FOLDER}/#{user}/#{base_file}_rmdup.sorted.bam"
+  tmp_file      = "#{TMP_FOLDER}/#{base_file}_rmdup.sorted.bam"
   
   return unless File.exists? bam_in
   return if File.exists? tmp_file
