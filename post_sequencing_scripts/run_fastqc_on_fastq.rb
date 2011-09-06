@@ -42,7 +42,7 @@ for path in files
       FileUtils.rm(running_file,                    :force=>true)
     end
   end
-  while forks >= 10
+  while forks.length >= 10
     puts "#{forks} running. #{MAX_FORKS} max."
     sleep(5)
     forks.delete_if {|t| alive? t}
