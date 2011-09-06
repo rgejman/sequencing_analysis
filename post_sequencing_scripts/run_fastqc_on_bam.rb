@@ -48,7 +48,7 @@ for path in files
       FileUtils.rm(running_file,                    :force=>true)
     end
   end
-  while forks.length >= 20
+  while forks.length >= 10
     puts "#{forks.length} running. 20 max."
     Process.wait(forks[0])
     forks.delete_at(0)
