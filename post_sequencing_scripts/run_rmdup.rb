@@ -19,7 +19,7 @@ def run_rmdup(user, base_file)
   puts "#{bam_in}--removing duplicate reads"
   begin
     ## Do not align the last base because it has a higher error rate.
-    cmd        = "samtools rmdup #{bam_in} #{tmp_file}"
+    cmd        = "samtools rmdup -s #{bam_in} #{tmp_file}"
     puts cmd
     `#{cmd}`
     FileUtils.mv(tmp_file, bam_out)
