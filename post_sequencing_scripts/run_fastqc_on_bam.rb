@@ -11,14 +11,14 @@ def alive?(pid)
 end
 
 require 'constants'
-files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.*") + Dir.glob("#{FASTQ_RNA_SEQ_FOLDER}/**/*_fastq.*")
+files = Dir.glob("#{ALIGNMENTS_FOLDER}/**/*.bam")
 forks = []
 for path in files
   forks << fork do
-    name                          = File.basename(path).gsub(".gz","").gsub("_fastq.txt","")
+    name                          = File.basename(path).gsub(".bam","")
     user                          = name.split("_")[0]
     running_file                  = running_file(name, "fastqc")
-    fastqc_tmp_folder_path        = path.gsub(".txt","").gsub(".gz","") + "c"
+    fastqc_tmp_folder_path        = path.gsub(".bam","") + "c"
     fastqc_tmp_zip_path           = "#{path}c.zip"
     fastqc_all_output_folder_path         = "#{FASTQC_FOLDER}/#{user}/#{name}_bamqc"
     fastqc_aligned_output_folder_path     = "#{FASTQC_FOLDER}/#{user}/#{name}_aligned_bamqc"
