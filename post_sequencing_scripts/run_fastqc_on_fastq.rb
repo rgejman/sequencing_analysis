@@ -5,7 +5,7 @@ files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.*") + Dir.glob("#{FASTQ_RNA_SE
 forks = []
 for path in files
   forks << fork do
-    name                          = File.basename(path).gsub("_fastq.txt","")
+    name                          = File.basename(path).gsub(/_fastq\.(txt)|(zip)/,"")
     user                          = name.split("_")[0]
     running_file                  = running_file(name, "fastqc")
     fastqc_tmp_folder_path        = path.gsub(/\.(txt)|(gz)/,"") + "c"
