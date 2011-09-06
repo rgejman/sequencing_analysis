@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby -wKU
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
-files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.txt") + Dir.glob("#{FASTQ_RNA_SEQ_FOLDER}/**/*_fastq.txt")
+files = Dir.glob("#{FASTQ_CHIP_FOLDER}/**/*_fastq.*") + Dir.glob("#{FASTQ_RNA_SEQ_FOLDER}/**/*_fastq.*")
 forks = []
 for path in files
   forks << fork do
     name                          = File.basename(path).gsub("_fastq.txt","")
     user                          = name.split("_")[0]
     running_file                  = running_file(name, "fastqc")
-    fastqc_tmp_folder_path        = path.gsub(".txt","") + "c"
+    fastqc_tmp_folder_path        = path.gsub(/\.(txt)|(gz)/,"") + "c"
     fastqc_tmp_zip_path           = "#{path}c.zip"
     fastqc_output_folder_path     = "#{FASTQC_FOLDER}/#{user}/#{name}_fastqc"
 
