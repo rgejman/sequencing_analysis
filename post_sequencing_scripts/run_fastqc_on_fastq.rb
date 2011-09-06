@@ -44,8 +44,8 @@ for path in files
   end
   while forks.length >= 10
     puts "#{forks.length} running. 10 max."
-    sleep(5)
-    forks.delete_if {|t| alive? t}
+    Process.wait(forks[0])
+    forks.delete_at(0)
   end
   
 end
