@@ -23,7 +23,9 @@ for path in files
     fastqc_all_output_folder_path         = "#{FASTQC_FOLDER}/#{user}/#{name}_bamqc"
     fastqc_aligned_output_folder_path     = "#{FASTQC_FOLDER}/#{user}/#{name}_aligned_bamqc"
 
-    next if File.exists? fastqc_output_folder_path # The file has been processed in the past
+    next if File.exists? fastqc_all_output_folder_path # The file has been processed in the past
+    next if File.exists? fastqc_aligned_output_folder_path # The file has been processed in the past
+    
     next if File.exists? running_file #This is being processed
     puts name
     `touch #{running_file}`
@@ -37,7 +39,7 @@ for path in files
       `#{cmd_aligned}`
       FileUtils.mv(fastqc_tmp_folder_path,fastqc_aligned_output_folder_path)
     rescue => e
-      FileUtils.rm(fastqc_output_folder_path,             :force=>true)
+      FileUtils.rm(fastqc_all_output_folder_path,             :force=>true)
       FileUtils.rm(fastqc_aligned_output_folder_path,     :force=>true)
       FileUtils.rm(fastqc_tmp_zip_path,                   :force=>true)
       FileUtils.rm(fastqc_tmp_folder_path,                :force=>true)
