@@ -33,7 +33,7 @@ for path in files
       cmd_all     = "fastqc -f bam #{path}"
       cmd_aligned = "fastqc -f bam_mapped #{path}"
       `mkdir -p #{FASTQC_FOLDER}/#{user}/`
-      
+      puts path
       `#{cmd_all}}`
       FileUtils.mv(fastqc_tmp_folder_path,fastqc_all_output_folder_path)
       `#{cmd_aligned}`
@@ -50,7 +50,7 @@ for path in files
       FileUtils.rm(running_file,                    :force=>true)
     end
   end
-  while forks.length >= 10
+  while forks.length >= 1
     puts "#{forks.length} running. 20 max."
     Process.wait(forks[0])
     forks.delete_at(0)
