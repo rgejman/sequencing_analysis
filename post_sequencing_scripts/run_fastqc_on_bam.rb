@@ -18,7 +18,7 @@ for path in files
     name                          = File.basename(path).gsub(".bam","")
     user                          = name.split("_")[0]
     running_file                  = running_file(name, "fastqc")
-    fastqc_tmp_folder_path        = path.gsub(".bam","") + "c"
+    fastqc_tmp_folder_path        = path.gsub(".sorted.bam","_bamqc")
     fastqc_tmp_zip_path           = "#{path}c.zip"
     fastqc_all_output_folder_path         = "#{FASTQC_FOLDER}/#{user}/#{name}_bamqc"
     fastqc_aligned_output_folder_path     = "#{FASTQC_FOLDER}/#{user}/#{name}_aligned_bamqc"
