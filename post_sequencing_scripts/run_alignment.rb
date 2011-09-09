@@ -10,14 +10,17 @@ BT_NUM_THREADS	= 18
 def run_alignment(user, base_file, genome, trim_from_end = 1)
   running_file  = running_file(base_file, "alignment")
   fastq_file    = "#{FASTQ_CHIP_FOLDER}/#{user}/#{base_file}_fastq.txt"
+  fastq_gz_file = "#{FASTQ_CHIP_FOLDER}/#{user}/#{base_file}_fastq.txt.gz"
   base          = base_file + ".sorted" #.bam is added automatically
   tmp_file      = "#{TMP_FOLDER}/#{base}"
   output_file   = "#{ALIGNMENTS_FOLDER}/#{user}/#{base}.bam"
   
-  return unless File.exists? fastq_file
+  return unless File.exists? fastq_file or File.exists? fastq_gz_file
   return if File.exists? tmp_file
   return if File.exists? output_file
   return if File.exists? running_file
+  
+  fastq_file = fastq_gz_file if !File.exists? fastq_file and File.exists? fastq_gz_file
   
   puts fastq_file + " with #{trim_from_end}nt trimmed from 3'"
   `touch #{running_file}`
@@ -40,7 +43,7 @@ def run_alignment(user, base_file, genome, trim_from_end = 1)
 end
 
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
-samples_res = conn.query("SELECT * FROM sequencing_samples,sequencing_run where sequencing_run_id = sequencing_run.id and user != 'Control' and user != 'control' and type = 'chip'")
+samples_res = conn.query("SELECT * FROM sequencing_samples,sequencing_run where sequencing_run_id = sequencing_run.id and user != 'Control' and user != 'control' and type = 'chip' and align=1")
 
 # Run through the files in the DB
 
