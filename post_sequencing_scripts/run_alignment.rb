@@ -20,13 +20,18 @@ def run_alignment(user, base_file, genome, trim_from_end = 1)
   return if File.exists? output_file
   return if File.exists? running_file
   
-  fastq_file = fastq_gz_file if !File.exists? fastq_file and File.exists? fastq_gz_file
   
   puts fastq_file + " with #{trim_from_end}nt trimmed from 3'"
   `touch #{running_file}`
   begin
     ## Do not align the last base because it has a higher error rate.
-    bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best --strata -m 2 #{genome} --trim3 #{trim_from_end} --sam \"#{fastq_file}\""
+    
+    if !File.exists? fastq_file and File.exists? fastq_gz_file #use gz file
+      bt_cmd        = "zcat #{fastq_gz_file} | bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best --strata -m 2 #{genome} --trim3 #{trim_from_end} --sam -"
+    else
+      bt_cmd        = "bowtie --chunkmbs 256 -p #{BT_NUM_THREADS} --best --strata -m 2 #{genome} --trim3 #{trim_from_end} --sam \"#{fastq_file}\""
+    end
+    
     convert_bam   = "samtools view -hbSu -"
     sort_bam      = "samtools sort - #{tmp_file}"
     `#{bt_cmd} | #{convert_bam} | #{sort_bam}`
