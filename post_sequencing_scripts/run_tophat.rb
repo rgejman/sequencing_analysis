@@ -7,7 +7,7 @@ NUM_THREADS = 12
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 res = conn.query("SELECT * FROM rna_seq_alignment ORDER BY created_at desc")
 res.each_hash do |rna_seq_alignment|
-  person =  rna_seq_alignment["person"]
+  person =  rna_seq_alignment["person"].capitalize
   output_folder_name  = person + "_" + rna_seq_alignment["sample"]
   output_folder_path  = "#{TOPHAT_FOLDER}/#{person}/#{output_folder_name}"
   next if File.exists? output_folder_path #this has already been analyzed. 
