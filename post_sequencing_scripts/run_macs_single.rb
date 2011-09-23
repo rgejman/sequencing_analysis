@@ -34,7 +34,7 @@ for file_path in files
   `mkdir #{analysis_folder_path}`
   Dir.chdir(analysis_folder_path)
   begin
-    puts `macs14 -t #{file_path} --g mm -n #{analysis_folder_name}`
+    puts `macs14 -t #{file_path} --g mm -n #{analysis_folder_name} -w --call-subpeaks`
     `r --vanilla < #{model_file}`
     `intersectBed -u -wa -a #{USEFUL_BED_FILES}/mm9.ensembl_with_symbols.tss.2kb.prot_coding.bed -b #{analysis_folder_name}_peaks.bed > #{analysis_folder_name}_peaks.overlap_tss.bed`
   rescue => e
