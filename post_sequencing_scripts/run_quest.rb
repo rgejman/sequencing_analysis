@@ -2,6 +2,7 @@
 $: << File.expand_path(File.dirname(__FILE__) + "/../")
 require 'constants'
 require 'mysql'
+require 'open3'
 conn = Mysql::new(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 res = conn.query("SELECT * FROM analysis_pairs WHERE active=1 ORDER BY created_at asc")
 res.each_hash do |row|
