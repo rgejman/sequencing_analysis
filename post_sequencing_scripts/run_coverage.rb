@@ -16,13 +16,14 @@ for file in files
     tmp_file3             = tmp_file2.gsub(".sorted",".normalized.sorted")
     output_file_1         = "#{COVERAGE_FOLDER}/#{user}/#{base}.cov.tdf"
     output_file_2         = "#{WIG_FOLDER}/#{user}/#{base}.#{WINDOW_SIZE}.wig"
+    output_file_3         = "#{WIG_FOLDER}/#{user}/#{base}.#{WINDOW_SIZE}.wig.gz"
     input_path            = file
     genome = "mm9"
     if file =~ /A549/ 
       genome = "hg19"
     end
     next if File.size(file) < 1024*1024 # 1 megabyte
-    next if File.exists?(output_file_1) and File.exists?(output_file_2) #Already processed
+    next if File.exists?(output_file_1) and (File.exists?(output_file_2) or File.exists?(output_file_3)) #Already processed
     next if File.exists? running_file #Being processed
     puts file
     `touch #{running_file}`
