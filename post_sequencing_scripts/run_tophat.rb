@@ -53,7 +53,7 @@ res.each_hash do |rna_seq_alignment|
     `bamtools index -in #{output_folder_path}/#{output_folder_name}.bam`
   rescue => e
     throw e
-  ensure
     conn.close
   end
 end
+conn.close
