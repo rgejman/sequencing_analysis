@@ -51,10 +51,10 @@ File.open(index_file, "r") do |index_in|
     next unless indices.include? index_name
     unless INDEX_FILES.has_key? index + "_read_1"
       if !paired
-        INDEX_FILES[index + "_read1"] = File.open(basename + "_" + index_name + "_qseq.txt","w")
+        INDEX_FILES[index + "_read_1"] = File.open(basename + "_" + index_name + "_qseq.txt","w")
       else
-        INDEX_FILES[index + "_read1"] = File.open(basename + "_" + index_name + "_1_qseq.txt","w")
-        INDEX_FILES[index + "_read2"] = File.open(basename + "_" + index_name + "_2_qseq.txt","w")
+        INDEX_FILES[index + "_read_1"] = File.open(basename + "_" + index_name + "_1_qseq.txt","w")
+        INDEX_FILES[index + "_read_2"] = File.open(basename + "_" + index_name + "_2_qseq.txt","w")
       end
     end
     INDEX_FILES[index + "_read_1"].puts read_1_line
