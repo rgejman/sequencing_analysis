@@ -28,13 +28,15 @@ read_1_file = ARGV[1]
 if !paired
   index_file  = ARGV[2]
   indices     = ARGV[3,ARGV.length-1]
+  basename    = read_1_file.gsub("_qseq.txt", "")
+  
 else
   read_2_file = ARGV[2]
   index_file  = ARGV[3]
   indices     = ARGV[4,ARGV.length-1]
+  basename    = read_1_file.gsub("_1_qseq.txt", "")
 end
 
-basename    = read_1_file.gsub("_qseq.txt", "")
 
 INDEX_FILES = {}
 

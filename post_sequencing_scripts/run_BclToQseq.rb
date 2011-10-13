@@ -184,8 +184,8 @@ res.each_hash do |sequencing_run|
           qseq_base_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}"
           `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
           for sample in samples[lane]
-            file_read_1 = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_1_#{sample['index'].to_s}_qseq.txt"
-            file_read_2 = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_2_#{sample['index'].to_s}_qseq.txt"
+            file_read_1 = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_1_qseq.txt"
+            file_read_2 = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_2_qseq.txt"
 
             FileUtils.mv(file_read_1, "#{qseq_base_filepath}/#{sample['qseq_file_1']}")
             FileUtils.mv(file_read_2, "#{qseq_base_filepath}/#{sample['qseq_file_2']}")
