@@ -56,5 +56,4 @@ res.each_hash do |rna_seq_alignment|
   ensure
     conn.close
   end
-  break
 end
