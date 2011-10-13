@@ -136,7 +136,7 @@ res.each_hash do |sequencing_run|
           `#{cat_cmd_1}`
           `#{cat_cmd_2}`
           indices = samples[lane].collect {|s| s['index']}
-          `ruby #{SCRIPTS_FOLDER}/demultiplexer.rb #{unmultiplexed_qseq_file} #{unmultiplexed_indices_file} #{indices.join(" ")}`
+          `ruby #{SCRIPTS_FOLDER}/demultiplexer.rb 1 #{unmultiplexed_qseq_file} #{unmultiplexed_indices_file} #{indices.join(" ")}`
           
           # do the rest of the samples
           qseq_base_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}"
@@ -148,6 +148,52 @@ res.each_hash do |sequencing_run|
           FileUtils.rm(unmultiplexed_qseq_file,    :force=>true)
           FileUtils.rm(unmultiplexed_indices_file,    :force=>true)
           
+        end
+      elsif paired and !sample["index"].nil?
+        puts "Lane #{lane}: PE indexed"
+        qseq_read1_files    = Dir.glob("s_#{lane}_1_*_qseq.txt").sort
+        qseq_files_indices  = Dir.glob("s_#{lane}_2_*_qseq.txt").sort
+        qseq_read2_files    = Dir.glob("s_#{lane}_3_*_qseq.txt").sort
+        
+        qseq_file_1           = sample["qseq_file_1"]
+        qseq_file_2           = sample["qseq_file_1"]
+        
+
+        lane_sample_filebase          = sample_filebase(run_id, date, lane, "user_#{run_id}", "lane_#{lane}")
+        unmultiplexed_qseq_file_read_1  = "#{TMP_FOLDER}/" + lane_sample_filebase + "_1_qseq.txt"
+        unmultiplexed_indices_file      = "#{TMP_FOLDER}/" + lane_sample_filebase + "_indices_qseq.txt"
+        unmultiplexed_qseq_file_read_2  = "#{TMP_FOLDER}/" + lane_sample_filebase + "_2_qseq.txt"
+
+
+        ## Concatenate all the tiles and strip out the "failed" reads (to save on space and aligning later, etc)
+        cat_cmd_1 = "cat #{qseq_read1_files.join(" ")} > #{unmultiplexed_qseq_file_read_1}"
+        cat_cmd_2 = "cat #{qseq_files_indices.join(" ")} > #{unmultiplexed_indices_file}"
+        cat_cmd_3 = "cat #{qseq_read2_files.join(" ")} > #{unmultiplexed_qseq_file_read_2}"
+        
+        puts "C: #{cat_cmd_1}"
+        puts "C: #{cat_cmd_2}"
+        puts "C: #{cat_cmd_3}"
+        forks << fork do
+          `#{cat_cmd_1}`
+          `#{cat_cmd_2}`
+          `#{cat_cmd_3}`
+          indices = samples[lane].collect {|s| s['index']}
+          `ruby #{SCRIPTS_FOLDER}/demultiplexer.rb 2 #{unmultiplexed_qseq_file_read_1} #{unmultiplexed_qseq_file_read_2} #{unmultiplexed_indices_file} #{indices.join(" ")}`
+          
+          # do the rest of the samples
+          qseq_base_filepath = "#{QSEQ_FOLDER}/#{sample['user'].capitalize}"
+          `mkdir -p #{QSEQ_FOLDER}/#{sample['user'].capitalize}/`
+          for sample in samples[lane]
+            file_read_1 = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq_1.txt"
+            file_read_2 = "#{TMP_FOLDER}/#{lane_sample_filebase.to_s}_#{sample['index'].to_s}_qseq_2.txt"
+
+            FileUtils.mv(file_read_1, "#{qseq_base_filepath}/#{sample['qseq_file_1']}")
+            FileUtils.mv(file_read_2, "#{qseq_base_filepath}/#{sample['qseq_file_2']}")
+            
+          end
+         # FileUtils.rm(unmultiplexed_qseq_file_read_1,    :force=>true)
+        #  FileUtils.rm(unmultiplexed_indices_file,    :force=>true)
+        #  FileUtils.rm(unmultiplexed_qseq_file_read_2,    :force=>true)
         end
       elsif !paired and sample["index"].nil?
         puts "Lane #{lane}: SR Non-indexed"
