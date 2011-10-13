@@ -22,7 +22,7 @@ for key in INDEX_MAP.keys
   end
 end
 
-paired      = ARGV[0].to_i == 1
+paired      = ARGV[0].to_i == 2
 read_1_file = ARGV[1]
 
 if !paired
